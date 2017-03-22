@@ -10,12 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
-import richk.RMS.model.Device;
 import richk.RMS.model.ModelException;
 
-/**
- * Servlet implementation class RemoveDeviceServlet
- */
 @WebServlet("/RemoveDeviceServlet")
 public class RemoveDeviceServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -38,8 +34,8 @@ public class RemoveDeviceServlet extends HttpServlet {
 		}
 		
 		try {
-			session.getDatabaseManager().RemoveDevice(Integer.parseInt(request.getParameter("ID")));
-			request.getRequestDispatcher("JSP/devicesList.jsp").forward(request, response);
+			session.getDatabaseManager().RemoveDevice(request.getParameter("name"));
+			request.getRequestDispatcher("JSP/devices_list_AJAJ.jsp").forward(request, response);
 
 		} catch (ModelException e) {
 			httpSession.setAttribute("error", e);

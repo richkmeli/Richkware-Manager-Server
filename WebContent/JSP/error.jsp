@@ -7,6 +7,9 @@
 <title>Error</title>
 </head>
 <body>
+<h1>Error</h1>
+	Please Contact The Administrator
+	<br>
 <% out.print(session.getAttribute("error")); %>
 </body>
 </html>

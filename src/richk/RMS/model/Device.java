@@ -1,23 +1,17 @@
 package richk.RMS.model;
 
 public class Device {
-	private int ID;
 	private String name;
 	private String IP;
-	private Boolean online;
+	private String serverPort;
 	private String lastConnection;
 
-	public Device(int iD, String name, String iP, Boolean online, String lastConnection) {
+	public Device(String name, String iP,String serverPort, String lastConnection) {
 		super();
-		ID = iD;
 		this.name = name;
 		IP = iP;
-		this.online = online;
+		this.serverPort = serverPort;
 		this.lastConnection = lastConnection;
-	}
-
-	public int getID() {
-		return ID;
 	}
 
 	public String getIP() {
@@ -28,16 +22,16 @@ public class Device {
 		return lastConnection;
 	}
 
+	public String getServerPort() {
+		return serverPort;
+	}
+
+	public void setServerPort(String serverPort) {
+		this.serverPort = serverPort;
+	}
+
 	public String getName() {
 		return name;
-	}
-
-	public Boolean getOnline() {
-		return online;
-	}
-
-	public void setID(int iD) {
-		ID = iD;
 	}
 
 	public void setIP(String iP) {
@@ -50,10 +44,6 @@ public class Device {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public void setOnline(Boolean online) {
-		this.online = online;
 	}
 
 }
