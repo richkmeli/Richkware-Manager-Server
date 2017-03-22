@@ -1,6 +1,9 @@
 package richk.RMS.web;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,10 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.derby.tools.sysinfo;
+
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
 import richk.RMS.model.Device;
 import richk.RMS.model.ModelException;
+import richk.RMS.util.Crypto;
 
 /**
  * Servlet implementation class AddDeviceServlet
@@ -39,16 +45,24 @@ public class AddDeviceServlet extends HttpServlet {
 		}
 
 		try {
+			
+			String data = request.getParameter("data");
+			//data = Cripto.EncryptDecrypt(data, 5);
+			
+			String name = data.substring(1,data.indexOf(","));
+			String serverPort = data.substring((data.indexOf(",")+1),(data.length()-1));
+			
+			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+			
 			Device device = new Device(
-					Integer.parseInt(request.getParameter("ID")),
-					request.getParameter("name"),
-					request.getParameter("IP"),
-					true,
-					request.getParameter("lastConnection"));
+					name,
+					request.getRemoteAddr(),
+					serverPort,
+					timeStamp);
 			session.getDatabaseManager().AddDevice(device);
-			request.getRequestDispatcher("JSP/devicesList.jsp").forward(request, response);
+			request.getRequestDispatcher("DevicesListServlet").forward(request, response);
 
-		} catch (ModelException e) {
+		} catch (Exception e) {
 			httpSession.setAttribute("error", e);
 			request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
 		}

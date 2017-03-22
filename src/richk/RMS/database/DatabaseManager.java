@@ -17,33 +17,25 @@ public class DatabaseManager implements Model{
 	private String dbUrl;
 	private String dbUsername;
 	private String dbPassword;
-
+	
 	public DatabaseManager() throws DatabaseException{
 		ResourceBundle resource = ResourceBundle.getBundle("configuration");
-		
-		if(resource.getString("database.name").compareTo("openshift") == 0){
-			dbUrl = "jdbc:mysql://" + "postgresql://" + System.getenv("OPENSHIFT_POSTGRESQL_DB_HOST") + ":" + System.getenv("OPENSHIFT_POSTGRESQL_DB_PORT");
-			dbUsername = resource.getString("database.username");
-			dbPassword = resource.getString("database.password");
-		}
-		else if (resource.getString("database.name").compareTo("apache") == 0){
-			dbUrl = resource.getString("database.url");
-			String dbClass = resource.getString("database.class");
+		dbUsername = resource.getString("database.username");
+		dbPassword = resource.getString("database.password");
 
-			try {
-				Class.forName(dbClass);
-			} catch (ClassNotFoundException e) {
-				throw new DatabaseException(e);
-			}
+		dbUrl = resource.getString("database.url");
+		String dbClass = resource.getString("database.class");
+		try {
+			Class.forName(dbClass);
+		} catch (ClassNotFoundException e) {
+			throw new DatabaseException(e);
 		}
-		else{
-			throw new DatabaseException(null);
-		}
+
 	}
 
 	private Connection connect() throws DatabaseException{
 		try {
-			return DriverManager.getConnection(dbUrl);
+			return DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -78,13 +70,12 @@ public class DatabaseManager implements Model{
 		ResultSet resultSet = null;
 
 		try{
-			connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-			preparedStatement = connection.prepareStatement("SELECT * FROM ?");
-			preparedStatement.setString(1, "DEVICE");
+			connection = connect();
+			preparedStatement = connection.prepareStatement("SELECT * FROM Device");
 			resultSet = preparedStatement.executeQuery();
 
 			while(resultSet.next()){
-				Device tmp = new Device(resultSet.getInt("ID"),resultSet.getString("NAME"),resultSet.getString("IP"),resultSet.getBoolean("ONLINE"),resultSet.getString("LASTCONNECTION"));
+				Device tmp = new Device(resultSet.getString("Name"),resultSet.getString("IP"),resultSet.getString("ServerPort"),resultSet.getString("LastConnection"));
 				deviceList.add(tmp);
 			}
 		}
@@ -100,16 +91,15 @@ public class DatabaseManager implements Model{
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
-
+	
 		try{
-			connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-			preparedStatement = connection.prepareStatement	("INSERT INTO ? (ID, NAME, IP, ONLINE, LASTCONNECTION) VALUES (?,?,?,TRUE,?)");
-			preparedStatement.setString(1,"DEVICE");
-			preparedStatement.setInt(2, device.getID());
-			preparedStatement.setString(3, device.getName());
-			preparedStatement.setString(4, device.getIP());
-			preparedStatement.setString(6, device.getLastConnection());
-			resultSet = preparedStatement.executeQuery();
+			connection = connect();
+			preparedStatement = connection.prepareStatement	("INSERT INTO Device (NAME, IP, SERVERPORT, LASTCONNECTION) VALUES (?,?,?,?)");
+			preparedStatement.setString(1, device.getName());
+			preparedStatement.setString(2, device.getIP());
+			preparedStatement.setString(3, device.getServerPort());
+			preparedStatement.setString(4, device.getLastConnection());
+			preparedStatement.executeUpdate();
 		}
 		catch(SQLException e){
 			disconnect(connection, preparedStatement, resultSet);
@@ -121,17 +111,16 @@ public class DatabaseManager implements Model{
 
 
 	@Override
-	public boolean RemoveDevice(int ID) throws ModelException {
+	public boolean RemoveDevice(String name) throws ModelException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 
 		try{
-			connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-			preparedStatement = connection.prepareStatement	("DELETE * FROM ? WHERE ID = ?");
-			preparedStatement.setString(1, "DEVICE");
-			preparedStatement.setInt(2, ID);
-			resultSet = preparedStatement.executeQuery();
+			connection = connect();
+			preparedStatement = connection.prepareStatement	("DELETE FROM Device WHERE Name = ?");
+			preparedStatement.setString(1, name);
+			preparedStatement.executeUpdate();
 		}
 		catch(SQLException e){
 			disconnect(connection, preparedStatement, resultSet);
