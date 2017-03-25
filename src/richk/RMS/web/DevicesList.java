@@ -1,8 +1,6 @@
 package richk.RMS.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,18 +11,17 @@ import javax.servlet.http.HttpSession;
 
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
-import richk.RMS.database.DatabaseManager;
-import richk.RMS.model.Device;
 import richk.RMS.model.ModelException;
 
 /**
  * Servlet implementation class DevicesListServlet
  */
-@WebServlet("/DevicesListServletAJAJ")
-public class DevicesListServletAJAJ extends HttpServlet {
+@WebServlet("/DevicesList")
+public class DevicesList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public DevicesListServletAJAJ() {
+
+	public DevicesList() {
 		super();
 	}
 
@@ -42,35 +39,14 @@ public class DevicesListServletAJAJ extends HttpServlet {
 		}
 
 		try {
-			DatabaseManager databaseManager = session.getDatabaseManager();
-			List<Device> devicesList = databaseManager.RefreshDevice();
-
-			String devicesListJSON = "{ ";
-			int index = 0;
-
-			for(Device device : devicesList){
-				String deviceJSON = "'"+index+"' : {"
-						+ "'name' : '"+device.getName()+"', "
-						+ "'IP' : '"+device.getIP()+"', "
-						+ "'serverPort' : '"+device.getServerPort()+"', "
-						+ "'lastConnection' : '"+device.getLastConnection()+"'}";
-				index++;
-				devicesListJSON += deviceJSON;
-				// se ci sono altri amici mette la "," se è l'ultimo non la mette
-				if(index < devicesList.size()) 
-					devicesListJSON += ", ";
-			}
-			devicesListJSON += " }";
-
-			PrintWriter out = response.getWriter();
-			out.println(devicesListJSON);
-			out.flush();
+			httpSession.setAttribute("device", session.getDatabaseManager().RefreshDevice());
+			request.getRequestDispatcher("JSP/device_list.jsp").forward(request, response);
 
 			} catch (ModelException e) {
 				httpSession.setAttribute("error", e);
 				request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
 			}
-
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

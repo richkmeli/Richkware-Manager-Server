@@ -56,7 +56,7 @@
 			request = new ActiveXObject("Microsoft.XMLHTTP");
 		
 		request.onreadystatechange = newConnection;
-		request.open("GET", "/Richkware-Manager-Server/DevicesListServletAJAJ", true, null, null);
+		request.open("GET", "/Richkware-Manager-Server/DevicesListAJAJ", true, null, null);
 		
 		request.send(null);
 	}
@@ -90,7 +90,7 @@
 					"<td>"+serverPort+"</td>"+
 					"<td>"+lastConnection+"</td>"+
 							"<td><a href=\"javascript:EditField('"+name+"','"+IP+"','"+serverPort+"','"+lastConnection+"')\">Edit</a></td>"+
-							"<td><a href=\"/Richkware-Manager-Server/RemoveDeviceServlet?name="+name+"\"style='color: red'>X</a></td>")
+							"<td><a href=\"/Richkware-Manager-Server/RemoveDevice?name="+name+"\"style='color: red'>X</a></td>")
 			devicesTable.appendChild(row);
 			index++
 		}
@@ -107,7 +107,7 @@
 <h1>List of Devices</h1>
 <a href="javascript:loadDevicesTable()">Reload List</a><br>
 
-<form id = "AddForm"
+<!-- <form id = "AddForm"
 	  action="AddDevice" 
 	  method="post">
       <table style="background-color: green">
@@ -124,6 +124,7 @@
       </table>
 	  </form>
 	 <br>
+-->
 	 
 <form action="EditDevice" 
 	method="post"

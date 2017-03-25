@@ -15,16 +15,17 @@ import org.apache.derby.tools.sysinfo;
 
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
+import richk.RMS.database.DatabaseManager;
 import richk.RMS.model.Device;
 import richk.RMS.model.ModelException;
 import richk.RMS.util.Crypto;
 
 
-@WebServlet("/AddDeviceServlet")
-public class AddDeviceServlet extends HttpServlet {
+@WebServlet("/AddInfo")
+public class AddInfo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public AddDeviceServlet() {
+	public AddInfo() {
 		super();
 	}
 
@@ -57,8 +58,14 @@ public class AddDeviceServlet extends HttpServlet {
 					request.getRemoteAddr(),
 					serverPort,
 					timeStamp);
-			session.getDatabaseManager().AddDevice(device);
-			request.getRequestDispatcher("DevicesListServlet").forward(request, response);
+			
+			DatabaseManager db = session.getDatabaseManager();
+			if(db.IsDevicePresent(name))
+				db.EditDevice(device);
+			else
+				db.AddDevice(device);
+			
+			request.getRequestDispatcher("JSP/devices_list_AJAJ.jsp").forward(request, response);
 
 		} catch (Exception e) {
 			httpSession.setAttribute("error", e);

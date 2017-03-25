@@ -12,11 +12,11 @@ import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
 import richk.RMS.model.ModelException;
 
-@WebServlet("/RemoveDeviceServlet")
-public class RemoveDeviceServlet extends HttpServlet {
+@WebServlet("/RemoveDevice")
+public class RemoveDevice extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public RemoveDeviceServlet() {
+    public RemoveDevice() {
         super();
     }
 

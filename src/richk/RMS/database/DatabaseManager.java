@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.xml.ws.Response;
+
 import richk.RMS.model.Device;
 import richk.RMS.model.Model;
 import richk.RMS.model.ModelException;
@@ -17,7 +19,7 @@ public class DatabaseManager implements Model{
 	private String dbUrl;
 	private String dbUsername;
 	private String dbPassword;
-	
+
 	public DatabaseManager() throws DatabaseException{
 		ResourceBundle resource = ResourceBundle.getBundle("configuration");
 		dbUsername = resource.getString("database.username");
@@ -90,11 +92,10 @@ public class DatabaseManager implements Model{
 	public boolean AddDevice(Device device) throws ModelException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-	
+
 		try{
 			connection = connect();
-			preparedStatement = connection.prepareStatement	("INSERT INTO Device (NAME, IP, SERVERPORT, LASTCONNECTION) VALUES (?,?,?,?)");
+			preparedStatement = connection.prepareStatement	("INSERT INTO device (name, ip, serverport, lastconnection) VALUES (?,?,?,?)");
 			preparedStatement.setString(1, device.getName());
 			preparedStatement.setString(2, device.getIP());
 			preparedStatement.setString(3, device.getServerPort());
@@ -102,11 +103,56 @@ public class DatabaseManager implements Model{
 			preparedStatement.executeUpdate();
 		}
 		catch(SQLException e){
-			disconnect(connection, preparedStatement, resultSet);
+			disconnect(connection, preparedStatement, null);
 			return false;
 		}
-		disconnect(connection, preparedStatement, resultSet);
+		disconnect(connection, preparedStatement, null);
 		return true;
+	}
+
+	@Override
+	public boolean EditDevice(Device device) throws ModelException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try{
+			connection = connect();
+			preparedStatement = connection.prepareStatement	("UPDATE device SET ip = ?, serverport = ?, lastconnection = ? WHERE name = ?");
+			preparedStatement.setString(1, device.getIP());
+			preparedStatement.setString(2, device.getServerPort());
+			preparedStatement.setString(3, device.getLastConnection());
+			preparedStatement.setString(4, device.getName());
+			preparedStatement.executeUpdate();
+		}
+		catch(SQLException e){
+			disconnect(connection, preparedStatement, null);
+			return false;
+		}
+		disconnect(connection, preparedStatement, null);
+		return true;
+	}
+
+	@Override
+	public boolean IsDevicePresent(String name) throws ModelException{
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		Boolean resp = false;
+
+		try{
+			connection = connect();
+			preparedStatement = connection.prepareStatement("SELECT * FROM device WHERE name = ?");
+			preparedStatement.setString(1, name);
+			resultSet = preparedStatement.executeQuery();
+
+			if(resultSet.next()) 
+				resp = true;
+		}
+		catch(SQLException e){
+			disconnect(connection, preparedStatement, resultSet);
+		}
+		disconnect(connection, preparedStatement, resultSet);
+		return resp;
 	}
 
 
@@ -114,19 +160,18 @@ public class DatabaseManager implements Model{
 	public boolean RemoveDevice(String name) throws ModelException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
 
 		try{
 			connection = connect();
-			preparedStatement = connection.prepareStatement	("DELETE FROM Device WHERE Name = ?");
+			preparedStatement = connection.prepareStatement	("DELETE FROM device WHERE name = ?");
 			preparedStatement.setString(1, name);
 			preparedStatement.executeUpdate();
 		}
 		catch(SQLException e){
-			disconnect(connection, preparedStatement, resultSet);
+			disconnect(connection, preparedStatement, null);
 			return false;
 		}
-		disconnect(connection, preparedStatement, resultSet);
+		disconnect(connection, preparedStatement, null);
 		return true;
 	}
 }

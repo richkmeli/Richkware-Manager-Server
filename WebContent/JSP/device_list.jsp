@@ -33,7 +33,7 @@ function EditField(name,IP,serverPort,lastConnection){
 </head>
 <body style="background-color: grey">
 
-<h1>Devices List</h1>
+<h1>List of devices</h1>
 
 <form action="EditDevice" 
 	method="post"
@@ -110,7 +110,7 @@ session.removeAttribute("device");
 				onClick='EditField"<%out.print(device.getName()); %>", "<%out.print(device.getIP()); %>", "<%out.print(device.getServerPort());%>", "<%out.print(device.getLastConnection());%>")'>				  		
 			</td>
 			
-		<td><a href="/Richkware-Manager-Server/RemoveDeviceServlet?name=<%=device.getName() %>"
+		<td><a href="/Richkware-Manager-Server/RemoveDevice?name=<%=device.getName() %>"
 				style="color: red">
 				X
 			</a></td>
