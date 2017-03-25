@@ -35,10 +35,12 @@
 		devicesTable.innerHTML = "";
 		
 		var row = document.createElement("tr");
-		row.innerHTML=(	"<td>name</td>"+
+		row.innerHTML=(	"<td>Index</td>"+
+						"<td>name</td>"+
 						"<td>IP</td>"+
 						"<td>serverPort</td>"+
 						"<td>lastConection</td>"+
+						"<td></td>"+
 						"<td></td>"+
 						"<td></td>"+
 						"<td></td>"+
@@ -82,7 +84,8 @@
 			var lastConnection = device["lastConnection"]
 			
 			var row = document.createElement("tr")
-			row.innerHTML=("<td>"+name+"</td>"+
+			row.innerHTML=("<td>"+(index+1)+"</td>"+
+					"<td>"+name+"</td>"+
 					"<td>"+IP+"</td>"+
 					"<td>"+serverPort+"</td>"+
 					"<td>"+lastConnection+"</td>"+

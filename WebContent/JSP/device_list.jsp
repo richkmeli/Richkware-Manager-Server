@@ -110,7 +110,7 @@ session.removeAttribute("device");
 				onClick='EditField"<%out.print(device.getName()); %>", "<%out.print(device.getIP()); %>", "<%out.print(device.getServerPort());%>", "<%out.print(device.getLastConnection());%>")'>				  		
 			</td>
 			
-		<td><a href="../RemoveDeviceServlet?name=<%=device.getName() %>"
+		<td><a href="/Richkware-Manager-Server/RemoveDeviceServlet?name=<%=device.getName() %>"
 				style="color: red">
 				X
 			</a></td>

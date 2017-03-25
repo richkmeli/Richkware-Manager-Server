@@ -17,15 +17,9 @@ import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
 import richk.RMS.model.Device;
 import richk.RMS.model.ModelException;
-<<<<<<< HEAD
 import richk.RMS.util.Crypto;
-=======
-import richk.RMS.util.Cripto;
->>>>>>> branch 'master' of https://github.com/richkmeli/Richkware-Manager-Server.git
 
-/**
- * Servlet implementation class AddDeviceServlet
- */
+
 @WebServlet("/AddDeviceServlet")
 public class AddDeviceServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
