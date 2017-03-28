@@ -4,7 +4,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -17,3 +16,9 @@ hs_err_pid*
 .classpath
 /src/configuration.properties
 /.tern-project
+.idea
+.settings/
+Richkware-Manager-Server.iml
+lib/
+out/
+docker-dir/

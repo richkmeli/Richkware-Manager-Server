@@ -56,7 +56,7 @@ public class DevicesListAJAJ extends HttpServlet {
 						+ "'lastConnection' : '"+device.getLastConnection()+"'}";
 				index++;
 				devicesListJSON += deviceJSON;
-				// se ci sono altri amici mette la "," se è l'ultimo non la mette
+				// se ci sono altri amici mette la "," se ï¿½ l'ultimo non la mette
 				if(index < devicesList.size()) 
 					devicesListJSON += ", ";
 			}

@@ -1,19 +1,13 @@
 package richk.RMS.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import javax.xml.ws.Response;
-
 import richk.RMS.model.Device;
 import richk.RMS.model.Model;
 import richk.RMS.model.ModelException;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class DatabaseManager implements Model{
 	private String dbUrl;
@@ -46,9 +40,8 @@ public class DatabaseManager implements Model{
 	private void disconnect(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) throws DatabaseException{
 		try {
 			resultSet.close();
-		}catch(SQLException e){
+		}catch(SQLException e) {
 			throw new DatabaseException(e);
-		}catch (Exception e1) {		
 		}
 		try {
 			preparedStatement.close();

@@ -1,4 +1,4 @@
-CONNECT 'jdbc:derby://localhost:1527/RichkwareMS;create=true;user=richk;password=richk';
+CONNECT 'jdbc:derby://192.168.99.100:1527/RichkwareMS;create=true;user=richk;password=richk';
 
 create table Device(
     Name varchar(50) not null primary key,
