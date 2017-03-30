@@ -3,10 +3,10 @@ package richk.RMS.database;
 import richk.RMS.model.ModelException;
 
 @SuppressWarnings("serial")
-public class DatabaseException extends ModelException{
+public class DatabaseException extends ModelException {
 
-	public DatabaseException(Exception exception) {
-		super(exception);
-	}
+    public DatabaseException(Exception exception) {
+        super(exception);
+    }
 
 }
