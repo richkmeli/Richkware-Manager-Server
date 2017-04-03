@@ -36,7 +36,7 @@
             "<td>name</td>" +
             "<td>IP</td>" +
             "<td>serverPort</td>" +
-            "<td>lastConection</td>" +
+            "<td>lastConnection</td>" +
             "<td></td>" +
             "<td></td>" +
             "<td></td>" +

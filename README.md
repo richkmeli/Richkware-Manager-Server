@@ -1,6 +1,6 @@
 # Richkware-Manager-Server
 
-Service for management of hosts where is present a malware developped using **Richkware** framework.
+Service for management of hosts where is present a malware developed using **Richkware** framework.
 
 ## Related Projects
 
