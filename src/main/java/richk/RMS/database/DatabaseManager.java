@@ -40,9 +40,9 @@ public class DatabaseManager implements Model {
     private void disconnect(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet) throws DatabaseException {
         try {
             resultSet.close();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new DatabaseException(e);
-        }catch (Exception e1) {		// null value of ResultSet in AddDevice, RemoveDevice...
+        } catch (Exception e1) {        // null value of ResultSet in AddDevice, RemoveDevice...
         }
         try {
             preparedStatement.close();

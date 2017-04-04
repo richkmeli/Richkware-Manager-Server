@@ -13,11 +13,11 @@
     <title>Error</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Error</h1>
-        Please Contact The Administrator
-        <br>
-        <% out.print(session.getAttribute("error")); %>
-    </div>
+<div class="container">
+    <h1>Error</h1>
+    Please Contact The Administrator
+    <br>
+    <% out.print(session.getAttribute("error")); %>
+</div>
 </body>
 </html>
