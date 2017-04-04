@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-/**
- * Servlet implementation class DevicesListServlet
- */
 @WebServlet("/DevicesList")
 public class DevicesList extends HttpServlet {
     private static final long serialVersionUID = 1L;
