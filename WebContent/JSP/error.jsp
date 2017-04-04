@@ -4,12 +4,20 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+    <link rel="stylesheet" href="/Richkware-Manager-Server/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/Richkware-Manager-Server/bootstrap/css/bootstrap-theme.min.css"/>
+    <script type="text/javascript" src="/Richkware-Manager-Server/JavaScript/jquery.min.js"></script>
+    <script type="text/javascript" src="/Richkware-Manager-Server/bootstrap/js/bootstrap.min.js"></script>
+
     <title>Error</title>
 </head>
 <body>
-<h1>Error</h1>
-Please Contact The Administrator
-<br>
-<% out.print(session.getAttribute("error")); %>
+    <div class="container">
+        <h1>Error</h1>
+        Please Contact The Administrator
+        <br>
+        <% out.print(session.getAttribute("error")); %>
+    </div>
 </body>
 </html>
