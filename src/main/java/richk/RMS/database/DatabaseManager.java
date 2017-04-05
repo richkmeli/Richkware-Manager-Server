@@ -7,7 +7,6 @@ import richk.RMS.model.ModelException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class DatabaseManager implements Model {
     private String dbUrl;
@@ -15,16 +14,45 @@ public class DatabaseManager implements Model {
     private String dbPassword;
 
     public DatabaseManager() throws DatabaseException {
-        ResourceBundle resource = ResourceBundle.getBundle("configuration");
+        /*ResourceBundle resource = ResourceBundle.getBundle("configuration");
         dbUsername = resource.getString("database.username");
         dbPassword = resource.getString("database.password");
 
         dbUrl = resource.getString("database.url");
+
         String dbClass = resource.getString("database.class");
         try {
             Class.forName(dbClass);
         } catch (ClassNotFoundException e) {
             throw new DatabaseException(e);
+        }*/
+
+
+        dbUsername = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
+        dbPassword = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
+        String DB_NAME = System.getenv("OPENSHIFT_APP_NAME");
+        String FORNAME_URL = "com.mysql.jdbc.Driver";
+        dbUrl = "jdbc:"+System.getenv("OPENSHIFT_MYSQL_DB_URL")+ DB_NAME;
+        try {
+            Class.forName(FORNAME_URL);
+        } catch (ClassNotFoundException e) {
+            throw new DatabaseException(e);
+        }
+
+        String tableSQL = "CREATE TABLE Device (" +
+                "Name VARCHAR(50) NOT NULL PRIMARY KEY," +
+                "IP VARCHAR(25) NOT NULL," +
+                "ServerPort VARCHAR(10)," +
+                "LastConnection VARCHAR(25)" +
+                ")";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement(tableSQL);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, null);
         }
 
     }
