@@ -1,4 +1,4 @@
-CONNECT 'jdbc:mysql://192.168.99.100:1527/RichkwareMS;create=true;user=richk;password=richk';
+CONNECT 'jdbc:derby://192.168.99.100:1527/RichkwareMS;create=true;user=richk;password=richk';
 
 CREATE TABLE Device (
   Name           VARCHAR(50) NOT NULL PRIMARY KEY,

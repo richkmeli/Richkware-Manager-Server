@@ -3,6 +3,7 @@ package richk.RMS.model;
 import java.util.List;
 
 public interface Model {
+    public boolean CreateDeviceTable() throws ModelException;
 
     public List<Device> RefreshDevice() throws ModelException;
 

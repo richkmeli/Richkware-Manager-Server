@@ -7,54 +7,45 @@ import richk.RMS.model.ModelException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class DatabaseManager implements Model {
     private String dbUrl;
     private String dbUsername;
     private String dbPassword;
+    private String schemaDbName;
+    private String tableDbName;
 
     public DatabaseManager() throws DatabaseException {
-        /*ResourceBundle resource = ResourceBundle.getBundle("configuration");
-        dbUsername = resource.getString("database.username");
-        dbPassword = resource.getString("database.password");
+        ResourceBundle resource = ResourceBundle.getBundle("configuration");
+        String dbClass = null;
 
-        dbUrl = resource.getString("database.url");
+        if (resource.getString("database.name").equals("derby")) {
+            dbUsername = resource.getString("database.username");
+            dbPassword = resource.getString("database.password");
+            dbUrl = resource.getString("database.url");
+            dbClass = resource.getString("database.class");
+        }else if(resource.getString("database.name").equals("openshift_mysql")) {
+            dbUsername = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
+            dbPassword = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
+            dbClass = "com.mysql.jdbc.Driver";
+            dbUrl = "jdbc:" + "mysql://"+ System.getenv("OPENSHIFT_MYSQL_DB_HOST")+":"+System.getenv("OPENSHIFT_MYSQL_DB_PORT")+"/"+System.getenv("OPENSHIFT_APP_NAME");
+        }
 
-        String dbClass = resource.getString("database.class");
+        schemaDbName = "richk";
+        tableDbName = schemaDbName + ".device";
+
         try {
             Class.forName(dbClass);
         } catch (ClassNotFoundException e) {
             throw new DatabaseException(e);
-        }*/
+        }
 
-
-        dbUsername = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
-        dbPassword = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
-        String DB_NAME = System.getenv("OPENSHIFT_APP_NAME");
-        String FORNAME_URL = "com.mysql.jdbc.Driver";
-        dbUrl = "jdbc:"+System.getenv("OPENSHIFT_MYSQL_DB_URL")+ DB_NAME;
         try {
-            Class.forName(FORNAME_URL);
-        } catch (ClassNotFoundException e) {
+            CreateDeviceTable();
+        } catch (ModelException e) {
             throw new DatabaseException(e);
         }
-
-        String tableSQL = "CREATE TABLE Device (" +
-                "Name VARCHAR(50) NOT NULL PRIMARY KEY," +
-                "IP VARCHAR(25) NOT NULL," +
-                "ServerPort VARCHAR(10)," +
-                "LastConnection VARCHAR(25)" +
-                ")";
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = connect();
-            preparedStatement = connection.prepareStatement(tableSQL);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            disconnect(connection, preparedStatement, null);
-        }
-
     }
 
     private Connection connect() throws DatabaseException {
@@ -86,6 +77,34 @@ public class DatabaseManager implements Model {
     }
 
     @Override
+    public boolean CreateDeviceTable() throws ModelException{
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        String schemaSQL = "CREATE SCHEMA " + schemaDbName;
+        String tableSQL = "CREATE TABLE " + tableDbName + "(" +
+                "Name VARCHAR(50) NOT NULL PRIMARY KEY," +
+                "IP VARCHAR(25) NOT NULL," +
+                "ServerPort VARCHAR(10)," +
+                "LastConnection VARCHAR(25)" +
+                ")";
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement(schemaSQL);
+            preparedStatement.executeUpdate();
+
+            preparedStatement = connection.prepareStatement(tableSQL);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, null);
+            return false;
+        }
+        disconnect(connection, preparedStatement, null);
+        return true;
+    }
+
+    @Override
     public List<Device> RefreshDevice() throws ModelException {
         List<Device> deviceList = new ArrayList<>();
 
@@ -95,7 +114,7 @@ public class DatabaseManager implements Model {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("SELECT * FROM Device");
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + tableDbName);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -116,7 +135,7 @@ public class DatabaseManager implements Model {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("INSERT INTO device (name, ip, serverport, lastconnection) VALUES (?,?,?,?)");
+            preparedStatement = connection.prepareStatement("INSERT INTO " + tableDbName + " (name, ip, serverport, lastconnection) VALUES (?,?,?,?)");
             preparedStatement.setString(1, device.getName());
             preparedStatement.setString(2, device.getIP());
             preparedStatement.setString(3, device.getServerPort());
@@ -137,7 +156,7 @@ public class DatabaseManager implements Model {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("UPDATE device SET ip = ?, serverport = ?, lastconnection = ? WHERE name = ?");
+            preparedStatement = connection.prepareStatement("UPDATE " + tableDbName + " SET ip = ?, serverport = ?, lastconnection = ? WHERE name = ?");
             preparedStatement.setString(1, device.getIP());
             preparedStatement.setString(2, device.getServerPort());
             preparedStatement.setString(3, device.getLastConnection());
@@ -160,7 +179,7 @@ public class DatabaseManager implements Model {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("SELECT * FROM device WHERE name = ?");
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + tableDbName + " WHERE name = ?");
             preparedStatement.setString(1, name);
             resultSet = preparedStatement.executeQuery();
 
@@ -181,7 +200,7 @@ public class DatabaseManager implements Model {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("DELETE FROM device WHERE name = ?");
+            preparedStatement = connection.prepareStatement("DELETE FROM " + tableDbName + " WHERE name = ?");
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
