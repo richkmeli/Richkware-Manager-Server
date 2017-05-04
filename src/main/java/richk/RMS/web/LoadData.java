@@ -4,6 +4,7 @@ import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
 import richk.RMS.database.DatabaseManager;
 import richk.RMS.model.Device;
+import richk.RMS.util.Crypto;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,7 +42,7 @@ public class LoadData extends HttpServlet {
         try {
 
             String data = request.getParameter("data");
-            //data = Cripto.EncryptDecrypt(data, 5);
+            //data = Crypto.Decrypt(data, "richktest");
 
             String name = data.substring(1, data.indexOf(","));
             String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
