@@ -2,6 +2,8 @@
 
 Service for management of hosts where is present a malware developed using **Richkware** framework.
 
+ <img src="http://richk.altervista.org/Richkware-Manager-ServerGitHub.jpeg">
+
 ## Related Projects
 
 [Richkware](https://github.com/richkmeli/Richkware): Framework for building Windows malwares.
