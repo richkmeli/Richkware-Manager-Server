@@ -2,13 +2,31 @@ package richk.RMS.util;
 
 public class Crypto {
 
-    public static String EncryptDecrypt(String input, int key) {
-        String output = null;
+    public static String Encrypt(String input, String key) {
+        StringBuilder output = new StringBuilder("");
 
-        for (int i = 0; i < input.length(); ++i) {
-            output += input.charAt(i) ^ key;
+        for (int i = 0, j = 0; i < input.length(); ++i) {
+            output.append((char)(input.charAt(i) ^ key.charAt(j)));
+
+            if(j == key.length()-1)
+                j = 0;
+            else ++j;
         }
 
-        return output;
+        return output.toString();
+    }
+
+    public static String Decrypt(String input, String key) {
+        StringBuilder output = new StringBuilder("");
+
+        for (int i = 0, j = 0; i < input.length(); ++i) {
+            output.append((char)(input.charAt(i) ^ key.charAt(j)));
+
+            if(j == key.length()-1)
+                j = 0;
+            else ++j;
+        }
+
+        return output.toString();
     }
 }
