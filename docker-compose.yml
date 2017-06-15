@@ -1,0 +1,13 @@
+web:
+  image: tomcat:latest
+  ports:
+    - "8080:18080"
+  links:
+    - "mysql"
+
+mysql:
+  image: mysql:latest
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: richk

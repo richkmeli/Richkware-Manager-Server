@@ -20,7 +20,7 @@ public class DatabaseManager implements Model {
         ResourceBundle resource = ResourceBundle.getBundle("configuration");
         String dbClass = null;
 
-        if (resource.getString("database.name").equals("derby")) {
+        if (resource.getString("database.name").equals("mysql")) {
             dbUsername = resource.getString("database.username");
             dbPassword = resource.getString("database.password");
             dbUrl = resource.getString("database.url");
@@ -32,18 +32,15 @@ public class DatabaseManager implements Model {
             dbUrl = "jdbc:" + "mysql://"+ System.getenv("OPENSHIFT_MYSQL_DB_HOST")+":"+System.getenv("OPENSHIFT_MYSQL_DB_PORT")+"/"+System.getenv("OPENSHIFT_APP_NAME");
         }
 
-        schemaDbName = "richk";
+        schemaDbName = "RichkwareMS";
         tableDbName = schemaDbName + ".device";
 
         try {
             Class.forName(dbClass);
-        } catch (ClassNotFoundException e) {
-            throw new DatabaseException(e);
-        }
-
-        try {
+            CreateDeviceSchema();
+            dbUrl += schemaDbName;
             CreateDeviceTable();
-        } catch (ModelException e) {
+        } catch (ModelException | ClassNotFoundException e) {
             throw new DatabaseException(e);
         }
     }
@@ -77,11 +74,29 @@ public class DatabaseManager implements Model {
     }
 
     @Override
-    public boolean CreateDeviceTable() throws ModelException{
+    public boolean CreateDeviceSchema() throws ModelException{
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         String schemaSQL = "CREATE SCHEMA " + schemaDbName;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement(schemaSQL);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, null);
+            return false;
+        }
+        disconnect(connection, preparedStatement, null);
+        return true;
+    }
+
+    @Override
+    public boolean CreateDeviceTable() throws ModelException{
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
         String tableSQL = "CREATE TABLE " + tableDbName + "(" +
                 "Name VARCHAR(50) NOT NULL PRIMARY KEY," +
                 "IP VARCHAR(25) NOT NULL," +
@@ -91,9 +106,6 @@ public class DatabaseManager implements Model {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement(schemaSQL);
-            preparedStatement.executeUpdate();
-
             preparedStatement = connection.prepareStatement(tableSQL);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
