@@ -1,13 +1,17 @@
-web:
-  image: tomcat:latest
-  ports:
-    - "8080:18080"
-  links:
-    - "mysql"
+version: '2'
+services:
+  web:
+    image: tomcat:latest
+    ports:
+      - "8080:8080"
+    links:
+      - "db"
+    volumes:
+      - out/artifacts/Richkware_Manager_Server/ /usr/local/tomcat/webapps/
 
-mysql:
-  image: mysql:latest
-  ports:
-    - "3306:3306"
-  environment:
-    MYSQL_ROOT_PASSWORD: richk
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: richk

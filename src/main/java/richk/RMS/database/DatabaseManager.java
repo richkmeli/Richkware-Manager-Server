@@ -24,15 +24,15 @@ public class DatabaseManager implements Model {
             dbUsername = resource.getString("database.username");
             dbPassword = resource.getString("database.password");
             dbUrl = resource.getString("database.url");
-            dbClass = resource.getString("database.class");
+            schemaDbName = "RichkwareMS";
         }else if(resource.getString("database.name").equals("openshift_mysql")) {
             dbUsername = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
             dbPassword = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
-            dbClass = "com.mysql.jdbc.Driver";
-            dbUrl = "jdbc:" + "mysql://"+ System.getenv("OPENSHIFT_MYSQL_DB_HOST")+":"+System.getenv("OPENSHIFT_MYSQL_DB_PORT")+"/"+System.getenv("OPENSHIFT_APP_NAME");
+            dbUrl = "jdbc:" + "mysql://"+ System.getenv("OPENSHIFT_MYSQL_DB_HOST")+":"+System.getenv("OPENSHIFT_MYSQL_DB_PORT")+"/";
+            schemaDbName = System.getenv("OPENSHIFT_APP_NAME");
         }
+        dbClass = "com.mysql.jdbc.Driver";
 
-        schemaDbName = "RichkwareMS";
         tableDbName = schemaDbName + ".device";
 
         try {
