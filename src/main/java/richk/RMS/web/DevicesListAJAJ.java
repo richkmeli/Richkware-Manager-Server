@@ -44,11 +44,11 @@ public class DevicesListAJAJ extends HttpServlet {
             DatabaseManager databaseManager = session.getDatabaseManager();
             List<Device> devicesList = databaseManager.RefreshDevice();
 
-            String devicesListJSON = "{ ";
+            String devicesListJSON = "[ ";
             int index = 0;
 
             for (Device device : devicesList) {
-                String deviceJSON = "'" + index + "' : {"
+                String deviceJSON = /*"'" + index + "' : {"*/ "{"
                         + "'name' : '" + device.getName() + "', "
                         + "'IP' : '" + device.getIP() + "', "
                         + "'serverPort' : '" + device.getServerPort() + "', "
@@ -58,7 +58,7 @@ public class DevicesListAJAJ extends HttpServlet {
                 if (index < devicesList.size())
                     devicesListJSON += ", ";
             }
-            devicesListJSON += " }";
+            devicesListJSON += " ]";
 
             PrintWriter out = response.getWriter();
             out.println(devicesListJSON);

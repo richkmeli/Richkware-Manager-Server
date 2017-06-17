@@ -27,7 +27,7 @@ function loadDevicesTable() {
 
     var thead = document.createElement("thead");
     var row = document.createElement("tr");
-    row.innerHTML = ( "<th>Index</th>" +
+    row.innerHTML = ( //"<th>Index</th>" +
     "<th>Name</th>" +
     "<th>IP</th>" +
     "<th>Server Port</th>" +
@@ -75,7 +75,7 @@ function newConnection() {
 
         var row = document.createElement("tr");
         row.innerHTML = (
-        "<td>" + (index + 1) + "</td>" +
+        //"<td>" + (index + 1) + "</td>" +
         "<td>" + name + "</td>" +
         "<td>" + IP + "</td>" +
         "<td>" + serverPort + "</td>" +
