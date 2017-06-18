@@ -31,16 +31,21 @@ public class DatabaseManager implements Model {
             dbUrl = "jdbc:" + "mysql://"+ System.getenv("OPENSHIFT_MYSQL_DB_HOST")+":"+System.getenv("OPENSHIFT_MYSQL_DB_PORT")+"/";
             schemaDbName = System.getenv("OPENSHIFT_APP_NAME");
         }
+
         dbClass = "com.mysql.jdbc.Driver";
-
-        tableDbName = schemaDbName + ".device";
-
         try {
             Class.forName(dbClass);
+        } catch (ClassNotFoundException e) {
+            throw new DatabaseException(e);
+        }
+
+        // database schema creation
+        tableDbName = schemaDbName + ".device";
+        try {
             CreateDeviceSchema();
             dbUrl += schemaDbName;
             CreateDeviceTable();
-        } catch (ModelException | ClassNotFoundException e) {
+        }catch (ModelException e) {
             throw new DatabaseException(e);
         }
     }
@@ -118,7 +123,7 @@ public class DatabaseManager implements Model {
 
     @Override
     public List<Device> RefreshDevice() throws ModelException {
-        List<Device> deviceList = new ArrayList<>();
+        List<Device> deviceList = new ArrayList<Device>();
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
