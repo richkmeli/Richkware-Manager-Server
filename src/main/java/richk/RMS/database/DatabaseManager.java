@@ -78,7 +78,6 @@ public class DatabaseManager implements Model {
 
     }
 
-    @Override
     public boolean CreateDeviceSchema() throws ModelException{
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -97,7 +96,6 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    @Override
     public boolean CreateDeviceTable() throws ModelException{
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -121,7 +119,6 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    @Override
     public List<Device> RefreshDevice() throws ModelException {
         List<Device> deviceList = new ArrayList<Device>();
 
@@ -145,7 +142,6 @@ public class DatabaseManager implements Model {
         return deviceList;
     }
 
-    @Override
     public boolean AddDevice(Device device) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -166,7 +162,6 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    @Override
     public boolean EditDevice(Device device) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -187,7 +182,6 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    @Override
     public boolean IsDevicePresent(String name) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -210,7 +204,6 @@ public class DatabaseManager implements Model {
     }
 
 
-    @Override
     public boolean RemoveDevice(String name) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
