@@ -1,51 +1,67 @@
 package richk.RMS.util;
 
-
 import javax.xml.bind.DatatypeConverter;
 
 public class Crypto {
 
-    public static String Encrypt(String input, String key) {
+    public static String EncryptRC4(String input, String key) {
         // encode input
         input = DatatypeConverter.printBase64Binary(input.getBytes());
 
-        // Make sure the key is at least as long as the message
-        String tmp = key;
-        while (key.length() < input.length())
-            key += tmp;
+        RC4 rc4 = new RC4(key.getBytes());
+        byte[] ciphertext = rc4.encrypt(input.getBytes());
 
-        // And now for the encryption part
-        StringBuilder output = new StringBuilder("");
+        // encode encrypted input
+        return DatatypeConverter.printBase64Binary(ciphertext);
+    }
 
-        for (int i = 0; i < input.length(); ++i) {
-            output.append((char)(input.charAt(i) ^ key.charAt(i)));
+    public static String DecryptRC4(String input, String key) {
+        // decode encrypted input
+        byte[] decoded = DatatypeConverter.parseBase64Binary(input);
+        //byte[] decoded = DatatypeConverter.parseHexBinary(input);
+
+        RC4 rc4 = new RC4(key.getBytes());
+        byte[] plaintext = rc4.decrypt(decoded);
+        String plaintextS = new String(plaintext);
+
+        // decode input
+        decoded = DatatypeConverter.parseBase64Binary(plaintextS);
+        //byte[] decoded2 = DatatypeConverter.parseHexBinary(plaintextS);
+        return new String(decoded);
+    }
+
+    public static String EncryptAES(String input, String key) {
+        // encode input
+        input = DatatypeConverter.printBase64Binary(input.getBytes());
+
+        AES aes = new AES(key);
+        String ciphertext = null;
+        try {
+            ciphertext = aes.encrypt(input);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // encode encrypted input
-        String out = DatatypeConverter.printBase64Binary(output.toString().getBytes());
-        return out;
+        return DatatypeConverter.printBase64Binary(ciphertext.getBytes());
     }
 
-    public static String Decrypt(String input, String key) {
+    public static String DecryptAES(String input, String key) {
         // decode encrypted input
         byte[] decoded = DatatypeConverter.parseBase64Binary(input);
         input = new String(decoded);
 
-        // Make sure the key is at least as long as the message
-        String tmp = key;
-        while (key.length() < input.length())
-            key += tmp;
-
-        // And now for the encryption part
-        StringBuilder output = new StringBuilder("");
-
-        for (int i = 0; i < input.length(); ++i) {
-            output.append((char)(input.charAt(i) ^ key.charAt(i)));
+        AES aes = new AES(key);
+        String plaintext = null;
+        try {
+            plaintext = aes.decrypt(input);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // decode input
-        decoded = DatatypeConverter.parseBase64Binary(output.toString());
-        String out = new String(decoded);
-        return out;
+        decoded = DatatypeConverter.parseBase64Binary(plaintext);
+        return new String(decoded);
     }
+
 }

@@ -40,9 +40,8 @@ public class LoadData extends HttpServlet {
         }
 
         try {
-
             String data = request.getParameter("data");
-            data = Crypto.Decrypt(data, "richktest");
+            data = Crypto.DecryptRC4(data, "richktest");
 
             String name = data.substring(1, data.indexOf(","));
             String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
