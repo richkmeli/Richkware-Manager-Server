@@ -17,6 +17,8 @@ function EditField(name, IP, serverPort, lastConnection) {
     document.getElementById("serverPort_E").value = serverPort;
     document.getElementById("lastConnection_OE").value = lastConnection;
     document.getElementById("lastConnection_E").value = lastConnection;
+    document.getElementById("encryptionKey_OE").value = lastConnection;
+    document.getElementById("encryptionKey_E").value = lastConnection;
 
 }
 
@@ -28,10 +30,11 @@ function loadDevicesTable() {
     var thead = document.createElement("thead");
     var row = document.createElement("tr");
     row.innerHTML = ( //"<th>Index</th>" +
-    "<th>Name</th>" +
-    "<th>IP</th>" +
-    "<th>Server Port</th>" +
-    "<th>Last Connection</th>");
+        "<th>Name</th>" +
+        "<th>IP</th>" +
+        "<th>Server Port</th>" +
+        "<th>Last Connection</th>" +
+        "<th>Encryption Key</th>");
 
     thead.appendChild(row)
     devicesTable.appendChild(thead);
@@ -72,16 +75,18 @@ function newConnection() {
         var IP = device["IP"];
         var serverPort = device["serverPort"];
         var lastConnection = device["lastConnection"];
+        var encryptionKey = device["encryptionKey"];
 
         var row = document.createElement("tr");
         row.innerHTML = (
-        //"<td>" + (index + 1) + "</td>" +
-        "<td>" + name + "</td>" +
-        "<td>" + IP + "</td>" +
-        "<td>" + serverPort + "</td>" +
-        "<td>" + lastConnection + "</td>" +
-        "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Edit</button></td>" +
-        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/RemoveDevice?name=" + name + "\';\">Remove</button></td>");
+            //"<td>" + (index + 1) + "</td>" +
+            "<td>" + name + "</td>" +
+            "<td>" + IP + "</td>" +
+            "<td>" + serverPort + "</td>" +
+            "<td>" + lastConnection + "</td>" +
+            "<td>" + encryptionKey + "</td>" +
+            "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Edit</button></td>" +
+            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/RemoveDevice?name=" + name + "\';\">Remove</button></td>");
 
         tbody.appendChild(row);
         index++

@@ -52,7 +52,8 @@ public class DevicesListAJAJ extends HttpServlet {
                         + "'name' : '" + device.getName() + "', "
                         + "'IP' : '" + device.getIP() + "', "
                         + "'serverPort' : '" + device.getServerPort() + "', "
-                        + "'lastConnection' : '" + device.getLastConnection() + "'}";
+                        + "'lastConnection' : '" + device.getLastConnection() + "', "
+                        + "'encryptionKey' : '" + device.getEncryptionKey()+ "'}";
                 index++;
                 devicesListJSON += deviceJSON;
                 if (index < devicesList.size())

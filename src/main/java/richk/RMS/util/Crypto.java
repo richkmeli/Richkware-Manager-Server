@@ -7,18 +7,20 @@ public class Crypto {
     public static String EncryptRC4(String input, String key) {
         // encode input
         input = DatatypeConverter.printBase64Binary(input.getBytes());
+        //input = DatatypeConverter.printHexBinary(input.getBytes());
 
         RC4 rc4 = new RC4(key.getBytes());
         byte[] ciphertext = rc4.encrypt(input.getBytes());
 
         // encode encrypted input
-        return DatatypeConverter.printBase64Binary(ciphertext);
+        //return DatatypeConverter.printBase64Binary(ciphertext);
+        return DatatypeConverter.printHexBinary(ciphertext);
     }
 
     public static String DecryptRC4(String input, String key) {
         // decode encrypted input
-        byte[] decoded = DatatypeConverter.parseBase64Binary(input);
-        //byte[] decoded = DatatypeConverter.parseHexBinary(input);
+        //byte[] decoded = DatatypeConverter.parseBase64Binary(input);
+        byte[] decoded = DatatypeConverter.parseHexBinary(input);
 
         RC4 rc4 = new RC4(key.getBytes());
         byte[] plaintext = rc4.decrypt(decoded);
@@ -26,7 +28,7 @@ public class Crypto {
 
         // decode input
         decoded = DatatypeConverter.parseBase64Binary(plaintextS);
-        //byte[] decoded2 = DatatypeConverter.parseHexBinary(plaintextS);
+        //decoded = DatatypeConverter.parseHexBinary(plaintextS);
         return new String(decoded);
     }
 

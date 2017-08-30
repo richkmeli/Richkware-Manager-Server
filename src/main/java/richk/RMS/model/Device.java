@@ -5,13 +5,16 @@ public class Device {
     private String IP;
     private String serverPort;
     private String lastConnection;
+    private String encryptionKey;
 
-    public Device(String name, String iP, String serverPort, String lastConnection) {
+    public Device(String name, String iP, String serverPort, String lastConnection, String encryptionKey) {
         super();
         this.name = name;
         IP = iP;
         this.serverPort = serverPort;
         this.lastConnection = lastConnection;
+        this.encryptionKey = encryptionKey;
+
     }
 
     public String getIP() {
@@ -26,12 +29,16 @@ public class Device {
         return serverPort;
     }
 
-    public void setServerPort(String serverPort) {
-        this.serverPort = serverPort;
+    public String getEncryptionKey() {
+        return encryptionKey;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
     }
 
     public void setIP(String iP) {
@@ -44,6 +51,10 @@ public class Device {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setEncryptionKey(String encryptionKey) {
+        this.encryptionKey = encryptionKey;
     }
 
 }

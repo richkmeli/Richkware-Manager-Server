@@ -14,21 +14,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
 
 
-@WebServlet("/LoadData")
-public class LoadData extends HttpServlet {
+@WebServlet("/GetEncryptionKey")
+public class GetEncryptionKey extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final int keyLength = 32;
     private String password;
 
-    public LoadData() {
+   public GetEncryptionKey() {
         super();
-        password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
-        }
+       password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
+
+   }
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,29 +47,23 @@ public class LoadData extends HttpServlet {
         }
 
         try {
-            String data = request.getParameter("data");
-            data = Crypto.DecryptRC4(data, password);
-
-            String name = data.substring(1, data.indexOf(","));
-            String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
-            String encryptionKey = RandomStringGenerator.GenerateString(keyLength);
-
-            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-
-            Device device = new Device(
-                    name,
-                    request.getRemoteAddr(),
-                    serverPort,
-                    timeStamp,
-                    encryptionKey);
+            String name = request.getParameter("id");
+            name = Crypto.DecryptRC4(name, password);
 
             DatabaseManager db = session.getDatabaseManager();
-            if (db.IsDevicePresent(name))
-                db.EditDevice(device);
-            else
-                db.AddDevice(device);
+            String encryptionKey = db.GetEncryptionKey(name);
+            if(encryptionKey.isEmpty()){
+                encryptionKey = "Error";
+            }
 
-            request.getRequestDispatcher("JSP/devices_list_AJAJ.jsp").forward(request, response);
+            // encrypt key server-side generated or error message with pre-shared password
+            encryptionKey = Crypto.EncryptRC4(encryptionKey, password);
+
+            encryptionKey = "$"+encryptionKey+"#";
+
+            PrintWriter out = response.getWriter();
+            out.println(encryptionKey);
+            out.flush();
 
         } catch (Exception e) {
             httpSession.setAttribute("error", e);

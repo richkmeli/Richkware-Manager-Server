@@ -25,10 +25,10 @@ public class DatabaseManager implements Model {
             dbPassword = resource.getString("database.password");
             dbUrl = resource.getString("database.url");
             schemaDbName = "RichkwareMS";
-        }else if(resource.getString("database.name").equals("openshift_mysql")) {
+        } else if (resource.getString("database.name").equals("openshift_mysql")) {
             dbUsername = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
             dbPassword = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
-            dbUrl = "jdbc:" + "mysql://"+ System.getenv("OPENSHIFT_MYSQL_DB_HOST")+":"+System.getenv("OPENSHIFT_MYSQL_DB_PORT")+"/";
+            dbUrl = "jdbc:" + "mysql://" + System.getenv("OPENSHIFT_MYSQL_DB_HOST") + ":" + System.getenv("OPENSHIFT_MYSQL_DB_PORT") + "/";
             schemaDbName = System.getenv("OPENSHIFT_APP_NAME");
         }
 
@@ -45,7 +45,7 @@ public class DatabaseManager implements Model {
             CreateDeviceSchema();
             dbUrl += schemaDbName;
             CreateDeviceTable();
-        }catch (ModelException e) {
+        } catch (ModelException e) {
             throw new DatabaseException(e);
         }
     }
@@ -78,7 +78,7 @@ public class DatabaseManager implements Model {
 
     }
 
-    public boolean CreateDeviceSchema() throws ModelException{
+    public boolean CreateDeviceSchema() throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -96,7 +96,7 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    public boolean CreateDeviceTable() throws ModelException{
+    public boolean CreateDeviceTable() throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -104,7 +104,8 @@ public class DatabaseManager implements Model {
                 "Name VARCHAR(50) NOT NULL PRIMARY KEY," +
                 "IP VARCHAR(25) NOT NULL," +
                 "ServerPort VARCHAR(10)," +
-                "LastConnection VARCHAR(25)" +
+                "LastConnection VARCHAR(25)," +
+                "EncryptionKey VARCHAR(32)" +
                 ")";
 
         try {
@@ -132,7 +133,7 @@ public class DatabaseManager implements Model {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Device tmp = new Device(resultSet.getString("Name"), resultSet.getString("IP"), resultSet.getString("ServerPort"), resultSet.getString("LastConnection"));
+                Device tmp = new Device(resultSet.getString("Name"), resultSet.getString("IP"), resultSet.getString("ServerPort"), resultSet.getString("LastConnection"), resultSet.getString("EncryptionKey"));
                 deviceList.add(tmp);
             }
         } catch (SQLException e) {
@@ -148,11 +149,12 @@ public class DatabaseManager implements Model {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("INSERT INTO " + tableDbName + " (name, ip, serverport, lastconnection) VALUES (?,?,?,?)");
+            preparedStatement = connection.prepareStatement("INSERT INTO " + tableDbName + " (name, ip, serverport, lastconnection, encryptionkey) VALUES (?,?,?,?,?)");
             preparedStatement.setString(1, device.getName());
             preparedStatement.setString(2, device.getIP());
             preparedStatement.setString(3, device.getServerPort());
             preparedStatement.setString(4, device.getLastConnection());
+            preparedStatement.setString(5, device.getEncryptionKey());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
@@ -168,11 +170,12 @@ public class DatabaseManager implements Model {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("UPDATE " + tableDbName + " SET ip = ?, serverport = ?, lastconnection = ? WHERE name = ?");
+            preparedStatement = connection.prepareStatement("UPDATE " + tableDbName + " SET ip = ?, serverport = ?, lastconnection = ?, encryptionkey = ? WHERE name = ?");
             preparedStatement.setString(1, device.getIP());
             preparedStatement.setString(2, device.getServerPort());
             preparedStatement.setString(3, device.getLastConnection());
             preparedStatement.setString(4, device.getName());
+            preparedStatement.setString(5, device.getEncryptionKey());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
@@ -219,5 +222,27 @@ public class DatabaseManager implements Model {
         }
         disconnect(connection, preparedStatement, null);
         return true;
+    }
+
+    public String GetEncryptionKey(String name) throws ModelException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String encryptionKey = "";
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + tableDbName + " WHERE name = ?");
+            preparedStatement.setString(1, name);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                encryptionKey = resultSet.getString("EncryptionKey");
+            }
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, resultSet);
+        }
+        disconnect(connection, preparedStatement, resultSet);
+        return encryptionKey;
     }
 }

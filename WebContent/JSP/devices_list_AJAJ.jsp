@@ -68,6 +68,10 @@
                                    type="text" value=""/></td>
                         <td><input id="lastConnection_OE" name="OLDlastConnection"
                                    type="text" value="" style="display: none"/></td>
+                        <td><input id="encryptionKey_E" name="encryptionKey"
+                                   type="text" value=""/></td>
+                        <td><input id="encryptionKey_OE" name="OLDencryptionKey"
+                                   type="text" value="" style="display: none"/></td>
 
                         <td><input id="submit" type="submit" value="Edit Device">
                     </tr>
