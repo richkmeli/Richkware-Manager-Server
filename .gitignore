@@ -17,8 +17,15 @@ hs_err_pid*
 /src/configuration.properties
 /.tern-project
 .idea
+.openshift
 .settings/
 Richkware-Manager-Server.iml
 lib/
 out/
 docker-dir/
+src/test/
+target/Richkware-Manager-Server-1.0-SNAPSHOT.jar
+target/classes/configuration.properties
+target/generated-sources/
+target/maven-archiver/
+target/maven-status/
