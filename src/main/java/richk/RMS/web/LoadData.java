@@ -28,7 +28,7 @@ public class LoadData extends HttpServlet {
     public LoadData() {
         super();
         password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
-        }
+    }
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

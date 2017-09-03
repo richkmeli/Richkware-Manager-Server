@@ -74,8 +74,8 @@ public class Crypto {
         byte[] encryptedAESsecretKey = null;
         try {
             // sign AES key
-            signatureAESsecretKey = RSA.sign(AESsecretKey.getEncoded(),RSAprivateKeyServer);
-            encryptedAESsecretKey = RSA.encrypt(AESsecretKey.getEncoded(),pubKeyClient);
+            signatureAESsecretKey = RSA.sign(AESsecretKey.getEncoded(), RSAprivateKeyServer);
+            encryptedAESsecretKey = RSA.encrypt(AESsecretKey.getEncoded(), pubKeyClient);
         } catch (Exception e) {
             throw new CryptoException(e);
         }
@@ -91,7 +91,7 @@ public class Crypto {
             throw new CryptoException(e);
         }
 
-        results.add(new KeyExchangePayload(encryptedAESsecretKeyS,signatureAESsecretKey,RSApublicKeyServerS,null));
+        results.add(new KeyExchangePayload(encryptedAESsecretKeyS, signatureAESsecretKey, RSApublicKeyServerS, null));
         results.add(AESsecretKey);
 
         return results;
@@ -110,15 +110,15 @@ public class Crypto {
 
         byte[] AESsecretKey = null;
         try {
-            AESsecretKey = RSA.decrypt(encryptedAESsecretKey,RSAprivateKeyClient);
-            if(!(RSA.verify(AESsecretKey,signatureAESsecretKey,kpubServer))){
+            AESsecretKey = RSA.decrypt(encryptedAESsecretKey, RSAprivateKeyClient);
+            if (!(RSA.verify(AESsecretKey, signatureAESsecretKey, kpubServer))) {
                 throw new CryptoException(new Exception("Failed to verify signature of message received. GetAESKeyFromKeyExchange()"));
             }
         } catch (Exception e) {
             throw new CryptoException(e);
         }
 
-        return new SecretKeySpec(AESsecretKey,0,AESsecretKey.length, "AES");
+        return new SecretKeySpec(AESsecretKey, 0, AESsecretKey.length, "AES");
 
     }
 
@@ -128,7 +128,7 @@ public class Crypto {
 
         byte[] ciphertext = null;
         try {
-            ciphertext = AES.encrypt(input.getBytes(),key);
+            ciphertext = AES.encrypt(input.getBytes(), key);
         } catch (Exception e) {
             throw new CryptoException(e);
         }
@@ -146,7 +146,7 @@ public class Crypto {
 
         byte[] plaintext = null;
         try {
-            plaintext = AES.decrypt(decoded,key);
+            plaintext = AES.decrypt(decoded, key);
         } catch (Exception e) {
             throw new CryptoException(e);
         }

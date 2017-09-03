@@ -3,9 +3,7 @@ package richk.RMS.web;
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
 import richk.RMS.database.DatabaseManager;
-import richk.RMS.model.Device;
 import richk.RMS.util.Crypto;
-import richk.RMS.util.RandomStringGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 
@@ -26,11 +22,11 @@ public class GetEncryptionKey extends HttpServlet {
     private static final int keyLength = 32;
     private String password;
 
-   public GetEncryptionKey() {
+    public GetEncryptionKey() {
         super();
-       password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
+        password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
 
-   }
+    }
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,14 +48,14 @@ public class GetEncryptionKey extends HttpServlet {
 
             DatabaseManager db = session.getDatabaseManager();
             String encryptionKey = db.GetEncryptionKey(name);
-            if(encryptionKey.isEmpty()){
+            if (encryptionKey.isEmpty()) {
                 encryptionKey = "Error";
             }
 
             // encrypt key server-side generated or error message with pre-shared password
             encryptionKey = Crypto.EncryptRC4(encryptionKey, password);
 
-            encryptionKey = "$"+encryptionKey+"#";
+            encryptionKey = "$" + encryptionKey + "#";
 
             PrintWriter out = response.getWriter();
             out.println(encryptionKey);

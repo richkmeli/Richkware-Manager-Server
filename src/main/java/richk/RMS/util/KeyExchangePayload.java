@@ -6,7 +6,7 @@ public class KeyExchangePayload {
     String kpubServer = null;
     String data = null;
 
-    public KeyExchangePayload(String encryptedAESsecretKey,String signatureAESsecretKey, String kpubServer, String data) {
+    public KeyExchangePayload(String encryptedAESsecretKey, String signatureAESsecretKey, String kpubServer, String data) {
         this.encryptedAESsecretKey = encryptedAESsecretKey;
         this.signatureAESsecretKey = signatureAESsecretKey;
         this.kpubServer = kpubServer;
