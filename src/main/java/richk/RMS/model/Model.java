@@ -15,7 +15,7 @@ public interface Model {
 
     public boolean RemoveDevice(String string) throws ModelException;
 
-    public boolean IsDevicePresent(String name) throws ModelException;
+    public Device GetDevice(String name) throws ModelException;
 
     public String GetEncryptionKey(String name) throws ModelException;
 }

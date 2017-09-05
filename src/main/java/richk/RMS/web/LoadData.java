@@ -46,26 +46,39 @@ public class LoadData extends HttpServlet {
 
         try {
             String data = request.getParameter("data");
-            data = Crypto.DecryptRC4(data, password);
-
             String name = data.substring(1, data.indexOf(","));
-            String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
+
+            // check in the DB if there is an entry with that name
+            DatabaseManager db = session.getDatabaseManager();
+            Device oldDevice = db.GetDevice(name);
+
+            // if this entry exists, then it's used to decrypt the encryption key in the DB
+            String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));;
+            if(oldDevice == null)
+                serverPort = Crypto.DecryptRC4(serverPort, password);
+            else
+                serverPort = Crypto.DecryptRC4(serverPort,oldDevice.getEncryptionKey());
+
+
             String encryptionKey = RandomStringGenerator.GenerateString(keyLength);
 
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
-            Device device = new Device(
+            Device newDevice = new Device(
                     name,
                     request.getRemoteAddr(),
                     serverPort,
                     timeStamp,
                     encryptionKey);
 
-            DatabaseManager db = session.getDatabaseManager();
-            if (db.IsDevicePresent(name))
-                db.EditDevice(device);
-            else
-                db.AddDevice(device);
+
+            if (oldDevice == null) {
+                db.AddDevice(newDevice);
+            }else{
+                // do not change Encryption Key
+                newDevice.setEncryptionKey(oldDevice.getEncryptionKey());
+                db.EditDevice(newDevice);
+            }
 
             request.getRequestDispatcher("JSP/devices_list_AJAJ.jsp").forward(request, response);
 

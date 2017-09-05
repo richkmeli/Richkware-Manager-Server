@@ -138,6 +138,7 @@ public class DatabaseManager implements Model {
             }
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, resultSet);
+            throw new ModelException(e);
         }
         disconnect(connection, preparedStatement, resultSet);
         return deviceList;
@@ -158,7 +159,8 @@ public class DatabaseManager implements Model {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
-            return false;
+            throw new ModelException(e);
+            //return false;
         }
         disconnect(connection, preparedStatement, null);
         return true;
@@ -174,22 +176,23 @@ public class DatabaseManager implements Model {
             preparedStatement.setString(1, device.getIP());
             preparedStatement.setString(2, device.getServerPort());
             preparedStatement.setString(3, device.getLastConnection());
-            preparedStatement.setString(4, device.getName());
-            preparedStatement.setString(5, device.getEncryptionKey());
+            preparedStatement.setString(4, device.getEncryptionKey());
+            preparedStatement.setString(5, device.getName());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
-            return false;
+            throw new ModelException(e);
+            //return false;
         }
         disconnect(connection, preparedStatement, null);
         return true;
     }
 
-    public boolean IsDevicePresent(String name) throws ModelException {
+    public Device GetDevice(String name) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        Boolean resp = false;
+        Device device = null;
 
         try {
             connection = connect();
@@ -198,12 +201,12 @@ public class DatabaseManager implements Model {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next())
-                resp = true;
+                device = new Device(resultSet.getString("Name"), resultSet.getString("IP"), resultSet.getString("ServerPort"), resultSet.getString("LastConnection"), resultSet.getString("EncryptionKey"));
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, resultSet);
         }
         disconnect(connection, preparedStatement, resultSet);
-        return resp;
+        return device;
     }
 
 
@@ -218,7 +221,8 @@ public class DatabaseManager implements Model {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
-            return false;
+            throw new ModelException(e);
+            //return false;
         }
         disconnect(connection, preparedStatement, null);
         return true;
@@ -241,6 +245,7 @@ public class DatabaseManager implements Model {
             }
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, resultSet);
+            throw new ModelException(e);
         }
         disconnect(connection, preparedStatement, resultSet);
         return encryptionKey;
