@@ -1,4 +1,5 @@
-# Richkware-Manager-Server [![Build Status](https://travis-ci.org/richkmeli/Richkware-Manager-Server.svg?branch=master)](https://travis-ci.org/richkmeli/Richkware-Manager-Server)
+# Richkware-Manager-Server
+[![Build Status](https://travis-ci.org/richkmeli/Richkware-Manager-Server.svg?branch=master)](https://travis-ci.org/richkmeli/Richkware-Manager-Server)
 
 Service for management of hosts where is present a malware developed using **Richkware** framework.
 
