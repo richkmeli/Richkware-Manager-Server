@@ -3,6 +3,8 @@ package richk.RMS.database;
 import richk.RMS.model.Device;
 import richk.RMS.model.Model;
 import richk.RMS.model.ModelException;
+import richk.RMS.model.User;
+import richk.RMS.util.Crypto;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,23 +17,24 @@ public class DatabaseManager implements Model {
     private String dbPassword;
     private String schemaDbName;
     private String tableDbName;
+    private String authTableDbName;
 
     public DatabaseManager() throws DatabaseException {
         ResourceBundle resource = ResourceBundle.getBundle("configuration");
         String dbClass = null;
 
-        if (resource.getString("database.name").equals("mysql")) {
-            dbUsername = resource.getString("database.username");
-            dbPassword = resource.getString("database.password");
-            dbUrl = resource.getString("database.url");
-            schemaDbName = "RichkwareMS";
-        } else if (resource.getString("database.name").equals("openshift_mysql")) {
+//        if (resource.getString("database.name").equals("mysql")) {
+        dbUsername = resource.getString("database.username");
+        dbPassword = resource.getString("database.password");
+        dbUrl = resource.getString("database.url");
+//            schemaDbName = "RichkwareMS";
+/*        } else if (resource.getString("database.name").equals("openshift_mysql")) {
             dbUsername = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
             dbPassword = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
             dbUrl = "jdbc:" + "mysql://" + System.getenv("OPENSHIFT_MYSQL_DB_HOST") + ":" + System.getenv("OPENSHIFT_MYSQL_DB_PORT") + "/";
             schemaDbName = System.getenv("OPENSHIFT_APP_NAME");
         }
-
+*/
         dbClass = "com.mysql.jdbc.Driver";
         try {
             Class.forName(dbClass);
@@ -40,11 +43,21 @@ public class DatabaseManager implements Model {
         }
 
         // database schema creation
-        tableDbName = schemaDbName + ".device";
+//        tableDbName = schemaDbName + ".device";
         try {
-            CreateDeviceSchema();
+            schemaDbName = "RichkwareMS";
+
+            CreateSchema();
             dbUrl += schemaDbName;
-            CreateDeviceTable();
+
+
+            tableDbName = schemaDbName + ".person";
+            authTableDbName = schemaDbName + ".user";
+            CreateTables();
+
+//            CreateDeviceSchema();
+//            dbUrl += schemaDbName;
+//            CreateDeviceTable();
         } catch (ModelException e) {
             throw new DatabaseException(e);
         }
@@ -78,7 +91,7 @@ public class DatabaseManager implements Model {
 
     }
 
-    public boolean CreateDeviceSchema() throws ModelException {
+    public boolean CreateSchema() throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -96,7 +109,7 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    public boolean CreateDeviceTable() throws ModelException {
+    public boolean CreateTables() throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -108,10 +121,19 @@ public class DatabaseManager implements Model {
                 "EncryptionKey VARCHAR(32)" +
                 ")";
 
+        String authTableSQL = "CREATE TABLE " + authTableDbName + "(" +
+                "email VARCHAR(50) NOT NULL PRIMARY KEY," +
+                "pass VARCHAR(64) NOT NULL" +
+                ")";
+
         try {
             connection = connect();
             preparedStatement = connection.prepareStatement(tableSQL);
             preparedStatement.executeUpdate();
+
+            preparedStatement = connection.prepareStatement(authTableSQL);
+            preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
             return false;
@@ -133,7 +155,12 @@ public class DatabaseManager implements Model {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Device tmp = new Device(resultSet.getString("Name"), resultSet.getString("IP"), resultSet.getString("ServerPort"), resultSet.getString("LastConnection"), resultSet.getString("EncryptionKey"));
+                Device tmp = new Device(
+                        resultSet.getString("Name"),
+                        resultSet.getString("IP"),
+                        resultSet.getString("ServerPort"),
+                        resultSet.getString("LastConnection"),
+                        resultSet.getString("EncryptionKey"));
                 deviceList.add(tmp);
             }
         } catch (SQLException e) {
@@ -250,4 +277,99 @@ public class DatabaseManager implements Model {
         disconnect(connection, preparedStatement, resultSet);
         return encryptionKey;
     }
+
+
+    public boolean AddUser(User user) throws ModelException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connect();
+
+            String hash = Crypto.HashSHA256(user.getPassword());
+
+            preparedStatement = connection.prepareStatement("INSERT INTO " + authTableDbName + " (email, pass) VALUES (?,?)");
+            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(2, hash);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, null);
+            throw new ModelException(e);
+            //return false;
+        }
+        disconnect(connection, preparedStatement, null);
+        return true;
+    }
+
+    public boolean IsUserPresent(String email) throws ModelException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        boolean isPresent = false;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + authTableDbName + " WHERE email = ?");
+            preparedStatement.setString(1, email);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                isPresent = true;
+            }
+
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, resultSet);
+        }
+        disconnect(connection, preparedStatement, resultSet);
+        return isPresent;
+    }
+
+    public boolean EditPassword(User user) throws ModelException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("UPDATE " + authTableDbName + " SET pass = ? WHERE email = ?");
+            preparedStatement.setString(1, user.getPassword());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, null);
+            throw new ModelException(e);
+            //return false;
+        }
+        disconnect(connection, preparedStatement, null);
+        return true;
+    }
+
+    public boolean CheckPassword(User user) throws ModelException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        boolean isPass = false;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + authTableDbName + " WHERE email = ?");
+            preparedStatement.setString(1, user.getEmail());
+            resultSet = preparedStatement.executeQuery();
+
+            String hash = Crypto.HashSHA256(user.getPassword());
+
+            if (resultSet.next()) {
+                if (resultSet.getString("pass").compareTo(hash) == 0) {
+                    isPass = true;
+                }
+
+            }
+
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, resultSet);
+        }
+        disconnect(connection, preparedStatement, resultSet);
+        return isPass;
+    }
+
 }

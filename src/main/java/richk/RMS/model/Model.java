@@ -3,9 +3,9 @@ package richk.RMS.model;
 import java.util.List;
 
 public interface Model {
-    public boolean CreateDeviceSchema() throws ModelException;
+    public boolean CreateSchema() throws ModelException;
 
-    public boolean CreateDeviceTable() throws ModelException;
+    public boolean CreateTables() throws ModelException;
 
     public List<Device> RefreshDevice() throws ModelException;
 
@@ -18,4 +18,12 @@ public interface Model {
     public Device GetDevice(String name) throws ModelException;
 
     public String GetEncryptionKey(String name) throws ModelException;
+
+    public boolean AddUser(User user) throws ModelException;
+
+    public boolean IsUserPresent(String email) throws ModelException;
+
+    public boolean EditPassword(User user) throws ModelException;
+
+    public boolean CheckPassword(User user) throws ModelException;
 }

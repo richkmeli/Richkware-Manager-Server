@@ -1,16 +1,23 @@
 version: '2'
 services:
   web:
-    image: tomcat:latest
+    image: tomcat:7
     ports:
       - "8080:8080"
-    links:
+    depends_on:
       - "db"
     volumes:
-      - out/artifacts/Richkware_Manager_Server/ /usr/local/tomcat/webapps/
+     #- ./out/artifacts/ROOT/ROOT.war:/usr/local/tomcat/webapps/ROOT.war:z
+     #- ./out/artifacts/ROOTe/:/usr/local/tomcat/webapps/ROOT/:ro
+     #- ./out/artifacts/ROOTe/:/usr/local/tomcat/webapps/ROOT/:z
+     - ./out/artifacts/Richkware_Manager_Server/Richkware-Manager-Server.war:/usr/local/tomcat/webapps/Richkware-Manager-Server.war:z
+
+
+    #restart: always
+    #restart: on-failure
 
   db:
-    image: mysql:latest
+    image: mysql:5.5
     ports:
       - "3306:3306"
     environment:

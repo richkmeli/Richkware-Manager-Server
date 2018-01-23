@@ -1,0 +1,1 @@
+var languages = ["it", "en"];

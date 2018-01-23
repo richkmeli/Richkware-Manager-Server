@@ -53,11 +53,12 @@ public class LoadData extends HttpServlet {
             Device oldDevice = db.GetDevice(name);
 
             // if this entry exists, then it's used to decrypt the encryption key in the DB
-            String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));;
-            if(oldDevice == null)
+            String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
+
+            if (oldDevice == null)
                 serverPort = Crypto.DecryptRC4(serverPort, password);
             else
-                serverPort = Crypto.DecryptRC4(serverPort,oldDevice.getEncryptionKey());
+                serverPort = Crypto.DecryptRC4(serverPort, oldDevice.getEncryptionKey());
 
 
             String encryptionKey = RandomStringGenerator.GenerateString(keyLength);
@@ -74,7 +75,7 @@ public class LoadData extends HttpServlet {
 
             if (oldDevice == null) {
                 db.AddDevice(newDevice);
-            }else{
+            } else {
                 // do not change Encryption Key
                 newDevice.setEncryptionKey(oldDevice.getEncryptionKey());
                 db.EditDevice(newDevice);

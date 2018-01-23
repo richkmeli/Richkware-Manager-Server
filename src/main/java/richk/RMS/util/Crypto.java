@@ -3,6 +3,7 @@ package richk.RMS.util;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -191,6 +192,25 @@ public class Crypto {
         X509EncodedKeySpec spec = fact.getKeySpec(publ,
                 X509EncodedKeySpec.class);
         return DatatypeConverter.printHexBinary(spec.getEncoded());
+    }
+
+    public static String HashSHA256(String input) {
+        // encode input
+        //input = DatatypeConverter.printBase64Binary(input.getBytes());
+        //input = DatatypeConverter.printHexBinary(input.getBytes());
+
+        MessageDigest digest = null;
+        byte[] hash = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        // encode encrypted input
+        //return DatatypeConverter.printBase64Binary(ciphertext);
+        return DatatypeConverter.printHexBinary(hash);
     }
 
 }

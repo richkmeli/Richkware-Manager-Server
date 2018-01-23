@@ -4,7 +4,7 @@
 .mtj.tmp/
 
 # Package Files #
-*.war
+#*.war
 *.ear
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
@@ -30,3 +30,4 @@ target/generated-sources/
 target/maven-archiver/
 target/maven-status/
 META-INF
+/MOUNT2SERVER.sh

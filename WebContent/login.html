@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>SB Admin - Start Bootstrap Template</title>
+    <!-- Bootstrap core CSS-->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="js/jquery/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="js/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="js/cookie/src/jquery.cookie.js"></script>
+    <script src="js/languages.js"></script>
+
+    <script>
+        var userLang = $.cookie("userLang");
+        if (!userLang) {
+            //Loading language file using the browser language
+            userLang = navigator.language || navigator.userLanguage;
+        }
+
+        var sc = document.createElement("script");
+        sc.setAttribute("type", "text/javascript");
+
+
+        switch (userLang) {
+            case "it-IT":
+                userLang = "it";
+            case "it":
+                sc.setAttribute("src", "lang/login/it.js");
+                break;
+            default:
+                userLang = "en";
+                sc.setAttribute("src", "lang/login/en.js");
+        }
+        document.head.appendChild(sc);
+
+    </script>
+</head>
+
+<body class="bg-dark">
+<div class="container">
+    <div class="card card-login mx-auto mt-5">
+        <div class="card-header" id="Logintitle"></div>
+        <div class="card-body">
+            <form action="LogIn" method="POST">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" id="Email"></label>
+                    <input class="form-control" id="exampleInputEmail1" name="email" type="email"
+                           aria-describedby="emailHelp" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input class="form-control" id="exampleInputPassword1" name="password" type="password"
+                           placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <label class="form-check-label" id="Remember"></label>
+                    </div>
+                </div>
+                <!--<a class="btn btn-primary btn-block" href="index.html" id="Login"></a>-->
+                <button type="submit" value="submit" class="btn btn-primary btn-block" id="Login"></button>
+
+            </form>
+            <div class="text-center">
+                <a class="d-block small mt-3" href="register.html" id="Registerpage"></a>
+                <a class="d-block small" href="forgot-password.html" id="Forgot"></a>
+            </div>
+            <div class="text-left">
+                <a class="nav-link dropdown-toggle mr-lg-2" id="languageDropdown" href="#" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <label id="Lang"></label>
+                    <span class="d-lg-none"></span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="languageDropdown" style="min-width: 30px;">
+                    <script>
+                        for (var lang in languages) {
+                            if (languages[lang] !== userLang) {
+                                document.write('<a class="dropdown-item" href="#" onClick="$.cookie(\'userLang\',\'' + languages[lang] + '\',7);location.reload(true);return false;">' + '<strong>' + languages[lang] + '</strong>' + '</a>'
+                                );
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    sc.onload = function () {
+        document.getElementById("Logintitle").innerHTML = lang.logintitle;
+        document.getElementById("Forgot").innerHTML = lang.forgot;
+        document.getElementById("Lang").innerHTML = lang.lang;
+        document.getElementById("Email").innerHTML = lang.email;
+        document.getElementById("Remember").innerHTML = lang.remember;
+        document.getElementById("Login").innerHTML = lang.login;
+        document.getElementById("Registerpage").innerHTML = lang.registerpage;
+    };
+</script>
+</body>
+</html>
