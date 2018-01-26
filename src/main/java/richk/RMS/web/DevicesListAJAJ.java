@@ -1,10 +1,13 @@
 package richk.RMS.web;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
 import richk.RMS.database.DatabaseManager;
 import richk.RMS.model.Device;
 import richk.RMS.model.ModelException;
+import richk.RMS.model.User;
 import richk.RMS.util.Crypto;
 import richk.RMS.util.KeyExchangePayload;
 
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.security.KeyPair;
 import java.util.List;
 
@@ -47,41 +51,50 @@ public class DevicesListAJAJ extends HttpServlet {
         try {
             String out = null;
 
-            // DevicesListAJAJ ? encryption = true/false & phase = 1,2,3,... & kpub = ...
-            //                 |                         |                   |            |
-            if (request.getParameterMap().containsKey("encryption")) {
-                String encryption = request.getParameter("encryption");
-                if (encryption.compareTo("true") == 0) {
-                    // encryption enabled
-                    String kpubC = null;
-                    if (request.getParameterMap().containsKey("Kpub")) {
-                        kpubC = request.getParameter("Kpub");
+    //        User user = session.getUser();
+            // Authentication
+    //        if (user != null) {
+                // DevicesListAJAJ ? encryption = true/false & phase = 1,2,3,... & kpub = ...
+                //                 |                         |                   |            |
+                if (request.getParameterMap().containsKey("encryption")) {
+                    String encryption = request.getParameter("encryption");
+                    if (encryption.compareTo("true") == 0) {
+                        // encryption enabled
+                        String kpubC = null;
+                        if (request.getParameterMap().containsKey("Kpub")) {
+                            kpubC = request.getParameter("Kpub");
+                        }
+                        // generation of public e private key of server
+                        KeyPair keyPair = Crypto.GetGeneratedKeyPairRSA();
+
+                        // [enc_(KpubC)(AESKey) , sign_(KprivS)(AESKey) , KpubS]
+                        List<Object> res = Crypto.KeyExchangeAESRSA(keyPair, kpubC);
+                        KeyExchangePayload keyExchangePayload = (KeyExchangePayload) res.get(0);
+                        SecretKey AESsecretKey = (SecretKey) res.get(1);
+                        // encrypt data (devices List) with AES secret key
+                        out = Crypto.EncryptAES(GenerateDevicesListJSON(session), AESsecretKey);
+                        // add data to the object
+                        keyExchangePayload.setData(out);
+
+                        out = GenerateKeyExchangePayloadJSON(keyExchangePayload);
                     }
-                    // generation of public e private key of server
-                    KeyPair keyPair = Crypto.GetGeneratedKeyPairRSA();
-
-                    // [enc_(KpubC)(AESKey) , sign_(KprivS)(AESKey) , KpubS]
-                    List<Object> res = Crypto.KeyExchangeAESRSA(keyPair, kpubC);
-                    KeyExchangePayload keyExchangePayload = (KeyExchangePayload) res.get(0);
-                    SecretKey AESsecretKey = (SecretKey) res.get(1);
-                    // encrypt data (devices List) with AES secret key
-                    out = Crypto.EncryptAES(GenerateDevicesListJSON(session), AESsecretKey);
-                    // add data to the object
-                    keyExchangePayload.setData(out);
-
-                    out = GenerateKeyExchangePayloadJSON(keyExchangePayload);
+                } else {
+                    // encryption disabled
+                    out = GenerateDevicesListJSON(session);
                 }
-            } else {
-                // encryption disabled
-                out = GenerateDevicesListJSON(session);
+
+                // servlet response
+                PrintWriter printWriter = response.getWriter();
+                printWriter.println(out);
+                printWriter.flush();
+                printWriter.close();
+   /*         } else {
+                // non loggato
+                // TODO rimanda da qualche parte perche c'è errore
+                httpSession.setAttribute("error", "non loggato");
+                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
-
-            // servlet response
-            PrintWriter printWriter = response.getWriter();
-            printWriter.println(out);
-            printWriter.flush();
-
-        } catch (Exception e) {
+    */    } catch (Exception e) {
             // redirect to the JSP that handles errors
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
@@ -96,11 +109,21 @@ public class DevicesListAJAJ extends HttpServlet {
         DatabaseManager databaseManager = session.getDatabaseManager();
         List<Device> devicesList = databaseManager.RefreshDevice();
 
-        String devicesListJSON = "[ ";
+        Type type = new TypeToken<List<Device>>(){}.getType();
+        Gson gson = new Gson();
+
+        devicesList.add(new Device("rick","43.34.43.34","40","20-10-18","ckeroivervioeon"));
+        devicesList.add(new Device("rick1","43.34.43.34","40","20-10-18","ckeroivervioeon"));
+        devicesList.add(new Device("rick2","43.34.43.34","40","20-10-18","ckeroivervioeon"));
+        // oggetto -> gson
+        String devicesListJSON = gson.toJson(devicesList, type);
+
+
+        /*String devicesListJSON = "[ ";
         int index = 0;
 
         for (Device device : devicesList) {
-            String deviceJSON = /*"'" + index + "' : {"*/ "{"
+            String deviceJSON = *//*"'" + index + "' : {"*//* "{"
                     + "'name' : '" + device.getName() + "', "
                     + "'IP' : '" + device.getIP() + "', "
                     + "'serverPort' : '" + device.getServerPort() + "', "
@@ -111,7 +134,7 @@ public class DevicesListAJAJ extends HttpServlet {
             if (index < devicesList.size())
                 devicesListJSON += ", ";
         }
-        devicesListJSON += " ]";
+        devicesListJSON += " ]";*/
 
         return devicesListJSON;
     }

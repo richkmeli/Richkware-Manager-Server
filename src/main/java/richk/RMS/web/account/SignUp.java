@@ -38,8 +38,8 @@ public class SignUp extends HttpServlet {
         try {
             String email = request.getParameter("email");
             String pass = request.getParameter("password");
-            String name = request.getParameter("name");
-            String lastname = request.getParameter("lastname");
+        //    String name = request.getParameter("name");
+        //    String lastname = request.getParameter("lastname");
 
 
             if (email != null) {
@@ -53,9 +53,9 @@ public class SignUp extends HttpServlet {
                             // inserisce in entrambi i db
                             session.getDatabaseManager().AddUser(new User(email, pass));
                             // se sono stati messi mette nel DB anche nome e cognome
-                            if (name != null && lastname != null) {
+//                            if (name != null && lastname != null) {
 //                                session.getDatabaseManager().EditPerson(new Person(email, name, lastname, null, null, null, null, null, null, null, null, null));
-                            }
+//                            }
 
                             // metti persona nella sessione
 //                            session.setPerson(session.getDatabaseManager().GetPerson(email));

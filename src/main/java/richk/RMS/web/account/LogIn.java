@@ -46,7 +46,7 @@ public class LogIn extends HttpServlet {
 //                            session.setPerson(session.getDatabaseManager().GetPerson(email));
 
                             //httpSession.setAttribute("emailUser", email);
-                            response.sendRedirect("controlPanel.html");
+                            response.sendRedirect("devices.html");
 
                             //request.getRequestDispatcher("controlPanel.html").forward(request, response);
                         } else {

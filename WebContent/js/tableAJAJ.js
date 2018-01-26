@@ -2,6 +2,8 @@
  * Created by Richk on 04-Apr-17.
  */
 
+
+
 function EditField(name, IP, serverPort, lastConnection) {
     var editForm = document.getElementById("EditForm");
     editForm.style.display = "inline";
@@ -22,8 +24,7 @@ function EditField(name, IP, serverPort, lastConnection) {
 
 }
 
-
-function loadDevicesTable() {
+function createTableHeader(){
     var devicesTable = document.getElementById("devicesTable");
     devicesTable.innerHTML = "";
 
@@ -38,6 +39,63 @@ function loadDevicesTable() {
 
     thead.appendChild(row)
     devicesTable.appendChild(thead);
+}
+
+function loadDevicesJSONtoTable(devicesList){
+
+    var tbody = document.createElement("tbody");
+    //var index = 0;
+    //while (devicesList[index] != null) {
+    for(device in devicesList){
+        //var device = devicesList[index];
+        var name = device["name"];
+        var IP = device["IP"];
+        var serverPort = device["serverPort"];
+        var lastConnection = device["lastConnection"];
+        var encryptionKey = device["encryptionKey"];
+
+        var row = document.createElement("tr");
+        row.innerHTML = (
+            //"<td>" + (index + 1) + "</td>" +
+            "<td>" + name + "</td>" +
+            "<td>" + IP + "</td>" +
+            "<td>" + serverPort + "</td>" +
+            "<td>" + lastConnection + "</td>" +
+            "<td>" + encryptionKey + "</td>" +
+            "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Edit</button></td>" +
+            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/RemoveDevice?name=" + name + "\';\">Remove</button></td>");
+
+        tbody.appendChild(row);
+  //      index++
+    }
+    devicesTable.appendChild(tbody);
+}
+
+function loadTable() {
+    createTableHeader();
+
+    var devicesList;
+    $(document).ready(function () {
+        $.get("DevicesListAJAJ", function (data, status) {
+            var deviceJSON = data;
+            alert (deviceJSON);
+            //device = JSON.parse(DeviceJSON);
+            //document.getElementById("Email").innerHTML = Person.email;
+
+            loadDevicesJSONtoTable(deviceJSON);
+        });
+    });
+
+    /* sc.onload = function () {
+         document.getElementById("Logout").innerHTML = lang.logout;
+         document.getElementById("Lang").innerHTML = lang.lang;
+     };
+     */
+}
+
+
+function loadDevicesTable() {
+    createTableHeader();
 
     request = null;
 
@@ -65,32 +123,9 @@ function newConnection() {
     }
 
     var JSON = request.responseText;
+    var result;
     eval("result = " + JSON);
 
-    var tbody = document.createElement("tbody");
-    var index = 0;
-    while (result[index] != null) {
-        var device = result[index];
-        var name = device["name"];
-        var IP = device["IP"];
-        var serverPort = device["serverPort"];
-        var lastConnection = device["lastConnection"];
-        var encryptionKey = device["encryptionKey"];
-
-        var row = document.createElement("tr");
-        row.innerHTML = (
-            //"<td>" + (index + 1) + "</td>" +
-            "<td>" + name + "</td>" +
-            "<td>" + IP + "</td>" +
-            "<td>" + serverPort + "</td>" +
-            "<td>" + lastConnection + "</td>" +
-            "<td>" + encryptionKey + "</td>" +
-            "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Edit</button></td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/RemoveDevice?name=" + name + "\';\">Remove</button></td>");
-
-        tbody.appendChild(row);
-        index++
-    }
-    devicesTable.appendChild(tbody);
+    loadDevicesJSONtoTable(result);
 
 }
