@@ -2,6 +2,26 @@
  * Created by Richk on 04-Apr-17.
  */
 
+function loadTable() {
+    createTableHeader();
+
+    $(document).ready(function () {
+        $.get("DevicesListAJAJ", function (data, status) {
+            var deviceJSON = data;
+            //    alert (deviceJSON);
+            //device = JSON.parse(DeviceJSON);
+            //document.getElementById("Email").innerHTML = Person.email;
+
+            loadDevicesJSONtoTable(deviceJSON);
+        });
+    });
+
+    /* sc.onload = function () {
+         document.getElementById("Logout").innerHTML = lang.logout;
+         document.getElementById("Lang").innerHTML = lang.lang;
+     };
+     */
+}
 
 
 function EditField(name, IP, serverPort, lastConnection) {
@@ -9,7 +29,7 @@ function EditField(name, IP, serverPort, lastConnection) {
     editForm.style.display = "inline";
 
     var editButton = document.getElementById("AddForm");
-    editButton.style.display = "none";
+    //editButton.style.display = "none";
 
     document.getElementById("name_OE").value = name;
     document.getElementById("name_E").value = name;
@@ -24,7 +44,7 @@ function EditField(name, IP, serverPort, lastConnection) {
 
 }
 
-function createTableHeader(){
+function createTableHeader() {
     var devicesTable = document.getElementById("devicesTable");
     devicesTable.innerHTML = "";
 
@@ -37,18 +57,24 @@ function createTableHeader(){
         "<th>Last Connection</th>" +
         "<th>Encryption Key</th>");
 
-    thead.appendChild(row)
+    thead.appendChild(row);
     devicesTable.appendChild(thead);
 }
 
-function loadDevicesJSONtoTable(devicesList){
+function loadDevicesJSONtoTable(devicesListJSON) {
+
+    var devicesList = jQuery.parseJSON(devicesListJSON);
+
 
     var tbody = document.createElement("tbody");
     //var index = 0;
     //while (devicesList[index] != null) {
-    for(device in devicesList){
+    //for(var device in devicesList){
+    $.each(devicesList, function (index, value) {
         //var device = devicesList[index];
-        var name = device["name"];
+        var device = value;
+
+        var name = device.name;
         var IP = device["IP"];
         var serverPort = device["serverPort"];
         var lastConnection = device["lastConnection"];
@@ -66,31 +92,9 @@ function loadDevicesJSONtoTable(devicesList){
             "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/RemoveDevice?name=" + name + "\';\">Remove</button></td>");
 
         tbody.appendChild(row);
-  //      index++
-    }
-    devicesTable.appendChild(tbody);
-}
-
-function loadTable() {
-    createTableHeader();
-
-    var devicesList;
-    $(document).ready(function () {
-        $.get("DevicesListAJAJ", function (data, status) {
-            var deviceJSON = data;
-            alert (deviceJSON);
-            //device = JSON.parse(DeviceJSON);
-            //document.getElementById("Email").innerHTML = Person.email;
-
-            loadDevicesJSONtoTable(deviceJSON);
-        });
+        //      index++
     });
-
-    /* sc.onload = function () {
-         document.getElementById("Logout").innerHTML = lang.logout;
-         document.getElementById("Lang").innerHTML = lang.lang;
-     };
-     */
+    devicesTable.appendChild(tbody);
 }
 
 

@@ -118,7 +118,6 @@ public class DevicesListAJAJ extends HttpServlet {
         // oggetto -> gson
         String devicesListJSON = gson.toJson(devicesList, type);
 
-
         /*String devicesListJSON = "[ ";
         int index = 0;
 
