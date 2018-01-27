@@ -2,7 +2,7 @@
  * Created by Richk on 04-Apr-17.
  */
 
-function loadTable() {
+function loadDevicesTable() {
     createTableHeader();
 
     $(document).ready(function () {
@@ -24,7 +24,7 @@ function loadTable() {
 }
 
 
-function EditField(name, IP, serverPort, lastConnection) {
+function EditDevicesTableField(name, IP, serverPort, lastConnection) {
     var editForm = document.getElementById("EditForm");
     editForm.style.display = "inline";
 
@@ -88,7 +88,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td>" + serverPort + "</td>" +
             "<td>" + lastConnection + "</td>" +
             "<td>" + encryptionKey + "</td>" +
-            "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Edit</button></td>" +
+            "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditDevicesTableField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Edit</button></td>" +
             "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/RemoveDevice?name=" + name + "\';\">Remove</button></td>");
 
         tbody.appendChild(row);
@@ -97,7 +97,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
     devicesTable.appendChild(tbody);
 }
 
-
+/*
 function loadDevicesTable() {
     createTableHeader();
 
@@ -133,3 +133,4 @@ function newConnection() {
     loadDevicesJSONtoTable(result);
 
 }
+*/
