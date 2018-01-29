@@ -28,8 +28,7 @@ public class GetEncryptionKey extends HttpServlet {
 
     }
 
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession httpSession = request.getSession();
         Session session = (Session) httpSession.getAttribute("session");
         if (session == null) {
@@ -41,6 +40,14 @@ public class GetEncryptionKey extends HttpServlet {
                 request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
         }
+        return session;
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession httpSession = request.getSession();
+        Session session = getServerSession(request, response);
+
 
         try {
             String name = request.getParameter("id");
@@ -67,7 +74,7 @@ public class GetEncryptionKey extends HttpServlet {
         }
     }
 
-
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }

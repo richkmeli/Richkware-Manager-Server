@@ -34,7 +34,7 @@ public class DevicesList extends HttpServlet {
         super();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession httpSession = request.getSession();
         Session session = (Session) httpSession.getAttribute("session");
         if (session == null) {
@@ -46,7 +46,13 @@ public class DevicesList extends HttpServlet {
                 request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
         }
+        return session;
+    }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession httpSession = request.getSession();
+        Session session = getServerSession(request, response);
 
         try {
 
@@ -102,23 +108,57 @@ public class DevicesList extends HttpServlet {
         }
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doPut(req, resp);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doDelete(req, resp);
+
+        HttpSession httpSession = req.getSession();
+        Session session = getServerSession(req, resp);
+
+        try {
+
+            String user = session.getUser();
+            // Authentication
+            if (user != null) {
+                // TODO togliere tutti i dispositivi di un un utente
+            } else {
+                // non loggato
+                // TODO rimanda da qualche parte perche c'è errore
+                httpSession.setAttribute("error", "non loggato");
+                req.getRequestDispatcher("login.html").forward(req, resp);
+            }
+        } catch (Exception e) {
+            // redirect to the JSP that handles errors
+            httpSession.setAttribute("error", e);
+            req.getRequestDispatcher("JSP/error.jsp").forward(req, resp);
+        }
+
     }
 
     private String GenerateDevicesListJSON(Session session) throws ModelException {
         DatabaseManager databaseManager = session.getDatabaseManager();
         List<Device> devicesList = null;
 
-        if(session.isAdmin()){
+        if (session.isAdmin()) {
             // if the user is an Admin, it gets the list of all devices
             devicesList = databaseManager.refreshDevice();
 
-        }else{
+        } else {
             devicesList = databaseManager.refreshDevice(session.getUser());
         }
 
-        Type type = new TypeToken<List<Device>>(){}.getType();
+        Type type = new TypeToken<List<Device>>() {
+        }.getType();
         Gson gson = new Gson();
 
         // oggetto -> gson
@@ -127,7 +167,7 @@ public class DevicesList extends HttpServlet {
         /*String devicesListJSON = "[ ";
         int index = 0;
 
-        for (Device device : devicesList) {
+        for (device device : devicesList) {
             String deviceJSON = *//*"'" + index + "' : {"*//* "{"
                     + "'name' : '" + device.getName() + "', "
                     + "'IP' : '" + device.getIP() + "', "
@@ -162,7 +202,8 @@ public class DevicesList extends HttpServlet {
 
 
 
-/*try {
+/* CON FASI
+try {
             String out = null;
 
             // DevicesList ? encryption = true/false & phase = 1,2,3,... & kpub = ...

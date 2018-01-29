@@ -21,9 +21,9 @@ public class Session {
         try {
             databaseManager.addUser(new User("richk@i.it", "00000000", true));
             databaseManager.addUser(new User("er@fv.it", "00000000", false));
-            databaseManager.addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon","richk@i.it"));
-            databaseManager.addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon","richk@i.it"));
-            databaseManager.addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon","er@fv.it"));
+            databaseManager.addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
+            databaseManager.addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
+            databaseManager.addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it"));
             databaseManager.addUser(new User("richk@i.it", "00000000", true));
         } catch (ModelException e) {
         }

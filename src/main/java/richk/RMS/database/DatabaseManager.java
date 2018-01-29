@@ -196,7 +196,7 @@ public class DatabaseManager implements Model {
                         resultSet.getString("EncryptionKey"),
                         resultSet.getString("UserAssociated"));
                 // add to the list the devices of the relative user.
-                if(user.compareTo(resultSet.getString("UserAssociated"))==0){
+                if (user.compareTo(resultSet.getString("UserAssociated")) == 0) {
                     deviceList.add(tmp);
                 }
             }
@@ -357,7 +357,7 @@ public class DatabaseManager implements Model {
             preparedStatement = connection.prepareStatement("INSERT INTO " + authTableDbName + " (email, pass, isAdmin) VALUES (?,?,?)");
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, hash);
-            preparedStatement.setBoolean(3,user.isAdmin());
+            preparedStatement.setBoolean(3, user.isAdmin());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {

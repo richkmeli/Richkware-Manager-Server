@@ -21,7 +21,7 @@ function loadDevicesTable() {
                 loadDevicesJSONtoTable(deviceJSON);
             }
 
-        },"json"/*, dataType*/)
+        }, "json"/*, dataType*/)
             .done(function () {
                 //alert("second success");
             })

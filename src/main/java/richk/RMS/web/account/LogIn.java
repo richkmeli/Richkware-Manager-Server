@@ -19,7 +19,7 @@ public class LogIn extends HttpServlet {
         super();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession httpSession = request.getSession();
         Session session = (Session) httpSession.getAttribute("session");
         if (session == null) {
@@ -31,6 +31,14 @@ public class LogIn extends HttpServlet {
                 request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
         }
+        return session;
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession httpSession = request.getSession();
+        Session session = getServerSession(request, response);
+
 
         try {
             String email = request.getParameter("email");
@@ -40,7 +48,7 @@ public class LogIn extends HttpServlet {
                 if (session.getDatabaseManager().isUserPresent(email)) {
                     if (pass != null) {
                         Boolean isAdmin = session.getDatabaseManager().isAdmin(email);
-                        if (session.getDatabaseManager().checkPassword(email,pass)) {
+                        if (session.getDatabaseManager().checkPassword(email, pass)) {
                             // set userID into the session
                             session.setUser(email);
                             session.setAdmin(isAdmin);
@@ -83,6 +91,7 @@ public class LogIn extends HttpServlet {
 
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.doGet(request, response);
     }

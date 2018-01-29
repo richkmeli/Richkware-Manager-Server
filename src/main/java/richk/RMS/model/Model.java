@@ -35,4 +35,4 @@ public interface Model {
 
     public boolean isAdmin(String email) throws ModelException;
 
-    }
+}

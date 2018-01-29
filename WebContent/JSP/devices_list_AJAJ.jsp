@@ -43,7 +43,7 @@
 
                     <td><input id = "submit"
                             type = "submit"
-                            value = "Add Device">
+                            value = "Add device">
                   </tr>
               </table>
               </form>

@@ -21,7 +21,7 @@ function loadUsersTable() {
                 loadUsersJSONtoTable(userJSON);
             }
 
-        },"json"/*, dataType*/)
+        }, "json"/*, dataType*/)
             .done(function () {
                 //alert("second success");
             })

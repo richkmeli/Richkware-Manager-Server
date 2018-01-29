@@ -22,7 +22,7 @@ public class SignUp extends HttpServlet {
         super();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession httpSession = request.getSession();
         Session session = (Session) httpSession.getAttribute("session");
         if (session == null) {
@@ -34,12 +34,19 @@ public class SignUp extends HttpServlet {
                 request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
         }
+        return session;
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession httpSession = request.getSession();
+        Session session = getServerSession(request, response);
 
         try {
             String email = request.getParameter("email");
             String pass = request.getParameter("password");
-        //    String name = request.getParameter("name");
-        //    String lastname = request.getParameter("lastname");
+            //    String name = request.getParameter("name");
+            //    String lastname = request.getParameter("lastname");
 
 
             if (email != null) {
@@ -50,7 +57,7 @@ public class SignUp extends HttpServlet {
                     if (pass != null) {
                         if (pass.length() >= 8) {
 
-                            session.getDatabaseManager().addUser(new User(email, pass,false));
+                            session.getDatabaseManager().addUser(new User(email, pass, false));
                             // set userID into the session
                             session.setUser(email);
 
