@@ -47,13 +47,13 @@ public class DatabaseManager implements Model {
         try {
             schemaDbName = "RichkwareMS";
 
-            CreateSchema();
+            createSchema();
             dbUrl += schemaDbName;
 
 
-            tableDbName = schemaDbName + ".person";
+            tableDbName = schemaDbName + ".device";
             authTableDbName = schemaDbName + ".user";
-            CreateTables();
+            createTables();
 
 //            CreateDeviceSchema();
 //            dbUrl += schemaDbName;
@@ -76,7 +76,7 @@ public class DatabaseManager implements Model {
             resultSet.close();
         } catch (SQLException e) {
             throw new DatabaseException(e);
-        } catch (Exception e1) {        // null value of ResultSet in AddDevice, RemoveDevice...
+        } catch (Exception e1) {        // null value of ResultSet in addDevice, removeDevice...
         }
         try {
             preparedStatement.close();
@@ -91,7 +91,7 @@ public class DatabaseManager implements Model {
 
     }
 
-    public boolean CreateSchema() throws ModelException {
+    public boolean createSchema() throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -109,29 +109,31 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    public boolean CreateTables() throws ModelException {
+    public boolean createTables() throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+
+        String authTableSQL = "CREATE TABLE " + authTableDbName + "(" +
+                "email VARCHAR(50) NOT NULL PRIMARY KEY," +
+                "pass VARCHAR(64) NOT NULL," +
+                "isAdmin BOOLEAN NOT NULL DEFAULT 0" +
+                ")";
 
         String tableSQL = "CREATE TABLE " + tableDbName + "(" +
                 "Name VARCHAR(50) NOT NULL PRIMARY KEY," +
                 "IP VARCHAR(25) NOT NULL," +
                 "ServerPort VARCHAR(10)," +
                 "LastConnection VARCHAR(25)," +
-                "EncryptionKey VARCHAR(32)" +
-                ")";
-
-        String authTableSQL = "CREATE TABLE " + authTableDbName + "(" +
-                "email VARCHAR(50) NOT NULL PRIMARY KEY," +
-                "pass VARCHAR(64) NOT NULL" +
+                "EncryptionKey VARCHAR(32)," +
+                "UserAssociated VARCHAR(50) REFERENCES user(email)" +
                 ")";
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement(tableSQL);
+            preparedStatement = connection.prepareStatement(authTableSQL);
             preparedStatement.executeUpdate();
 
-            preparedStatement = connection.prepareStatement(authTableSQL);
+            preparedStatement = connection.prepareStatement(tableSQL);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -142,7 +144,7 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    public List<Device> RefreshDevice() throws ModelException {
+    public List<Device> refreshDevice() throws ModelException {
         List<Device> deviceList = new ArrayList<Device>();
 
         Connection connection = null;
@@ -160,7 +162,8 @@ public class DatabaseManager implements Model {
                         resultSet.getString("IP"),
                         resultSet.getString("ServerPort"),
                         resultSet.getString("LastConnection"),
-                        resultSet.getString("EncryptionKey"));
+                        resultSet.getString("EncryptionKey"),
+                        resultSet.getString("UserAssociated"));
                 deviceList.add(tmp);
             }
         } catch (SQLException e) {
@@ -171,18 +174,81 @@ public class DatabaseManager implements Model {
         return deviceList;
     }
 
-    public boolean AddDevice(Device device) throws ModelException {
+
+    public List<Device> refreshDevice(String user) throws ModelException {
+        List<Device> deviceList = new ArrayList<Device>();
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + tableDbName);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Device tmp = new Device(
+                        resultSet.getString("Name"),
+                        resultSet.getString("IP"),
+                        resultSet.getString("ServerPort"),
+                        resultSet.getString("LastConnection"),
+                        resultSet.getString("EncryptionKey"),
+                        resultSet.getString("UserAssociated"));
+                // add to the list the devices of the relative user.
+                if(user.compareTo(resultSet.getString("UserAssociated"))==0){
+                    deviceList.add(tmp);
+                }
+            }
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, resultSet);
+            throw new ModelException(e);
+        }
+        disconnect(connection, preparedStatement, resultSet);
+        return deviceList;
+    }
+
+
+    public List<User> refreshUser() throws ModelException {
+        List<User> userList = new ArrayList<User>();
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + authTableDbName);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                User tmp = new User(
+                        resultSet.getString("email"),
+                        resultSet.getString("pass"),
+                        resultSet.getBoolean("isAdmin"));
+                userList.add(tmp);
+            }
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, resultSet);
+            throw new ModelException(e);
+        }
+        disconnect(connection, preparedStatement, resultSet);
+        return userList;
+    }
+
+    public boolean addDevice(Device device) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("INSERT INTO " + tableDbName + " (name, ip, serverport, lastconnection, encryptionkey) VALUES (?,?,?,?,?)");
+            preparedStatement = connection.prepareStatement("INSERT INTO " + tableDbName + " (name, ip, serverport, lastconnection, encryptionkey, userAssociated) VALUES (?,?,?,?,?,?)");
             preparedStatement.setString(1, device.getName());
             preparedStatement.setString(2, device.getIP());
             preparedStatement.setString(3, device.getServerPort());
             preparedStatement.setString(4, device.getLastConnection());
             preparedStatement.setString(5, device.getEncryptionKey());
+            preparedStatement.setString(6, device.getUserAssociated());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
@@ -193,7 +259,7 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    public boolean EditDevice(Device device) throws ModelException {
+    public boolean editDevice(Device device) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -215,7 +281,7 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    public Device GetDevice(String name) throws ModelException {
+    public Device getDevice(String name) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -228,7 +294,7 @@ public class DatabaseManager implements Model {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next())
-                device = new Device(resultSet.getString("Name"), resultSet.getString("IP"), resultSet.getString("ServerPort"), resultSet.getString("LastConnection"), resultSet.getString("EncryptionKey"));
+                device = new Device(resultSet.getString("Name"), resultSet.getString("IP"), resultSet.getString("ServerPort"), resultSet.getString("LastConnection"), resultSet.getString("EncryptionKey"), resultSet.getString("UserAssociated"));
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, resultSet);
         }
@@ -237,7 +303,7 @@ public class DatabaseManager implements Model {
     }
 
 
-    public boolean RemoveDevice(String name) throws ModelException {
+    public boolean removeDevice(String name) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -255,7 +321,7 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    public String GetEncryptionKey(String name) throws ModelException {
+    public String getEncryptionKey(String name) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -279,7 +345,7 @@ public class DatabaseManager implements Model {
     }
 
 
-    public boolean AddUser(User user) throws ModelException {
+    public boolean addUser(User user) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -288,9 +354,10 @@ public class DatabaseManager implements Model {
 
             String hash = Crypto.HashSHA256(user.getPassword());
 
-            preparedStatement = connection.prepareStatement("INSERT INTO " + authTableDbName + " (email, pass) VALUES (?,?)");
+            preparedStatement = connection.prepareStatement("INSERT INTO " + authTableDbName + " (email, pass, isAdmin) VALUES (?,?,?)");
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, hash);
+            preparedStatement.setBoolean(3,user.isAdmin());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -302,7 +369,7 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    public boolean IsUserPresent(String email) throws ModelException {
+    public boolean isUserPresent(String email) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -325,15 +392,15 @@ public class DatabaseManager implements Model {
         return isPresent;
     }
 
-    public boolean EditPassword(User user) throws ModelException {
+    public boolean editPassword(String email, String pass) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             connection = connect();
             preparedStatement = connection.prepareStatement("UPDATE " + authTableDbName + " SET pass = ? WHERE email = ?");
-            preparedStatement.setString(1, user.getPassword());
-            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, pass);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
@@ -344,7 +411,27 @@ public class DatabaseManager implements Model {
         return true;
     }
 
-    public boolean CheckPassword(User user) throws ModelException {
+    public boolean editAdmin(String email, Boolean isAdmin) throws ModelException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("UPDATE " + authTableDbName + " SET isAdmin = ? WHERE email = ?");
+            preparedStatement.setBoolean(1, isAdmin);
+            preparedStatement.setString(2, email);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, null);
+            throw new ModelException(e);
+            //return false;
+        }
+        disconnect(connection, preparedStatement, null);
+        return true;
+    }
+
+
+    public boolean checkPassword(String email, String pass) throws ModelException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -353,10 +440,10 @@ public class DatabaseManager implements Model {
         try {
             connection = connect();
             preparedStatement = connection.prepareStatement("SELECT * FROM " + authTableDbName + " WHERE email = ?");
-            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(1, email);
             resultSet = preparedStatement.executeQuery();
 
-            String hash = Crypto.HashSHA256(user.getPassword());
+            String hash = Crypto.HashSHA256(pass);
 
             if (resultSet.next()) {
                 if (resultSet.getString("pass").compareTo(hash) == 0) {
@@ -370,6 +457,32 @@ public class DatabaseManager implements Model {
         }
         disconnect(connection, preparedStatement, resultSet);
         return isPass;
+    }
+
+    public boolean isAdmin(String email) throws ModelException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        boolean isAdmin = false;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + authTableDbName + " WHERE email = ?");
+            preparedStatement.setString(1, email);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                if (resultSet.getBoolean("isAdmin")) {
+                    isAdmin = true;
+                }
+
+            }
+
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, resultSet);
+        }
+        disconnect(connection, preparedStatement, resultSet);
+        return isAdmin;
     }
 
 }

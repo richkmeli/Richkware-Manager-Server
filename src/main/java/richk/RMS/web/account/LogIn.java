@@ -2,7 +2,6 @@ package richk.RMS.web.account;
 
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
-import richk.RMS.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,12 +37,13 @@ public class LogIn extends HttpServlet {
             String pass = request.getParameter("password");
 
             if (email != null) {
-                if (session.getDatabaseManager().IsUserPresent(email)) {
+                if (session.getDatabaseManager().isUserPresent(email)) {
                     if (pass != null) {
-
-                        if (session.getDatabaseManager().CheckPassword(new User(email, pass))) {
-                            // metti persona nella sessione
-//                            session.setPerson(session.getDatabaseManager().GetPerson(email));
+                        Boolean isAdmin = session.getDatabaseManager().isAdmin(email);
+                        if (session.getDatabaseManager().checkPassword(email,pass)) {
+                            // set userID into the session
+                            session.setUser(email);
+                            session.setAdmin(isAdmin);
 
                             //httpSession.setAttribute("emailUser", email);
                             response.sendRedirect("devices.html");

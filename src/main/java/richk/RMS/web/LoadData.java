@@ -50,7 +50,7 @@ public class LoadData extends HttpServlet {
 
             // check in the DB if there is an entry with that name
             DatabaseManager db = session.getDatabaseManager();
-            Device oldDevice = db.GetDevice(name);
+            Device oldDevice = db.getDevice(name);
 
             // if this entry exists, then it's used to decrypt the encryption key in the DB
             String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
@@ -65,20 +65,24 @@ public class LoadData extends HttpServlet {
 
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
+            //TODO: impostare in richkware che carica anche l'email dell'account associato
+            String userAssociated = "email";
+
             Device newDevice = new Device(
                     name,
                     request.getRemoteAddr(),
                     serverPort,
                     timeStamp,
-                    encryptionKey);
+                    encryptionKey,
+                    userAssociated);
 
 
             if (oldDevice == null) {
-                db.AddDevice(newDevice);
+                db.addDevice(newDevice);
             } else {
                 // do not change Encryption Key
                 newDevice.setEncryptionKey(oldDevice.getEncryptionKey());
-                db.EditDevice(newDevice);
+                db.editDevice(newDevice);
             }
 
             request.getRequestDispatcher("JSP/devices_list_AJAJ.jsp").forward(request, response);

@@ -8,10 +8,8 @@ import richk.RMS.database.DatabaseManager;
 import richk.RMS.model.Device;
 import richk.RMS.model.ModelException;
 import richk.RMS.model.User;
-import richk.RMS.util.Crypto;
 import richk.RMS.util.KeyExchangePayload;
 
-import javax.crypto.SecretKey;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,17 +19,16 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.security.KeyPair;
 import java.util.List;
 
 /**
  * Servlet implementation class DevicesListServlet
  */
-@WebServlet("/DevicesListAJAJ")
-public class DevicesListAJAJ extends HttpServlet {
+@WebServlet("/UsersList")
+public class UsersList extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public DevicesListAJAJ() {
+    public UsersList() {
         super();
     }
 
@@ -48,53 +45,37 @@ public class DevicesListAJAJ extends HttpServlet {
             }
         }
 
+
         try {
+
             String out = null;
 
-    //        User user = session.getUser();
+            String user = session.getUser();
             // Authentication
-    //        if (user != null) {
-                // DevicesListAJAJ ? encryption = true/false & phase = 1,2,3,... & kpub = ...
-                //                 |                         |                   |            |
-                if (request.getParameterMap().containsKey("encryption")) {
-                    String encryption = request.getParameter("encryption");
-                    if (encryption.compareTo("true") == 0) {
-                        // encryption enabled
-                        String kpubC = null;
-                        if (request.getParameterMap().containsKey("Kpub")) {
-                            kpubC = request.getParameter("Kpub");
-                        }
-                        // generation of public e private key of server
-                        KeyPair keyPair = Crypto.GetGeneratedKeyPairRSA();
+            if (user != null) {
 
-                        // [enc_(KpubC)(AESKey) , sign_(KprivS)(AESKey) , KpubS]
-                        List<Object> res = Crypto.KeyExchangeAESRSA(keyPair, kpubC);
-                        KeyExchangePayload keyExchangePayload = (KeyExchangePayload) res.get(0);
-                        SecretKey AESsecretKey = (SecretKey) res.get(1);
-                        // encrypt data (devices List) with AES secret key
-                        out = Crypto.EncryptAES(GenerateDevicesListJSON(session), AESsecretKey);
-                        // add data to the object
-                        keyExchangePayload.setData(out);
-
-                        out = GenerateKeyExchangePayloadJSON(keyExchangePayload);
-                    }
-                } else {
-                    // encryption disabled
+                if(session.isAdmin()){
                     out = GenerateDevicesListJSON(session);
+
+                    // servlet response
+                    PrintWriter printWriter = response.getWriter();
+                    printWriter.println(out);
+                    printWriter.flush();
+                    printWriter.close();
+                } else {
+                    // non ha privilegi
+                    // TODO rimanda da qualche parte perche c'è errore
+                    httpSession.setAttribute("error", "non ha privilegi");
+                    request.getRequestDispatcher("login.html").forward(request, response);
                 }
 
-                // servlet response
-                PrintWriter printWriter = response.getWriter();
-                printWriter.println(out);
-                printWriter.flush();
-                printWriter.close();
-   /*         } else {
+            } else {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "non loggato");
-                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+                request.getRequestDispatcher("login.html").forward(request, response);
             }
-    */    } catch (Exception e) {
+        } catch (Exception e) {
             // redirect to the JSP that handles errors
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
@@ -107,21 +88,18 @@ public class DevicesListAJAJ extends HttpServlet {
 
     private String GenerateDevicesListJSON(Session session) throws ModelException {
         DatabaseManager databaseManager = session.getDatabaseManager();
-        List<Device> devicesList = databaseManager.RefreshDevice();
+        List<User> userList = databaseManager.refreshUser();
 
-        Type type = new TypeToken<List<Device>>(){}.getType();
+        Type type = new TypeToken<List<User>>(){}.getType();
         Gson gson = new Gson();
 
-        devicesList.add(new Device("rick","43.34.43.34","40","20-10-18","ckeroivervioeon"));
-        devicesList.add(new Device("rick1","43.34.43.34","40","20-10-18","ckeroivervioeon"));
-        devicesList.add(new Device("rick2","43.34.43.34","40","20-10-18","ckeroivervioeon"));
         // oggetto -> gson
-        String devicesListJSON = gson.toJson(devicesList, type);
+        String usersListJSON = gson.toJson(userList, type);
 
-        /*String devicesListJSON = "[ ";
+        /*String usersListJSON = "[ ";
         int index = 0;
 
-        for (Device device : devicesList) {
+        for (Device device : userList) {
             String deviceJSON = *//*"'" + index + "' : {"*//* "{"
                     + "'name' : '" + device.getName() + "', "
                     + "'IP' : '" + device.getIP() + "', "
@@ -129,13 +107,13 @@ public class DevicesListAJAJ extends HttpServlet {
                     + "'lastConnection' : '" + device.getLastConnection() + "', "
                     + "'encryptionKey' : '" + device.getEncryptionKey() + "'}";
             index++;
-            devicesListJSON += deviceJSON;
-            if (index < devicesList.size())
-                devicesListJSON += ", ";
+            usersListJSON += deviceJSON;
+            if (index < userList.size())
+                usersListJSON += ", ";
         }
-        devicesListJSON += " ]";*/
+        usersListJSON += " ]";*/
 
-        return devicesListJSON;
+        return usersListJSON;
     }
 
     private String GenerateKeyExchangePayloadJSON(KeyExchangePayload keyExchangePayload) throws ModelException {
@@ -159,7 +137,7 @@ public class DevicesListAJAJ extends HttpServlet {
 /*try {
             String out = null;
 
-            // DevicesListAJAJ ? encryption = true/false & phase = 1,2,3,... & kpub = ...
+            // DevicesList ? encryption = true/false & phase = 1,2,3,... & kpub = ...
             //                 |                         |                   |            |
             if (request.getParameterMap().containsKey("encryption")) {
                 String encryption = request.getParameter("encryption");

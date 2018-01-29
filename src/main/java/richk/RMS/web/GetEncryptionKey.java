@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.util.ResourceBundle;
 
 
-@WebServlet("/GetEncryptionKey")
+@WebServlet("/getEncryptionKey")
 public class GetEncryptionKey extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final int keyLength = 32;
@@ -47,7 +47,7 @@ public class GetEncryptionKey extends HttpServlet {
             name = Crypto.DecryptRC4(name, password);
 
             DatabaseManager db = session.getDatabaseManager();
-            String encryptionKey = db.GetEncryptionKey(name);
+            String encryptionKey = db.getEncryptionKey(name);
             if (encryptionKey.isEmpty()) {
                 encryptionKey = "Error";
             }

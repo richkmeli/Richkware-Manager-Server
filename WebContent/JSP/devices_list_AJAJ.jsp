@@ -19,7 +19,7 @@
 
 </head>
 
-<body style="background-color: white" onload="loadDevicesTable()">
+<body style="background-color: white" onload="loadUsersTable()">
 
 <div class="jumbotron text-center">
     <h1>List of Devices</h1>
@@ -28,11 +28,11 @@
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-body">
-            <button type="button" class="btn btn-default btn-sm pull-right" onclick="loadDevicesTable()">
+            <button type="button" class="btn btn-default btn-sm pull-right" onclick="loadUsersTable()">
                 <span class="glyphicon glyphicon-refresh"></span>
             </button>
             <!-- <form id = "AddForm"
-              action="AddDevice"
+              action="addDevice"
               method="post">
               <table style="background-color: green">
                   <tr>

@@ -1,7 +1,8 @@
-package richk.RMS.web.account;
+package richk.RMS.web;
 
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
+import richk.RMS.model.ModelException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,11 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet({"/LogOut"})
-public class LogOut extends HttpServlet {
+@WebServlet("/DevicesListSync")
+public class DevicesListSync extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public LogOut() {
+
+    public DevicesListSync() {
         super();
     }
 
@@ -33,16 +35,10 @@ public class LogOut extends HttpServlet {
         }
 
         try {
+            httpSession.setAttribute("device", session.getDatabaseManager().refreshDevice());
+            request.getRequestDispatcher("JSP/device_list.jsp").forward(request, response);
 
-            if (session != null) {
-                // remove user from the session
-                session.removeUser();
-            }
-            httpSession.invalidate();
-
-            response.sendRedirect("login.html");
-
-        } catch (Exception e) {
+        } catch (ModelException e) {
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
         }
@@ -50,6 +46,7 @@ public class LogOut extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.doGet(request, response);
+        doGet(request, response);
     }
+
 }

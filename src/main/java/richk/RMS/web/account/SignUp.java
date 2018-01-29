@@ -44,29 +44,22 @@ public class SignUp extends HttpServlet {
 
             if (email != null) {
                 // se l'email è già presente nel DB
-                if (session.getDatabaseManager().IsUserPresent(email)) {
+                if (session.getDatabaseManager().isUserPresent(email)) {
                     // TODO password gia presente vuoi recuperarla? guarda se html o popup js
                 } else {
                     if (pass != null) {
                         if (pass.length() >= 8) {
 
-                            // inserisce in entrambi i db
-                            session.getDatabaseManager().AddUser(new User(email, pass));
-                            // se sono stati messi mette nel DB anche nome e cognome
-//                            if (name != null && lastname != null) {
-//                                session.getDatabaseManager().EditPerson(new Person(email, name, lastname, null, null, null, null, null, null, null, null, null));
-//                            }
-
-                            // metti persona nella sessione
-//                            session.setPerson(session.getDatabaseManager().GetPerson(email));
+                            session.getDatabaseManager().addUser(new User(email, pass,false));
+                            // set userID into the session
+                            session.setUser(email);
 
                             //httpSession.setAttribute("emailUser", email);
                             //response.sendRedirect("controlPanel.html");
 
                             //response.setHeader("Location", "/controlPanel.html");
 
-                            response.sendRedirect("controlPanel.html");
-
+                            response.sendRedirect("devices.html");
                             //request.getRequestDispatcher("controlPanel.html").forward(request, response);
                         } else {
                             // pass corta

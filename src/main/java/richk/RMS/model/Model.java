@@ -3,27 +3,36 @@ package richk.RMS.model;
 import java.util.List;
 
 public interface Model {
-    public boolean CreateSchema() throws ModelException;
+    public boolean createSchema() throws ModelException;
 
-    public boolean CreateTables() throws ModelException;
+    public boolean createTables() throws ModelException;
 
-    public List<Device> RefreshDevice() throws ModelException;
+    public List<Device> refreshDevice() throws ModelException;
 
-    public boolean AddDevice(Device device) throws ModelException;
+    public List<Device> refreshDevice(String user) throws ModelException;
 
-    public boolean EditDevice(Device device) throws ModelException;
+    public List<User> refreshUser() throws ModelException;
 
-    public boolean RemoveDevice(String string) throws ModelException;
+    public boolean addDevice(Device device) throws ModelException;
 
-    public Device GetDevice(String name) throws ModelException;
+    public boolean editDevice(Device device) throws ModelException;
 
-    public String GetEncryptionKey(String name) throws ModelException;
+    public boolean removeDevice(String string) throws ModelException;
 
-    public boolean AddUser(User user) throws ModelException;
+    public Device getDevice(String name) throws ModelException;
 
-    public boolean IsUserPresent(String email) throws ModelException;
+    public String getEncryptionKey(String name) throws ModelException;
 
-    public boolean EditPassword(User user) throws ModelException;
+    public boolean addUser(User user) throws ModelException;
 
-    public boolean CheckPassword(User user) throws ModelException;
-}
+    public boolean isUserPresent(String email) throws ModelException;
+
+    public boolean editPassword(String email, String pass) throws ModelException;
+
+    public boolean editAdmin(String email, Boolean isAdmin) throws ModelException;
+
+    public boolean checkPassword(String email, String pass) throws ModelException;
+
+    public boolean isAdmin(String email) throws ModelException;
+
+    }

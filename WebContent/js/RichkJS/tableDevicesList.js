@@ -6,14 +6,33 @@ function loadDevicesTable() {
     createTableHeader();
 
     $(document).ready(function () {
-        $.get("DevicesListAJAJ", function (data, status) {
+        $.get("DevicesList", /*data,*/ function (data, status) {
             var deviceJSON = data;
             //    alert (deviceJSON);
             //device = JSON.parse(DeviceJSON);
             //document.getElementById("Email").innerHTML = Person.email;
 
-            loadDevicesJSONtoTable(deviceJSON);
-        });
+            //status : "success", "notmodified", "error", "timeout", or "parsererror"
+            if (status === "error" || status === "timeout" || status === "parsererror") {
+                alert("You are not logged in. You are being redirected to the Login Page");
+                window.location.href = "login.html";
+            } else {
+                //if you set "json" as dataType, it's already parsed, so it's a JSON object
+                loadDevicesJSONtoTable(deviceJSON);
+            }
+
+        },"json"/*, dataType*/)
+            .done(function () {
+                //alert("second success");
+            })
+            .fail(function () {
+                //alert( "error" );
+                alert("You are not logged in. You are being redirected to the Login Page");
+                window.location.href = "login.html";
+            })
+            .always(function () {
+                //alert("finished");
+            });
     });
 
     /* sc.onload = function () {
@@ -23,7 +42,7 @@ function loadDevicesTable() {
      */
 }
 
-
+/*
 function EditDevicesTableField(name, IP, serverPort, lastConnection) {
     var editForm = document.getElementById("EditForm");
     editForm.style.display = "inline";
@@ -42,7 +61,7 @@ function EditDevicesTableField(name, IP, serverPort, lastConnection) {
     document.getElementById("encryptionKey_OE").value = lastConnection;
     document.getElementById("encryptionKey_E").value = lastConnection;
 
-}
+}*/
 
 function createTableHeader() {
     var devicesTable = document.getElementById("devicesTable");
@@ -55,7 +74,8 @@ function createTableHeader() {
         "<th>IP</th>" +
         "<th>Server Port</th>" +
         "<th>Last Connection</th>" +
-        "<th>Encryption Key</th>");
+        "<th>Encryption Key</th>" +
+        "<th>User Associated</th>");
 
     thead.appendChild(row);
     devicesTable.appendChild(thead);
@@ -63,8 +83,7 @@ function createTableHeader() {
 
 function loadDevicesJSONtoTable(devicesListJSON) {
 
-    var devicesList = jQuery.parseJSON(devicesListJSON);
-
+    var devicesList = devicesListJSON//jQuery.parseJSON(devicesListJSON);
 
     var tbody = document.createElement("tbody");
     //var index = 0;
@@ -79,6 +98,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         var serverPort = device["serverPort"];
         var lastConnection = device["lastConnection"];
         var encryptionKey = device["encryptionKey"];
+        var userAssociated = device["userAssociated"];
 
         var row = document.createElement("tr");
         row.innerHTML = (
@@ -88,6 +108,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td>" + serverPort + "</td>" +
             "<td>" + lastConnection + "</td>" +
             "<td>" + encryptionKey + "</td>" +
+            "<td>" + userAssociated + "</td>" +
             "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditDevicesTableField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Edit</button></td>" +
             "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/RemoveDevice?name=" + name + "\';\">Remove</button></td>");
 
@@ -98,7 +119,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
 }
 
 /*
-function loadDevicesTable() {
+function loadUsersTable() {
     createTableHeader();
 
     request = null;
@@ -110,7 +131,7 @@ function loadDevicesTable() {
         request = new ActiveXObject("Microsoft.XMLHTTP");
 
     request.onreadystatechange = newConnection;
-    request.open("GET", "/Richkware-Manager-Server/DevicesListAJAJ", true, null, null);
+    request.open("GET", "/Richkware-Manager-Server/DevicesList", true, null, null);
 
     request.send(null);
 }
@@ -130,7 +151,7 @@ function newConnection() {
     var result;
     eval("result = " + JSON);
 
-    loadDevicesJSONtoTable(result);
+    loadUsersJSONtoTable(result);
 
 }
 */
