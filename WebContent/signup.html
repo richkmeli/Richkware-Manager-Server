@@ -6,10 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <meta name="author" content="">
-    <title>RMS Sign Up
-        <Page></Page>
-    </title>
+    <meta name="author" content="Riccardo Melioli">
+    <title>RMS Sign Up</title>
+
     <!-- Bootstrap core CSS-->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom fonts for this template-->
@@ -19,7 +18,7 @@
 
     <!-- Bootstrap core JavaScript-->
     <script src="js/jquery/jquery.js"></script>
-    <script src="bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="js/jquery-easing/jquery.easing.min.js"></script>
 
@@ -52,7 +51,54 @@
     </script>
 </head>
 
-<body class="bg-dark">
+
+<body class="bg-dark" onclick="serUserNearBrand()">
+
+<nav class="navbar navbar-toggleable-md navbar-dark bg-faded">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="index.html">
+        RMS<span id="userNearBrand"></span>
+    </a>
+    <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="devices.html">Devices List</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="users.html">Users List</a>
+            </li>
+            <!--DISABLED<li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>-->
+        </ul>
+        <ul class="nav <!--justify-content-end-->">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <span class="fa fa-user-plus"></span> Sign Up <span class="sr-only">(current)</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="login.html">
+                    <span class="fa fa-sign-in"></span> Login
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Richkware-Manager-Server/LogOut">
+                    <span class="fa fa-sign-out"></span> Logout
+                </a>
+            </li>
+            <!--<a class="nav-link active" href="#">Active</a>
+             <a class="nav-link disabled" href="#">Disabled</a>-->
+            </li>
+        </ul>
+    </div>
+</nav>
+
 <div class="container">
     <div class="card card-register mx-auto mt-5">
         <div class="card-header" id="Registertitle"></div>

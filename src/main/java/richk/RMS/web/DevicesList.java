@@ -120,6 +120,7 @@ public class DevicesList extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //TODO quando il metodo è attivo, commenta il super
         super.doDelete(req, resp);
 
         HttpSession httpSession = req.getSession();

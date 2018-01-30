@@ -41,7 +41,10 @@ public class LogIn extends HttpServlet {
 
 
         try {
-            String email = request.getParameter("email");
+            // check if is not already logged
+            if (session.getUser() == null) {
+
+                String email = request.getParameter("email");
             String pass = request.getParameter("password");
 
             if (email != null) {
@@ -80,6 +83,12 @@ public class LogIn extends HttpServlet {
                 // mancano email o password
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "email null");
+                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+            }
+            }else{
+                // already logged
+                // TODO rimanda da qualche parte perche c'è errore
+                httpSession.setAttribute("error", "già loggato");
                 request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
 

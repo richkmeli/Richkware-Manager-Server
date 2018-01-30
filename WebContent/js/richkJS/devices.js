@@ -1,9 +1,13 @@
-/**
- * Created by Richk on 04-Apr-17.
- */
+import setUserNearBrand from "account.js";
+
+function main() {
+    serUserNearBrand();
+    createDevicesTableHeader();
+    loadDevicesTable();
+}
 
 function loadDevicesTable() {
-    createTableHeader();
+    createDevicesTableHeader();
 
     $(document).ready(function () {
         $.get("DevicesList", /*data,*/ function (data, status) {
@@ -63,7 +67,7 @@ function EditDevicesTableField(name, IP, serverPort, lastConnection) {
 
 }*/
 
-function createTableHeader() {
+function createDevicesTableHeader() {
     var devicesTable = document.getElementById("devicesTable");
     devicesTable.innerHTML = "";
 
@@ -101,6 +105,8 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         var userAssociated = device["userAssociated"];
 
         var row = document.createElement("tr");
+        row.id = "tableRow" + index;
+
         row.innerHTML = (
             //"<td>" + (index + 1) + "</td>" +
             "<td>" + name + "</td>" +
@@ -110,7 +116,9 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td>" + encryptionKey + "</td>" +
             "<td>" + userAssociated + "</td>" +
             "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditDevicesTableField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Edit</button></td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/RemoveDevice?name=" + name + "\';\">Remove</button></td>");
+            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteDevice('" + name + "','" + index + "')\">Remove</button></td>");
+
+        //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
 
         tbody.appendChild(row);
         //      index++
@@ -118,9 +126,19 @@ function loadDevicesJSONtoTable(devicesListJSON) {
     devicesTable.appendChild(tbody);
 }
 
+function deleteDevice(device, indexTableRow){
+    $.ajax({
+        url: '/Richkware-Manager-Server/device?name='+device,
+        type: 'DELETE',
+        success: function(result) {
+            $("#tableRow"+indexTableRow).remove();
+        }
+    });
+}
+
 /*
 function loadUsersTable() {
-    createTableHeader();
+    createDevicesTableHeader();
 
     request = null;
 

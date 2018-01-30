@@ -43,45 +43,54 @@ public class SignUp extends HttpServlet {
         Session session = getServerSession(request, response);
 
         try {
-            String email = request.getParameter("email");
-            String pass = request.getParameter("password");
-            //    String name = request.getParameter("name");
-            //    String lastname = request.getParameter("lastname");
+            // check if is not already logged
+            if (session.getUser() == null) {
+
+                String email = request.getParameter("email");
+                String pass = request.getParameter("password");
+                //    String name = request.getParameter("name");
+                //    String lastname = request.getParameter("lastname");
 
 
-            if (email != null) {
-                // se l'email è già presente nel DB
-                if (session.getDatabaseManager().isUserPresent(email)) {
-                    // TODO password gia presente vuoi recuperarla? guarda se html o popup js
-                } else {
-                    if (pass != null) {
-                        if (pass.length() >= 8) {
+                if (email != null) {
+                    // se l'email è già presente nel DB
+                    if (session.getDatabaseManager().isUserPresent(email)) {
+                        // TODO password gia presente vuoi recuperarla? guarda se html o popup js
+                    } else {
+                        if (pass != null) {
+                            if (pass.length() >= 8) {
 
-                            session.getDatabaseManager().addUser(new User(email, pass, false));
-                            // set userID into the session
-                            session.setUser(email);
+                                session.getDatabaseManager().addUser(new User(email, pass, false));
+                                // set userID into the session
+                                session.setUser(email);
 
-                            //httpSession.setAttribute("emailUser", email);
-                            //response.sendRedirect("controlPanel.html");
+                                //httpSession.setAttribute("emailUser", email);
+                                //response.sendRedirect("controlPanel.html");
 
-                            //response.setHeader("Location", "/controlPanel.html");
+                                //response.setHeader("Location", "/controlPanel.html");
 
-                            response.sendRedirect("devices.html");
-                            //request.getRequestDispatcher("controlPanel.html").forward(request, response);
+                                response.sendRedirect("devices.html");
+                                //request.getRequestDispatcher("controlPanel.html").forward(request, response);
+                            } else {
+                                // pass corta
+                                // TODO rimanda da qualche parte perche c'è errore
+                                httpSession.setAttribute("error", "pass corta");
+                                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+                            }
                         } else {
-                            // pass corta
+                            // mancano email o password
                             // TODO rimanda da qualche parte perche c'è errore
-                            httpSession.setAttribute("error", "pass corta");
+                            httpSession.setAttribute("error", "mancano email o password");
                             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
                         }
-                    } else {
-                        // mancano email o password
-                        // TODO rimanda da qualche parte perche c'è errore
-                        httpSession.setAttribute("error", "mancano email o password");
-                        request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
                     }
-                }
 
+                }
+            }else{
+                // already logged
+                // TODO rimanda da qualche parte perche c'è errore
+                httpSession.setAttribute("error", "già loggato");
+                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
 
 

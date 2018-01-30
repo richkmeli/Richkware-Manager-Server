@@ -5,9 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
 import richk.RMS.database.DatabaseManager;
-import richk.RMS.model.Device;
 import richk.RMS.model.ModelException;
-import richk.RMS.util.KeyExchangePayload;
+import richk.RMS.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,11 +23,11 @@ import java.util.List;
 /**
  * Servlet implementation class DevicesListServlet
  */
-@WebServlet("/device")
-public class device extends HttpServlet {
+@WebServlet("/user")
+public class user extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public device() {
+    public user() {
         super();
     }
 
@@ -59,33 +58,22 @@ public class device extends HttpServlet {
             String user = session.getUser();
             // Authentication
             if (user != null) {
-                if (request.getParameterMap().containsKey("name")) {
-                    String name = request.getParameter("name");
 
-                    Device device = session.getDatabaseManager().getDevice(name);
+                //if (session.isAdmin()) {
+                    out = GenerateUserListJSON(session);
 
-                    if(device.getUserAssociated().compareTo(session.getUser())==0 ||
-                            session.isAdmin()){
-                        out = GenerateDevicesListJSON(device);
-                    }else {
-                        // TODO rimanda da qualche parte perche c'è errore
-                        httpSession.setAttribute("error", "non hai i privilegi");
-                        request.getRequestDispatcher("login.html").forward(request, response);
-
-                    }
-
-
-                }else{
+                    // servlet response
+                    PrintWriter printWriter = response.getWriter();
+                    printWriter.println(out);
+                    printWriter.flush();
+                    printWriter.close();
+                /*} else {
+                    // non ha privilegi
                     // TODO rimanda da qualche parte perche c'è errore
-                    httpSession.setAttribute("error", "dispositivo non specificato");
+                    httpSession.setAttribute("error", "non ha privilegi");
                     request.getRequestDispatcher("login.html").forward(request, response);
-                }
+                }*/
 
-                // servlet response
-                PrintWriter printWriter = response.getWriter();
-                printWriter.println(out);
-                printWriter.flush();
-                printWriter.close();
             } else {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
@@ -126,9 +114,7 @@ public class device extends HttpServlet {
                 if (req.getParameterMap().containsKey("name")) {
                     String name = req.getParameter("name");
 
-                    Device device = session.getDatabaseManager().getDevice(name);
-
-                    if(device.getUserAssociated().compareTo(session.getUser())==0 ||
+                    if(name.compareTo(session.getUser())==0 ||
                             session.isAdmin()){
                         session.getDatabaseManager().removeDevice(name);
                         out = "deleted";
@@ -162,21 +148,18 @@ public class device extends HttpServlet {
 
     }
 
-    private String GenerateDevicesListJSON(Device device/*, Session session*/) throws ModelException {
-        //DatabaseManager databaseManager = session.getDatabaseManager();
-        List<Device> devicesList = new ArrayList<>();
+    private String GenerateUserListJSON(Session session) throws ModelException {
+        DatabaseManager databaseManager = session.getDatabaseManager();
+        List<User> userList = new ArrayList<>();//databaseManager.refreshUser();
+        userList.add(new User(session.getUser(),"hidden",session.isAdmin()));
 
-        devicesList.add(device);
-
-        Type type = new TypeToken<List<Device>>() {
+        Type type = new TypeToken<List<User>>() {
         }.getType();
         Gson gson = new Gson();
 
         // oggetto -> gson
-        String devicesListJSON = gson.toJson(devicesList, type);
+        String usersListJSON = gson.toJson(userList, type);
 
-        return devicesListJSON;
+        return usersListJSON;
     }
-
 }
-

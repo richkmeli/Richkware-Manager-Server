@@ -1,10 +1,12 @@
-/**
- * Created by Richk on 04-Apr-17.
- */
+import setUserNearBrand from "account.js";
+
+function main() {
+    setUserNearBrand();
+    createUsersTableHeader();
+    loadUsersTable();
+}
 
 function loadUsersTable() {
-    createTableHeader();
-
     $(document).ready(function () {
         $.get("UsersList", /*data,*/ function (data, status) {
             var userJSON = data;
@@ -63,7 +65,7 @@ function EditDevicesTableField(name, IP, serverPort, lastConnection) {
 
 }*/
 
-function createTableHeader() {
+function createUsersTableHeader() {
     var usersTable = document.getElementById("usersTable");
     usersTable.innerHTML = "";
 
@@ -95,16 +97,28 @@ function loadUsersJSONtoTable(usersListJSON) {
         var isAdmin = user.isAdmin;
 
         var row = document.createElement("tr");
+        row.id = "tableRow" + index;
+
         row.innerHTML = (
             //"<td>" + (index + 1) + "</td>" +
             "<td>" + email + "</td>" +
             "<td>" + password + "</td>" +
             "<td>" + isAdmin + "</td>" +
             "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditDevicesTableField('" + email + "','" + password + "','" + isAdmin + "')\">Edit</button></td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/RemoveDevice?email=" + email + "\';\">Remove</button></td>");
+            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteUser('" + name + "','" + index + "')\">Remove</button></td>");
 
         tbody.appendChild(row);
         //      index++
     });
     usersTable.appendChild(tbody);
+}
+
+function deleteUser(user, indexTableRow){
+    $.ajax({
+        url: '/Richkware-Manager-Server/user?name='+user,
+        type: 'DELETE',
+        success: function(result) {
+            $("#tableRow"+indexTableRow).remove();
+        }
+    });
 }
