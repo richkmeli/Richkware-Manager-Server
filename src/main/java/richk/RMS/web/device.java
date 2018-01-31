@@ -7,7 +7,9 @@ import richk.RMS.database.DatabaseException;
 import richk.RMS.database.DatabaseManager;
 import richk.RMS.model.Device;
 import richk.RMS.model.ModelException;
+import richk.RMS.util.Crypto;
 import richk.RMS.util.KeyExchangePayload;
+import richk.RMS.util.RandomStringGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,8 +20,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Servlet implementation class DevicesListServlet
@@ -27,9 +32,13 @@ import java.util.List;
 @WebServlet("/device")
 public class device extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final int keyLength = 32;
+    private String password;
+
 
     public device() {
         super();
+        password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
     }
 
     private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -106,7 +115,59 @@ public class device extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
+        //super.doPut(req, resp);
+        HttpSession httpSession = req.getSession();
+        Session session = getServerSession(req, resp);
+
+        try {
+            //String data
+            String name= req.getParameter("data0");
+            //String name = data.substring(1, data.indexOf(","));
+
+            // check in the DB if there is an entry with that name
+            DatabaseManager db = session.getDatabaseManager();
+            Device oldDevice = db.getDevice(name);
+
+            // if this entry exists, then it's used to decrypt the encryption key in the DB
+            String serverPort= req.getParameter("data1");
+            //String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
+            String userAssociated = req.getParameter("data2");
+
+            if (oldDevice == null) {
+                serverPort = Crypto.DecryptRC4(serverPort, password);
+                userAssociated = Crypto.DecryptRC4(userAssociated, password);
+            } else {
+                serverPort = Crypto.DecryptRC4(serverPort, oldDevice.getEncryptionKey());
+                userAssociated = Crypto.DecryptRC4(userAssociated, oldDevice.getEncryptionKey());
+            }
+
+            String encryptionKey = RandomStringGenerator.GenerateString(keyLength);
+
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+
+            Device newDevice = new Device(
+                    name,
+                    req.getRemoteAddr(),
+                    serverPort,
+                    timeStamp,
+                    encryptionKey,
+                    userAssociated);
+
+
+            if (oldDevice == null) {
+                db.addDevice(newDevice);
+            } else {
+                // do not change Encryption Key
+                newDevice.setEncryptionKey(oldDevice.getEncryptionKey());
+                db.editDevice(newDevice);
+            }
+
+            //req.getRequestDispatcher("index.html").forward(req, resp);
+
+        } catch (Exception e) {
+            httpSession.setAttribute("error", e);
+            req.getRequestDispatcher("JSP/error.jsp").forward(req, resp);
+        }
     }
 
     @Override

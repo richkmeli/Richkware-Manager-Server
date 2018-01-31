@@ -1,7 +1,6 @@
 
 function bodyOnLoad() {
     accountInformation();
-    createDevicesTableHeader();
     loadDevicesTable();
 }
 

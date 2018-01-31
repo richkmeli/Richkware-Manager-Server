@@ -1,4 +1,3 @@
-
 function accountInformation() {
 
     $(document).ready(function () {

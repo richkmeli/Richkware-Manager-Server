@@ -111,12 +111,12 @@ public class user extends HttpServlet {
             String user = session.getUser();
             // Authentication
             if (user != null) {
-                if (req.getParameterMap().containsKey("name")) {
-                    String name = req.getParameter("name");
+                if (req.getParameterMap().containsKey("email")) {
+                    String email = req.getParameter("email");
 
-                    if(name.compareTo(session.getUser())==0 ||
+                    if(email.compareTo(session.getUser())==0 ||
                             session.isAdmin()){
-                        session.getDatabaseManager().removeDevice(name);
+                        session.getDatabaseManager().removeUser(email);
                         out = "deleted";
                     }else {
                         // TODO rimanda da qualche parte perche c'è errore

@@ -1,7 +1,6 @@
 
 function bodyOnLoad() {
     accountInformation();
-    createUsersTableHeader();
     loadUsersTable();
 }
 
@@ -48,6 +47,8 @@ function accountInformation() {
 
 
 function loadUsersTable() {
+    createUsersTableHeader();
+
     $(document).ready(function () {
         $.get("UsersList", /*data,*/ function (data, status) {
             var userJSON = data;
@@ -146,7 +147,7 @@ function loadUsersJSONtoTable(usersListJSON) {
             "<td>" + password + "</td>" +
             "<td>" + isAdmin + "</td>" +
             "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditDevicesTableField('" + email + "','" + password + "','" + isAdmin + "')\">Edit</button></td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteUser('" + name + "','" + index + "')\">Remove</button></td>");
+            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteUser('" + email + "','" + index + "')\">Remove</button></td>");
 
         tbody.appendChild(row);
         //      index++
@@ -154,9 +155,9 @@ function loadUsersJSONtoTable(usersListJSON) {
     usersTable.appendChild(tbody);
 }
 
-function deleteUser(user, indexTableRow){
+function deleteUser(email, indexTableRow){
     $.ajax({
-        url: '/Richkware-Manager-Server/user?name='+user,
+        url: '/Richkware-Manager-Server/user?email='+email,
         type: 'DELETE',
         success: function(result) {
             $("#tableRow"+indexTableRow).remove();

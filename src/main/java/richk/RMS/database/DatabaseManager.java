@@ -265,12 +265,14 @@ public class DatabaseManager implements Model {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("UPDATE " + tableDbName + " SET ip = ?, serverport = ?, lastconnection = ?, encryptionkey = ? WHERE name = ?");
+            preparedStatement = connection.prepareStatement("UPDATE " + tableDbName + " SET ip = ?, serverport = ?, lastconnection = ?, encryptionkey = ?, userassociated = ? WHERE name = ?");
             preparedStatement.setString(1, device.getIP());
             preparedStatement.setString(2, device.getServerPort());
             preparedStatement.setString(3, device.getLastConnection());
             preparedStatement.setString(4, device.getEncryptionKey());
             preparedStatement.setString(5, device.getName());
+            preparedStatement.setString(6, device.getUserAssociated());
+
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
@@ -311,6 +313,24 @@ public class DatabaseManager implements Model {
             connection = connect();
             preparedStatement = connection.prepareStatement("DELETE FROM " + tableDbName + " WHERE name = ?");
             preparedStatement.setString(1, name);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, null);
+            throw new ModelException(e);
+            //return false;
+        }
+        disconnect(connection, preparedStatement, null);
+        return true;
+    }
+
+    public boolean removeUser(String email) throws ModelException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("DELETE FROM " + authTableDbName + " WHERE email = ?");
+            preparedStatement.setString(1, email);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);

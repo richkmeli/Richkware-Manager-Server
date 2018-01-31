@@ -25,6 +25,8 @@ public interface Model {
 
     public boolean addUser(User user) throws ModelException;
 
+    public boolean removeUser(String email) throws ModelException;
+
     public boolean isUserPresent(String email) throws ModelException;
 
     public boolean editPassword(String email, String pass) throws ModelException;
