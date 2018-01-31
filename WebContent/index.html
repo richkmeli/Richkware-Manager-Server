@@ -17,7 +17,8 @@
     <title>Richkware Manager Server</title>
 
 </head>
-<body class="bg-dark" onclick="serUserNearBrand()">
+
+<body class="bg-dark" onload="accountInformation()">
 
 <nav class="navbar navbar-toggleable-md navbar-dark bg-faded">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +35,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="devices.html">Devices List</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="usersNavBar" hidden="true">
                 <a class="nav-link" href="users.html">Users List</a>
             </li>
             <!--DISABLED<li class="nav-item">
@@ -42,18 +43,18 @@
             </li>-->
         </ul>
         <ul class="nav <!--justify-content-end-->">
-            <li class="nav-item">
-                <a class="nav-link" href="signup.html">
+            <li class="nav-item" id="signupNavBar">
+                <a class="nav-link" href="signup.html" >
                     <span class="fa fa-user-plus"></span> Sign Up
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="login.html">
+            <li class="nav-item" id="loginNavBar">
+                <a class="nav-link" href="login.html" >
                     <span class="fa fa-sign-in"></span> Login
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/Richkware-Manager-Server/LogOut">
+            <li class="nav-item" id="logoutNavBar">
+                <a class="nav-link" href="/Richkware-Manager-Server/LogOut" >
                     <span class="fa fa-sign-out"></span> Logout
                 </a>
             </li>
