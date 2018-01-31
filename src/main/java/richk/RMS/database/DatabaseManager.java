@@ -266,12 +266,14 @@ public class DatabaseManager implements Model {
         try {
             connection = connect();
             preparedStatement = connection.prepareStatement("UPDATE " + tableDbName + " SET ip = ?, serverport = ?, lastconnection = ?, encryptionkey = ?, userassociated = ? WHERE name = ?");
+            // arguments that will be edited
             preparedStatement.setString(1, device.getIP());
             preparedStatement.setString(2, device.getServerPort());
             preparedStatement.setString(3, device.getLastConnection());
             preparedStatement.setString(4, device.getEncryptionKey());
-            preparedStatement.setString(5, device.getName());
-            preparedStatement.setString(6, device.getUserAssociated());
+            preparedStatement.setString(5, device.getUserAssociated());
+            // SQL WHERE
+            preparedStatement.setString(6, device.getName());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
