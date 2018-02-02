@@ -120,50 +120,58 @@ public class device extends HttpServlet {
         Session session = getServerSession(req, resp);
 
         try {
-            //String data
-            String name= req.getParameter("data0");
-            //String name = data.substring(1, data.indexOf(","));
+            if (req.getParameterMap().containsKey("data0") &&
+                    req.getParameterMap().containsKey("data1") &&
+                    req.getParameterMap().containsKey("data2")) {
+                //String data
+                String name = req.getParameter("data0");
+                //String name = data.substring(1, data.indexOf(","));
 
-            // check in the DB if there is an entry with that name
-            DatabaseManager db = session.getDatabaseManager();
-            Device oldDevice = db.getDevice(name);
+                // check in the DB if there is an entry with that name
+                DatabaseManager db = session.getDatabaseManager();
+                Device oldDevice = db.getDevice(name);
 
-            // if this entry exists, then it's used to decrypt the encryption key in the DB
-            String serverPort= req.getParameter("data1");
-            //String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
-            String userAssociated = req.getParameter("data2");
+                // if this entry exists, then it's used to decrypt the encryption key in the DB
+                String serverPort = req.getParameter("data1");
+                //String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
+                String userAssociated = req.getParameter("data2");
 
-            if (oldDevice == null) {
-                serverPort = Crypto.DecryptRC4(serverPort, password);
-                userAssociated = Crypto.DecryptRC4(userAssociated, password);
-            } else {
-                serverPort = Crypto.DecryptRC4(serverPort, oldDevice.getEncryptionKey());
-                userAssociated = Crypto.DecryptRC4(userAssociated, oldDevice.getEncryptionKey());
+                if (oldDevice == null) {
+                    serverPort = Crypto.DecryptRC4(serverPort, password);
+                    userAssociated = Crypto.DecryptRC4(userAssociated, password);
+                } else {
+                    serverPort = Crypto.DecryptRC4(serverPort, oldDevice.getEncryptionKey());
+                    userAssociated = Crypto.DecryptRC4(userAssociated, oldDevice.getEncryptionKey());
+                }
+
+                String encryptionKey = RandomStringGenerator.GenerateString(keyLength);
+
+                String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+
+                Device newDevice = new Device(
+                        name,
+                        req.getRemoteAddr(),
+                        serverPort,
+                        timeStamp,
+                        encryptionKey,
+                        userAssociated);
+
+
+                if (oldDevice == null) {
+                    db.addDevice(newDevice);
+                } else {
+                    // do not change Encryption Key
+                    newDevice.setEncryptionKey(oldDevice.getEncryptionKey());
+                    db.editDevice(newDevice);
+                }
+
+                //req.getRequestDispatcher("index.html").forward(req, resp);
+            }else{
+                // argomenti non presenti
+                // TODO rimanda da qualche parte perche c'è errore
+                httpSession.setAttribute("error", "argomenti non presenti");
+                req.getRequestDispatcher("login.html").forward(req, resp);
             }
-
-            String encryptionKey = RandomStringGenerator.GenerateString(keyLength);
-
-            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-
-            Device newDevice = new Device(
-                    name,
-                    req.getRemoteAddr(),
-                    serverPort,
-                    timeStamp,
-                    encryptionKey,
-                    userAssociated);
-
-
-            if (oldDevice == null) {
-                db.addDevice(newDevice);
-            } else {
-                // do not change Encryption Key
-                newDevice.setEncryptionKey(oldDevice.getEncryptionKey());
-                db.editDevice(newDevice);
-            }
-
-            //req.getRequestDispatcher("index.html").forward(req, resp);
-
         } catch (Exception e) {
             httpSession.setAttribute("error", e);
             req.getRequestDispatcher("JSP/error.jsp").forward(req, resp);

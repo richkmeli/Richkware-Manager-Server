@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.util.ResourceBundle;
 
 
-@WebServlet("/getEncryptionKey")
+@WebServlet("/GetEncryptionKey")
 public class GetEncryptionKey extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final int keyLength = 32;
@@ -50,24 +50,31 @@ public class GetEncryptionKey extends HttpServlet {
 
 
         try {
-            String name = request.getParameter("id");
-            name = Crypto.DecryptRC4(name, password);
+            if (request.getParameterMap().containsKey("id")){
 
-            DatabaseManager db = session.getDatabaseManager();
-            String encryptionKey = db.getEncryptionKey(name);
-            if (encryptionKey.isEmpty()) {
-                encryptionKey = "Error";
+                String name = request.getParameter("id");
+                name = Crypto.DecryptRC4(name, password);
+
+                DatabaseManager db = session.getDatabaseManager();
+                String encryptionKey = db.getEncryptionKey(name);
+                if (encryptionKey.isEmpty()) {
+                    encryptionKey = "Error";
+                }
+
+                // encrypt key server-side generated or error message with pre-shared password
+                encryptionKey = Crypto.EncryptRC4(encryptionKey, password);
+
+                encryptionKey = "$" + encryptionKey + "#";
+
+                PrintWriter out = response.getWriter();
+                out.println(encryptionKey);
+                out.flush();
+            }else{
+                // argomenti non presenti
+                // TODO rimanda da qualche parte perche c'è errore
+                httpSession.setAttribute("error", "argomenti non presenti");
+                request.getRequestDispatcher("login.html").forward(request, response);
             }
-
-            // encrypt key server-side generated or error message with pre-shared password
-            encryptionKey = Crypto.EncryptRC4(encryptionKey, password);
-
-            encryptionKey = "$" + encryptionKey + "#";
-
-            PrintWriter out = response.getWriter();
-            out.println(encryptionKey);
-            out.flush();
-
         } catch (Exception e) {
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
