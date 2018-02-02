@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <meta name="author" content="Riccardo Melioli">
 
-    <meta http-equiv="refresh" content="5; ../index.html">
+    <meta http-equiv="refresh" content="5; /Richkware-Manager-Server/index.html">
 
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.css"/>
     <link rel="stylesheet" href="../fonts/font-awesome/css/font-awesome.css"/>
