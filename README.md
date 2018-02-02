@@ -13,9 +13,9 @@ RMS has been developed following the REST principles; the following table shows 
 |--------------|:----:|:---:|:---:|:------:|
 | device | x | | x | x |
 | user | x | | | x |
-| DeviceList | x | | | x |
-| UserList | x | | | |
-| GetEncryptionKey | x | | | |
+| deviceList | x | | | x |
+| userList | x | | | |
+| encryptionKey | x | | | |
 
 
 ## Related Projects
