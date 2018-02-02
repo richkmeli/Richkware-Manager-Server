@@ -1,7 +1,12 @@
 
 function bodyOnLoad() {
     accountInformation();
+
     loadDevicesTable();
+    window.setInterval(function(){
+        loadDevicesTable();
+    }, 5000);
+
 }
 
 
@@ -47,10 +52,9 @@ function accountInformation() {
 }
 
 function loadDevicesTable() {
-    createDevicesTableHeader();
 
     $(document).ready(function () {
-        $.get("DevicesList", /*data,*/ function (data, status) {
+        $.get("devicesList", /*data,*/ function (data, status) {
             var deviceJSON = data;
             //    alert (deviceJSON);
             //device = JSON.parse(DeviceJSON);
@@ -126,6 +130,7 @@ function createDevicesTableHeader() {
 }
 
 function loadDevicesJSONtoTable(devicesListJSON) {
+    createDevicesTableHeader();
 
     var devicesList = devicesListJSON//jQuery.parseJSON(devicesListJSON);
 

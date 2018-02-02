@@ -1,13 +1,9 @@
 package richk.RMS.web;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import richk.RMS.Session;
 import richk.RMS.database.DatabaseException;
 import richk.RMS.database.DatabaseManager;
-import richk.RMS.model.ModelException;
-import richk.RMS.model.User;
-import richk.RMS.util.KeyExchangePayload;
+import richk.RMS.util.Crypto;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,18 +13,19 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Type;
-import java.util.List;
+import java.util.ResourceBundle;
 
-/**
- * Servlet implementation class DevicesListServlet
- */
-@WebServlet("/UsersList")
-public class UsersList extends HttpServlet {
+
+@WebServlet("/encryptionKey")
+public class encryptionKey extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final int keyLength = 32;
+    private String password;
 
-    public UsersList() {
+    public encryptionKey() {
         super();
+        password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
+
     }
 
     private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,37 +48,34 @@ public class UsersList extends HttpServlet {
         HttpSession httpSession = request.getSession();
         Session session = getServerSession(request, response);
 
+
         try {
+            if (request.getParameterMap().containsKey("id")){
 
-            String out = null;
+                String name = request.getParameter("id");
+                name = Crypto.DecryptRC4(name, password);
 
-            String user = session.getUser();
-            // Authentication
-            if (user != null) {
-
-                if (session.isAdmin()) {
-                    out = GenerateDevicesListJSON(session);
-
-                    // servlet response
-                    PrintWriter printWriter = response.getWriter();
-                    printWriter.println(out);
-                    printWriter.flush();
-                    printWriter.close();
-                } else {
-                    // non ha privilegi
-                    // TODO rimanda da qualche parte perche c'è errore
-                    httpSession.setAttribute("error", "non ha privilegi");
-                    request.getRequestDispatcher("login.html").forward(request, response);
+                DatabaseManager db = session.getDatabaseManager();
+                String encryptionKey = db.getEncryptionKey(name);
+                if (encryptionKey.isEmpty()) {
+                    encryptionKey = "Error";
                 }
 
-            } else {
-                // non loggato
+                // encrypt key server-side generated or error message with pre-shared password
+                encryptionKey = Crypto.EncryptRC4(encryptionKey, password);
+
+                encryptionKey = "$" + encryptionKey + "#";
+
+                PrintWriter out = response.getWriter();
+                out.println(encryptionKey);
+                out.flush();
+            }else{
+                // argomenti non presenti
                 // TODO rimanda da qualche parte perche c'è errore
-                httpSession.setAttribute("error", "non loggato");
+                httpSession.setAttribute("error", "argomenti non presenti");
                 request.getRequestDispatcher("login.html").forward(request, response);
             }
         } catch (Exception e) {
-            // redirect to the JSP that handles errors
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
         }
@@ -92,17 +86,4 @@ public class UsersList extends HttpServlet {
         doGet(request, response);
     }
 
-    private String GenerateDevicesListJSON(Session session) throws ModelException {
-        DatabaseManager databaseManager = session.getDatabaseManager();
-        List<User> userList = databaseManager.refreshUser();
-
-        Type type = new TypeToken<List<User>>() {
-        }.getType();
-        Gson gson = new Gson();
-
-        // oggetto -> gson
-        String usersListJSON = gson.toJson(userList, type);
-
-        return usersListJSON;
-    }
 }

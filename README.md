@@ -5,6 +5,19 @@ Service for management of hosts where is present a malware developed using **Ric
 
  <img src="http://richk.altervista.org/rms.png">
 
+## Implementation
+
+RMS has been developed following the REST principles; the following table shows which HTTP methods have been used for each servlet.
+
+|  HTTP methods  | GET | POST | PUT | DELETE |
+|--------------|:----:|:---:|:---:|:------:|
+| device | x | | x | x |
+| user | x | | | x |
+| DeviceList | x | | | x |
+| UserList | x | | | |
+| GetEncryptionKey | x | | | |
+
+
 ## Related Projects
 
 [Richkware](https://github.com/richkmeli/Richkware): Framework for building Windows malware.

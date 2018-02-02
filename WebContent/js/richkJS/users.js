@@ -1,7 +1,11 @@
 
 function bodyOnLoad() {
     accountInformation();
+
     loadUsersTable();
+    window.setInterval(function(){
+        loadUsersTable();
+    }, 5000);
 }
 
 function accountInformation() {
@@ -47,10 +51,9 @@ function accountInformation() {
 
 
 function loadUsersTable() {
-    createUsersTableHeader();
 
     $(document).ready(function () {
-        $.get("UsersList", /*data,*/ function (data, status) {
+        $.get("usersList", /*data,*/ function (data, status) {
             var userJSON = data;
             //    alert (userJSON);
             //device = JSON.parse(DeviceJSON);
@@ -123,6 +126,7 @@ function createUsersTableHeader() {
 }
 
 function loadUsersJSONtoTable(usersListJSON) {
+    createUsersTableHeader();
 
     var usersList = usersListJSON//jQuery.parseJSON(usersListJSON);
 

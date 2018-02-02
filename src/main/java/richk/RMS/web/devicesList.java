@@ -26,11 +26,11 @@ import java.util.List;
 /**
  * Servlet implementation class DevicesListServlet
  */
-@WebServlet("/DevicesList")
-public class DevicesList extends HttpServlet {
+@WebServlet("/devicesList")
+public class devicesList extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public DevicesList() {
+    public devicesList() {
         super();
     }
 
@@ -61,7 +61,7 @@ public class DevicesList extends HttpServlet {
             String user = session.getUser();
             // Authentication
             if (user != null) {
-                // DevicesList ? encryption = true/false & phase = 1,2,3,... & kpub = ...
+                // devicesList ? encryption = true/false & phase = 1,2,3,... & kpub = ...
                 //                 |                         |                   |            |
                 if (request.getParameterMap().containsKey("encryption")) {
                     String encryption = request.getParameter("encryption");
@@ -207,7 +207,7 @@ public class DevicesList extends HttpServlet {
 try {
             String out = null;
 
-            // DevicesList ? encryption = true/false & phase = 1,2,3,... & kpub = ...
+            // devicesList ? encryption = true/false & phase = 1,2,3,... & kpub = ...
             //                 |                         |                   |            |
             if (request.getParameterMap().containsKey("encryption")) {
                 String encryption = request.getParameter("encryption");
