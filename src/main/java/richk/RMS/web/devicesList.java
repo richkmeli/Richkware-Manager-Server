@@ -90,6 +90,10 @@ public class devicesList extends HttpServlet {
                     out = GenerateDevicesListJSON(session);
                 }
 
+                //response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+                //response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+                //response.setHeader("Expires", "0"); // Proxies.
+
                 // servlet response
                 PrintWriter printWriter = response.getWriter();
                 printWriter.println(out);
@@ -99,7 +103,7 @@ public class devicesList extends HttpServlet {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "non loggato");
-                request.getRequestDispatcher("login.html").forward(request, response);
+                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
