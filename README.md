@@ -1,7 +1,7 @@
 # Richkware-Manager-Server
 [![Build Status](https://travis-ci.org/richkmeli/Richkware-Manager-Server.svg?branch=master)](https://travis-ci.org/richkmeli/Richkware-Manager-Server)
 
-Service for management of hosts where is present a malware developed using **Richkware** framework.
+Service for the management of hosts in which is present an instance of malware developed using **Richkware** framework.
 
  <img src="http://richk.altervista.org/rms.png">
 
@@ -22,7 +22,7 @@ RMS has been developed following the REST principles; the following table shows 
 
 [Richkware](https://github.com/richkmeli/Richkware): Framework for building Windows malware.
 
-[Richkware-Manager-Client](https://github.com/richkmeli/Richkware-Manager-Client): Client of **Richkware-Manager-Server**, that obtains list of all hosts and is able to send commands to do at each of them.
+[Richkware-Manager-Client](https://github.com/richkmeli/Richkware-Manager-Client): Client of **Richkware-Manager-Server**, that it obtains the list of all hosts from the server and it's able to send any kind of commands to them.
 
 ![](http://richk.altervista.org/RichkwareDiagram.svg)
 
