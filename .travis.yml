@@ -22,6 +22,9 @@ before_install:
 #  - docker-compose --version
 
 before_script:
+  # Disable services enabled by default
+  - sudo service mysql stop
+  - sudo service postgresql stop
   - mvn clean install
   - mvn package
   - docker-compose up -d
