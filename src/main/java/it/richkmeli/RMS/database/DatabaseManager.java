@@ -1,10 +1,10 @@
-package richk.RMS.database;
+package it.richkmeli.RMS.database;
 
-import richk.RMS.model.Device;
-import richk.RMS.model.Model;
-import richk.RMS.model.ModelException;
-import richk.RMS.model.User;
-import richk.RMS.util.Crypto;
+import it.richkmeli.RMS.model.Device;
+import it.richkmeli.RMS.model.Model;
+import it.richkmeli.RMS.model.ModelException;
+import it.richkmeli.RMS.model.User;
+import it.richkmeli.jcrypto.Crypto;
 
 import java.sql.*;
 import java.util.ArrayList;

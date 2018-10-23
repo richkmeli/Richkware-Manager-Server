@@ -1,15 +1,14 @@
-package richk.RMS.web;
+package it.richkmeli.RMS.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import richk.RMS.Session;
-import richk.RMS.database.DatabaseException;
-import richk.RMS.database.DatabaseManager;
-import richk.RMS.model.Device;
-import richk.RMS.model.ModelException;
-import richk.RMS.util.Crypto;
-import richk.RMS.util.KeyExchangePayload;
-import richk.RMS.util.RandomStringGenerator;
+import it.richkmeli.RMS.database.DatabaseException;
+import it.richkmeli.RMS.database.DatabaseManager;
+import it.richkmeli.RMS.model.Device;
+import it.richkmeli.RMS.model.ModelException;
+import it.richkmeli.jcrypto.Crypto;
+import it.richkmeli.jcrypto.util.RandomStringGenerator;
+import it.richkmeli.RMS.Session;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

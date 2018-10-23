@@ -1,9 +1,9 @@
-package richk.RMS.web;
+package it.richkmeli.RMS.web;
 
-import richk.RMS.Session;
-import richk.RMS.database.DatabaseException;
-import richk.RMS.database.DatabaseManager;
-import richk.RMS.util.Crypto;
+import it.richkmeli.RMS.database.DatabaseException;
+import it.richkmeli.RMS.database.DatabaseManager;
+import it.richkmeli.jcrypto.Crypto;
+import it.richkmeli.RMS.Session;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -1,7 +1,8 @@
-package richk.RMS.web.account;
+package it.richkmeli.RMS.web;
 
-import richk.RMS.Session;
-import richk.RMS.database.DatabaseException;
+import it.richkmeli.RMS.database.DatabaseException;
+import it.richkmeli.RMS.model.ModelException;
+import it.richkmeli.RMS.Session;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,15 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet({"/LogOut"})
-public class LogOut extends HttpServlet {
+@WebServlet("/devicesListSync")
+public class devicesListSync extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public LogOut() {
+
+    public devicesListSync() {
         super();
     }
 
-    private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession httpSession = request.getSession();
         Session session = (Session) httpSession.getAttribute("session");
         if (session == null) {
@@ -31,33 +33,20 @@ public class LogOut extends HttpServlet {
                 request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
         }
-        return session;
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        Session session = getServerSession(request, response);
 
         try {
+            httpSession.setAttribute("device", session.getDatabaseManager().refreshDevice());
+            request.getRequestDispatcher("JSP/device_list.jsp").forward(request, response);
 
-            if (session != null) {
-                // remove user from the session
-                session.removeUser();
-            }
-            httpSession.invalidate();
-
-            response.sendRedirect("login.html");
-
-        } catch (Exception e) {
+        } catch (ModelException e) {
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
         }
 
     }
 
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.doGet(request, response);
+        doGet(request, response);
     }
+
 }

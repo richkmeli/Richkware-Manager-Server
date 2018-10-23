@@ -1,8 +1,8 @@
-package richk.RMS.web.account;
+package it.richkmeli.RMS.web.account;
 
-import richk.RMS.Session;
-import richk.RMS.database.DatabaseException;
-import richk.RMS.model.User;
+import it.richkmeli.RMS.database.DatabaseException;
+import it.richkmeli.RMS.model.User;
+import it.richkmeli.RMS.Session;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

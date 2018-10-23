@@ -1,4 +1,4 @@
-package richk.RMS.model;
+package it.richkmeli.RMS.model;
 
 @SuppressWarnings("serial")
 public class ModelException extends Exception {

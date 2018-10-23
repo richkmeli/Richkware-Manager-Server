@@ -1,6 +1,6 @@
-package richk.RMS.database;
+package it.richkmeli.RMS.database;
 
-import richk.RMS.model.ModelException;
+import it.richkmeli.RMS.model.ModelException;
 
 @SuppressWarnings("serial")
 public class DatabaseException extends ModelException {

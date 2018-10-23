@@ -1,10 +1,10 @@
-package richk.RMS;
+package it.richkmeli.RMS;
 
-import richk.RMS.database.DatabaseException;
-import richk.RMS.database.DatabaseManager;
-import richk.RMS.model.Device;
-import richk.RMS.model.ModelException;
-import richk.RMS.model.User;
+import it.richkmeli.RMS.database.DatabaseException;
+import it.richkmeli.RMS.database.DatabaseManager;
+import it.richkmeli.RMS.model.Device;
+import it.richkmeli.RMS.model.ModelException;
+import it.richkmeli.RMS.model.User;
 
 public class Session {
     protected DatabaseManager databaseManager;

@@ -1,13 +1,12 @@
-package richk.RMS.web;
+package it.richkmeli.RMS.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import richk.RMS.Session;
-import richk.RMS.database.DatabaseException;
-import richk.RMS.database.DatabaseManager;
-import richk.RMS.model.ModelException;
-import richk.RMS.model.User;
-import richk.RMS.util.KeyExchangePayload;
+import it.richkmeli.RMS.database.DatabaseException;
+import it.richkmeli.RMS.database.DatabaseManager;
+import it.richkmeli.RMS.model.ModelException;
+import it.richkmeli.RMS.model.User;
+import it.richkmeli.RMS.Session;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,16 +17,17 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Servlet implementation class DevicesListServlet
  */
-@WebServlet("/usersList")
-public class usersList extends HttpServlet {
+@WebServlet("/user")
+public class user extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public usersList() {
+    public user() {
         super();
     }
 
@@ -59,20 +59,20 @@ public class usersList extends HttpServlet {
             // Authentication
             if (user != null) {
 
-                if (session.isAdmin()) {
-                    out = GenerateDevicesListJSON(session);
+                //if (session.isAdmin()) {
+                    out = GenerateUserListJSON(session);
 
                     // servlet response
                     PrintWriter printWriter = response.getWriter();
                     printWriter.println(out);
                     printWriter.flush();
                     printWriter.close();
-                } else {
+                /*} else {
                     // non ha privilegi
                     // TODO rimanda da qualche parte perche c'è errore
                     httpSession.setAttribute("error", "non ha privilegi");
                     request.getRequestDispatcher("login.html").forward(request, response);
-                }
+                }*/
 
             } else {
                 // non loggato
@@ -92,9 +92,66 @@ public class usersList extends HttpServlet {
         doGet(request, response);
     }
 
-    private String GenerateDevicesListJSON(Session session) throws ModelException {
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doPut(req, resp);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //if the code below is de-commented, this servlet disables DELETE
+        //super.doDelete(req, resp);
+
+        HttpSession httpSession = req.getSession();
+        Session session = getServerSession(req, resp);
+
+        try {
+            String out = null;
+
+            String user = session.getUser();
+            // Authentication
+            if (user != null) {
+                if (req.getParameterMap().containsKey("email")) {
+                    String email = req.getParameter("email");
+
+                    if(email.compareTo(session.getUser())==0 ||
+                            session.isAdmin()){
+                        session.getDatabaseManager().removeUser(email);
+                        out = "deleted";
+                    }else {
+                        // TODO rimanda da qualche parte perche c'è errore
+                        httpSession.setAttribute("error", "non hai i privilegi");
+                        req.getRequestDispatcher("login.html").forward(req, resp);
+                    }
+
+                }else{
+                    // TODO rimanda da qualche parte perche c'è errore
+                    httpSession.setAttribute("error", "dispositivo non specificato");
+                    req.getRequestDispatcher("login.html").forward(req, resp);
+                }
+                // servlet response
+                PrintWriter printWriter = resp.getWriter();
+                printWriter.println(out);
+                printWriter.flush();
+                printWriter.close();
+            } else {
+                // non loggato
+                // TODO rimanda da qualche parte perche c'è errore
+                httpSession.setAttribute("error", "non loggato");
+                req.getRequestDispatcher("login.html").forward(req, resp);
+            }
+        } catch (Exception e) {
+            // redirect to the JSP that handles errors
+            httpSession.setAttribute("error", e);
+            req.getRequestDispatcher("JSP/error.jsp").forward(req, resp);
+        }
+
+    }
+
+    private String GenerateUserListJSON(Session session) throws ModelException {
         DatabaseManager databaseManager = session.getDatabaseManager();
-        List<User> userList = databaseManager.refreshUser();
+        List<User> userList = new ArrayList<>();//databaseManager.refreshUser();
+        userList.add(new User(session.getUser(),"hidden",session.isAdmin()));
 
         Type type = new TypeToken<List<User>>() {
         }.getType();
