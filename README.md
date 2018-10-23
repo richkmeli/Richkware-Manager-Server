@@ -41,6 +41,12 @@ Open the configuration file (/src/main/resources/configuration.properties) and s
 - __database.password__: password used to access to the database (default: richk)
 - __encryptionkey__: encryption key used to exchange message to Richkware and RMC. if you change this parameter, remember to change also the configurations in Richkware and RMC (default: richktest)
 
-After that, you can deploy RMS using __docker-compose__.
+now we can build the "war" file, executing the following command:
+    
+    mvn package
+
+then you can deploy RMS using __docker-compose__
 
     docker-compose up
+
+finally, you can open [RMS](http://0.0.0.0:8080/Richkware-Manager-Server/).

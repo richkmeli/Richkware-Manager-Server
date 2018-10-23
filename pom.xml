@@ -4,9 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>richk.RMS</groupId>
+    <groupId>it.richkware.RMS</groupId>
     <artifactId>Richkware-Manager-Server</artifactId>
     <version>1.0</version>
+    <packaging>war</packaging>
 
     <repositories>
         <repository>
@@ -23,6 +24,14 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warSourceDirectory>WebContent</warSourceDirectory>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
         </plugins>
