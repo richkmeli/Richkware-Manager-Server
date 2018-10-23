@@ -1,14 +1,33 @@
 language: java
 
+sudo: required
+
+services:
+- docker
+dist: trusty
+
 env:
-  - DOCKER_COMPOSE_VERSION=1.4.2
+  - DOCKER_COMPOSE_VERSION=1.8.0
+  - COMPOSE_VERSION=1.5.2
 
 before_install:
+# Docker Compose Install
+  - sudo apt-get update
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+  - docker-compose --version
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
+  - docker-compose --version
+
+before_script:
+  - mvn clean install
+  - mvn package
+  - docker-compose up
 
 script:
-- mvn clean install
-- docker-compose up
+  - curl http://0.0.0.0:8080/Richkware-Manager-Server/
+
+after_script:
+  - docker-compose stop
