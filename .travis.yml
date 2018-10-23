@@ -30,7 +30,7 @@ before_script:
   - docker-compose up -d
 
 script:
-  - curl http://0.0.0.0:8080/Richkware-Manager-Server/
+  - curl http://localhost:8080/Richkware-Manager-Server/
 
 after_script:
   - docker-compose stop
