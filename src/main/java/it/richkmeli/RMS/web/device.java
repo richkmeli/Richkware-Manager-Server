@@ -2,13 +2,12 @@ package it.richkmeli.RMS.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.richkmeli.RMS.database.DatabaseException;
-import it.richkmeli.RMS.database.DatabaseManager;
-import it.richkmeli.RMS.model.Device;
-import it.richkmeli.RMS.model.ModelException;
+import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
+import it.richkmeli.RMS.data.device.model.Device;
 import it.richkmeli.jcrypto.Crypto;
-import it.richkmeli.jcrypto.util.RandomStringGenerator;
 import it.richkmeli.RMS.Session;
+import it.richkmeli.jcrypto.util.RandomStringGenerator;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -70,7 +69,7 @@ public class device extends HttpServlet {
                 if (request.getParameterMap().containsKey("name")) {
                     String name = request.getParameter("name");
 
-                    Device device = session.getDatabaseManager().getDevice(name);
+                    Device device = session.getDeviceDatabaseManager().getDevice(name);
 
                     if(device.getUserAssociated().compareTo(session.getUser())==0 ||
                             session.isAdmin()){
@@ -127,8 +126,8 @@ public class device extends HttpServlet {
                 //String name = data.substring(1, data.indexOf(","));
 
                 // check in the DB if there is an entry with that name
-                DatabaseManager db = session.getDatabaseManager();
-                Device oldDevice = db.getDevice(name);
+                DeviceDatabaseManager deviceDatabaseManager = session.getDeviceDatabaseManager();
+                Device oldDevice = deviceDatabaseManager.getDevice(name);
 
                 // if this entry exists, then it's used to decrypt the encryption key in the DB
                 String serverPort = req.getParameter("data1");
@@ -143,7 +142,7 @@ public class device extends HttpServlet {
                     userAssociated = Crypto.DecryptRC4(userAssociated, oldDevice.getEncryptionKey());
                 }
 
-                String encryptionKey = RandomStringGenerator.GenerateString(keyLength);
+                String encryptionKey = RandomStringGenerator.GenerateAlphanumericString(keyLength);
 
                 String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
@@ -157,11 +156,11 @@ public class device extends HttpServlet {
 
 
                 if (oldDevice == null) {
-                    db.addDevice(newDevice);
+                    deviceDatabaseManager.addDevice(newDevice);
                 } else {
                     // do not change Encryption Key
                     newDevice.setEncryptionKey(oldDevice.getEncryptionKey());
-                    db.editDevice(newDevice);
+                    deviceDatabaseManager.editDevice(newDevice);
                 }
 
                 //req.getRequestDispatcher("index.html").forward(req, resp);
@@ -194,11 +193,11 @@ public class device extends HttpServlet {
                 if (req.getParameterMap().containsKey("name")) {
                     String name = req.getParameter("name");
 
-                    Device device = session.getDatabaseManager().getDevice(name);
+                    Device device = session.getDeviceDatabaseManager().getDevice(name);
 
                     if(device.getUserAssociated().compareTo(session.getUser())==0 ||
                             session.isAdmin()){
-                        session.getDatabaseManager().removeDevice(name);
+                        session.getDeviceDatabaseManager().removeDevice(name);
                         out = "deleted";
                     }else {
                         // TODO rimanda da qualche parte perche c'è errore
@@ -230,7 +229,7 @@ public class device extends HttpServlet {
 
     }
 
-    private String GenerateDevicesListJSON(Device device/*, Session session*/) throws ModelException {
+    private String GenerateDevicesListJSON(Device device/*, Session session*/) {
         //DatabaseManager databaseManager = session.getDatabaseManager();
         List<Device> devicesList = new ArrayList<>();
 

@@ -2,13 +2,12 @@ package it.richkmeli.RMS.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.richkmeli.RMS.database.DatabaseException;
-import it.richkmeli.RMS.database.DatabaseManager;
-import it.richkmeli.RMS.model.Device;
-import it.richkmeli.RMS.model.ModelException;
+import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
+import it.richkmeli.RMS.data.device.model.Device;
 import it.richkmeli.jcrypto.Crypto;
-import it.richkmeli.jcrypto.KeyExchangePayload;
 import it.richkmeli.RMS.Session;
+import it.richkmeli.jcrypto.KeyExchangePayloadCompat;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.crypto.SecretKey;
 import javax.servlet.ServletException;
@@ -76,7 +75,7 @@ public class devicesList extends HttpServlet {
 
                         // [enc_(KpubC)(AESKey) , sign_(KprivS)(AESKey) , KpubS]
                         List<Object> res = Crypto.KeyExchangeAESRSA(keyPair, kpubC);
-                        KeyExchangePayload keyExchangePayload = (KeyExchangePayload) res.get(0);
+                        KeyExchangePayloadCompat keyExchangePayload = (KeyExchangePayloadCompat) res.get(0);
                         SecretKey AESsecretKey = (SecretKey) res.get(1);
                         // encrypt data (devices List) with AES secret key
                         out = Crypto.EncryptAES(GenerateDevicesListJSON(session), AESsecretKey);
@@ -150,8 +149,8 @@ public class devicesList extends HttpServlet {
 
     }
 
-    private String GenerateDevicesListJSON(Session session) throws ModelException {
-        DatabaseManager databaseManager = session.getDatabaseManager();
+    private String GenerateDevicesListJSON(Session session) throws DatabaseException {
+        DeviceDatabaseManager databaseManager = session.getDeviceDatabaseManager();
         List<Device> devicesList = null;
 
         if (session.isAdmin()) {
@@ -189,7 +188,7 @@ public class devicesList extends HttpServlet {
         return devicesListJSON;
     }
 
-    private String GenerateKeyExchangePayloadJSON(KeyExchangePayload keyExchangePayload) throws ModelException {
+    private String GenerateKeyExchangePayloadJSON(KeyExchangePayloadCompat keyExchangePayload) {
         String keyExchangePayloadJSON;// = "[ ";
         keyExchangePayloadJSON = /*"'" + index + "' : {"*/ "{"
                 + "'encryptedAESsecretKey' : '" + keyExchangePayload.getEncryptedAESsecretKey() + "', "

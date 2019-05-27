@@ -1,8 +1,7 @@
 package it.richkmeli.RMS.web;
 
-import it.richkmeli.RMS.database.DatabaseException;
-import it.richkmeli.RMS.model.ModelException;
 import it.richkmeli.RMS.Session;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,10 +34,11 @@ public class devicesListSync extends HttpServlet {
         }
 
         try {
-            httpSession.setAttribute("device", session.getDatabaseManager().refreshDevice());
+
+            httpSession.setAttribute("device", session.getDeviceDatabaseManager().refreshDevice());
             request.getRequestDispatcher("JSP/device_list.jsp").forward(request, response);
 
-        } catch (ModelException e) {
+        } catch (DatabaseException e) {
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
         }

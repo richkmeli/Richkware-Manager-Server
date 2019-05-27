@@ -1,8 +1,8 @@
 package it.richkmeli.RMS.web.account;
 
-import it.richkmeli.RMS.database.DatabaseException;
-import it.richkmeli.RMS.model.User;
 import it.richkmeli.RMS.Session;
+import it.richkmeli.jframework.auth.model.User;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -54,13 +54,13 @@ public class SignUp extends HttpServlet {
 
                 if (email != null) {
                     // se l'email è già presente nel DB
-                    if (session.getDatabaseManager().isUserPresent(email)) {
+                    if (session.getAuthDatabaseManager().isUserPresent(email)) {
                         // TODO password gia presente vuoi recuperarla? guarda se html o popup js
                     } else {
                         if (pass != null) {
                             if (pass.length() >= 8) {
 
-                                session.getDatabaseManager().addUser(new User(email, pass, false));
+                                session.getAuthDatabaseManager().addUser(new User(email, pass, false));
                                 // set userID into the session
                                 session.setUser(email);
 

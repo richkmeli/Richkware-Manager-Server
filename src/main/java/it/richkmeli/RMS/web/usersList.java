@@ -2,11 +2,10 @@ package it.richkmeli.RMS.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.richkmeli.RMS.database.DatabaseException;
-import it.richkmeli.RMS.database.DatabaseManager;
-import it.richkmeli.RMS.model.ModelException;
-import it.richkmeli.RMS.model.User;
 import it.richkmeli.RMS.Session;
+import it.richkmeli.jframework.auth.AuthDatabaseManager;
+import it.richkmeli.jframework.auth.model.User;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -59,7 +58,7 @@ public class usersList extends HttpServlet {
             if (user != null) {
 
                 if (session.isAdmin()) {
-                    out = GenerateDevicesListJSON(session);
+                    out = GenerateUsersListJSON(session);
 
                     // servlet response
                     PrintWriter printWriter = response.getWriter();
@@ -91,9 +90,9 @@ public class usersList extends HttpServlet {
         doGet(request, response);
     }
 
-    private String GenerateDevicesListJSON(Session session) throws ModelException {
-        DatabaseManager databaseManager = session.getDatabaseManager();
-        List<User> userList = databaseManager.refreshUser();
+    private String GenerateUsersListJSON(Session session) throws DatabaseException {
+        AuthDatabaseManager authDatabaseManager = session.getAuthDatabaseManager();
+        List<User> userList = authDatabaseManager.refreshUser();
 
         Type type = new TypeToken<List<User>>() {
         }.getType();

@@ -1,9 +1,9 @@
 package it.richkmeli.RMS.web;
 
-import it.richkmeli.RMS.database.DatabaseException;
-import it.richkmeli.RMS.database.DatabaseManager;
+import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
 import it.richkmeli.jcrypto.Crypto;
 import it.richkmeli.RMS.Session;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -55,8 +55,8 @@ public class encryptionKey extends HttpServlet {
                 String name = request.getParameter("id");
                 name = Crypto.DecryptRC4(name, password);
 
-                DatabaseManager db = session.getDatabaseManager();
-                String encryptionKey = db.getEncryptionKey(name);
+                DeviceDatabaseManager deviceDatabaseManager = session.getDeviceDatabaseManager();
+                String encryptionKey = deviceDatabaseManager.getEncryptionKey(name);
                 if (encryptionKey.isEmpty()) {
                     encryptionKey = "Error";
                 }

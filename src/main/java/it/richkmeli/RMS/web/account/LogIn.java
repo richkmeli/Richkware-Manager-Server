@@ -1,7 +1,7 @@
 package it.richkmeli.RMS.web.account;
 
-import it.richkmeli.RMS.database.DatabaseException;
 import it.richkmeli.RMS.Session;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,10 +48,10 @@ public class LogIn extends HttpServlet {
             String pass = request.getParameter("password");
 
             if (email != null) {
-                if (session.getDatabaseManager().isUserPresent(email)) {
+                if (session.getAuthDatabaseManager().isUserPresent(email)) {
                     if (pass != null) {
-                        Boolean isAdmin = session.getDatabaseManager().isAdmin(email);
-                        if (session.getDatabaseManager().checkPassword(email, pass)) {
+                        Boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);
+                        if (session.getAuthDatabaseManager().checkPassword(email, pass)) {
                             // set userID into the session
                             session.setUser(email);
                             session.setAdmin(isAdmin);

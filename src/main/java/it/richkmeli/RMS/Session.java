@@ -1,37 +1,59 @@
 package it.richkmeli.RMS;
 
-import it.richkmeli.RMS.database.DatabaseException;
-import it.richkmeli.RMS.database.DatabaseManager;
-import it.richkmeli.RMS.model.Device;
-import it.richkmeli.RMS.model.ModelException;
-import it.richkmeli.RMS.model.User;
+import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
+import it.richkmeli.RMS.data.device.model.Device;
+import it.richkmeli.jframework.auth.AuthDatabaseManager;
+import it.richkmeli.jframework.auth.model.User;
+import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.util.Logger;
 
 public class Session {
-    protected DatabaseManager databaseManager;
+    private DeviceDatabaseManager deviceDatabaseManager;
+    private AuthDatabaseManager authDatabaseManager;
     private String userID;
     private Boolean isAdmin;
 
 
     public Session() throws DatabaseException {
-        databaseManager = new DatabaseManager();
+        deviceDatabaseManager = new DeviceDatabaseManager();
+        authDatabaseManager = new AuthDatabaseManager();
         userID = null;
         isAdmin = false;
 
         //TODO: load data for testing
         try {
-            databaseManager.addUser(new User("richk@i.it", "00000000", true));
-            databaseManager.addUser(new User("er@fv.it", "00000000", false));
-            databaseManager.addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-            databaseManager.addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-            databaseManager.addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it"));
-            databaseManager.addUser(new User("richk@i.it", "00000000", true));
-        } catch (ModelException e) {
+            authDatabaseManager.addUser(new User("richk@i.it", "00000000", true));
+            authDatabaseManager.addUser(new User("er@fv.it", "00000000", false));
+            deviceDatabaseManager.addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
+            deviceDatabaseManager.addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
+            deviceDatabaseManager.addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it"));
+            authDatabaseManager.addUser(new User("richk@i.it", "00000000", true));
+        } catch (DatabaseException e) {
+            Logger.e("Session ",e);
         }
 
     }
 
-    public DatabaseManager getDatabaseManager() {
+    /*public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }*/
+
+    public DeviceDatabaseManager getDeviceDatabaseManager() throws DatabaseException {
+        if(deviceDatabaseManager != null){
+            return deviceDatabaseManager;
+        }else{
+            deviceDatabaseManager = new DeviceDatabaseManager();
+            return deviceDatabaseManager;
+        }
+    }
+
+    public AuthDatabaseManager getAuthDatabaseManager() throws DatabaseException {
+        if(authDatabaseManager != null){
+            return authDatabaseManager;
+        }else{
+            authDatabaseManager = new AuthDatabaseManager();
+            return authDatabaseManager;
+        }
     }
 
     public String getUser() {

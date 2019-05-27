@@ -1,4 +1,4 @@
-package it.richkmeli.RMS.model;
+package it.richkmeli.RMS.data.device.model;
 
 public class Device {
     private String name;

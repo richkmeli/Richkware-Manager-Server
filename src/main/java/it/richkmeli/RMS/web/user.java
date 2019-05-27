@@ -2,11 +2,9 @@ package it.richkmeli.RMS.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.richkmeli.RMS.database.DatabaseException;
-import it.richkmeli.RMS.database.DatabaseManager;
-import it.richkmeli.RMS.model.ModelException;
-import it.richkmeli.RMS.model.User;
 import it.richkmeli.RMS.Session;
+import it.richkmeli.jframework.auth.model.User;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -116,7 +114,7 @@ public class user extends HttpServlet {
 
                     if(email.compareTo(session.getUser())==0 ||
                             session.isAdmin()){
-                        session.getDatabaseManager().removeUser(email);
+                        session.getAuthDatabaseManager().removeUser(email);
                         out = "deleted";
                     }else {
                         // TODO rimanda da qualche parte perche c'è errore
@@ -148,8 +146,8 @@ public class user extends HttpServlet {
 
     }
 
-    private String GenerateUserListJSON(Session session) throws ModelException {
-        DatabaseManager databaseManager = session.getDatabaseManager();
+    private String GenerateUserListJSON(Session session) {
+        //DatabaseManager databaseManager = session.getDatabaseManager();
         List<User> userList = new ArrayList<>();//databaseManager.refreshUser();
         userList.add(new User(session.getUser(),"hidden",session.isAdmin()));
 

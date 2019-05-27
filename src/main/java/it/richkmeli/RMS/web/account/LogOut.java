@@ -1,7 +1,7 @@
 package it.richkmeli.RMS.web.account;
 
-import it.richkmeli.RMS.database.DatabaseException;
 import it.richkmeli.RMS.Session;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
