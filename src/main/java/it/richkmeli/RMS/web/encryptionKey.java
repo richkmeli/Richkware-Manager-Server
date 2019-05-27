@@ -4,6 +4,7 @@ import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
 import it.richkmeli.jcrypto.Crypto;
 import it.richkmeli.RMS.Session;
 import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.util.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -72,10 +73,12 @@ public class encryptionKey extends HttpServlet {
             }else{
                 // argomenti non presenti
                 // TODO rimanda da qualche parte perche c'è errore
+                Logger.e("SERVLET encryptionKey, doGet: argomenti non presenti");
                 httpSession.setAttribute("error", "argomenti non presenti");
                 request.getRequestDispatcher("login.html").forward(request, response);
             }
         } catch (Exception e) {
+            Logger.e("SERVLET encryptionKey, doGet",e);
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
         }

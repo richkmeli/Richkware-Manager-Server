@@ -8,6 +8,7 @@ import it.richkmeli.jcrypto.Crypto;
 import it.richkmeli.RMS.Session;
 import it.richkmeli.jcrypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.util.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -154,6 +155,7 @@ public class device extends HttpServlet {
                         encryptionKey,
                         userAssociated);
 
+                Logger.i("SERVLET device, doGet: Device: "+ name + " "+ req.getRemoteAddr() + " "+ serverPort + " "+ timeStamp + " "+ encryptionKey + " "+ userAssociated + " ");
 
                 if (oldDevice == null) {
                     deviceDatabaseManager.addDevice(newDevice);
@@ -167,10 +169,12 @@ public class device extends HttpServlet {
             }else{
                 // argomenti non presenti
                 // TODO rimanda da qualche parte perche c'è errore
+                Logger.e("SERVLET device, doGet: argomenti non presenti");
                 httpSession.setAttribute("error", "argomenti non presenti");
                 req.getRequestDispatcher("login.html").forward(req, resp);
             }
         } catch (Exception e) {
+            Logger.e("SERVLET device, doGet",e);
             httpSession.setAttribute("error", e);
             req.getRequestDispatcher("JSP/error.jsp").forward(req, resp);
         }
