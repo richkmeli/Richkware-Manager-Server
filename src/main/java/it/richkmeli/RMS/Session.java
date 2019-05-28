@@ -5,7 +5,6 @@ import it.richkmeli.RMS.data.device.model.Device;
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.database.DatabaseException;
-import it.richkmeli.jframework.util.Logger;
 
 public class Session {
     private DeviceDatabaseManager deviceDatabaseManager;
@@ -19,18 +18,6 @@ public class Session {
         authDatabaseManager = new AuthDatabaseManager();
         userID = null;
         isAdmin = false;
-
-        //TODO: load data for testing
-        try {
-            authDatabaseManager.addUser(new User("richk@i.it", "00000000", true));
-            authDatabaseManager.addUser(new User("er@fv.it", "00000000", false));
-            deviceDatabaseManager.addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-            deviceDatabaseManager.addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-            deviceDatabaseManager.addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it"));
-            authDatabaseManager.addUser(new User("richk@i.it", "00000000", true));
-        } catch (DatabaseException e) {
-            Logger.e("Session ",e);
-        }
 
     }
 

@@ -9,10 +9,8 @@ function bodyOnLoad() {
 
 }
 
-
 function accountInformation() {
 
-    $(document).ready(function () {
         $.get("user", /*data,*/ function (data, status) {
 
             user = data[0];
@@ -47,7 +45,6 @@ function accountInformation() {
             .always(function () {
                 //alert("finished");
             });
-    });
 
 }
 
