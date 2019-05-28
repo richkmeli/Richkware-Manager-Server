@@ -86,7 +86,7 @@ public class SignUp extends HttpServlet {
                     }
 
                 }
-            }else{
+            } else {
                 // already logged
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "già loggato");

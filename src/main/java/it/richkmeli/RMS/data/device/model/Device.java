@@ -2,25 +2,23 @@ package it.richkmeli.RMS.data.device.model;
 
 public class Device {
     private String name;
-    private String IP;
+    private String ip;
     private String serverPort;
     private String lastConnection;
     private String encryptionKey;
     private String userAssociated;
 
-    public Device(String name, String iP, String serverPort, String lastConnection, String encryptionKey, String userAssociated) {
-        super();
+    public Device(String name, String ip, String serverPort, String lastConnection, String encryptionKey, String userAssociated) {
         this.name = name;
-        IP = iP;
+        this.ip = ip;
         this.serverPort = serverPort;
         this.lastConnection = lastConnection;
         this.encryptionKey = encryptionKey;
         this.userAssociated = userAssociated;
-
     }
 
-    public String getIP() {
-        return IP;
+    public String getIp() {
+        return ip;
     }
 
     public String getLastConnection() {
@@ -43,8 +41,8 @@ public class Device {
         this.serverPort = serverPort;
     }
 
-    public void setIP(String iP) {
-        IP = iP;
+    public void setIp(String iP) {
+        ip = iP;
     }
 
     public void setLastConnection(String lastConnection) {

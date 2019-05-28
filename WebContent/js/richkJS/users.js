@@ -1,9 +1,8 @@
-
 function bodyOnLoad() {
     accountInformation();
 
     loadUsersTable();
-    window.setInterval(function(){
+    window.setInterval(function () {
         loadUsersTable();
     }, 5000);
 }
@@ -17,7 +16,7 @@ function accountInformation() {
             // load name near to the brand
             var string = " - " + user.email;
             if (user.isAdmin == true) {
-                string = string +" (ADMIN)";
+                string = string + " (ADMIN)";
             }
             document.getElementById("userNearBrand").innerHTML = string;
 
@@ -159,12 +158,12 @@ function loadUsersJSONtoTable(usersListJSON) {
     usersTable.appendChild(tbody);
 }
 
-function deleteUser(email, indexTableRow){
+function deleteUser(email, indexTableRow) {
     $.ajax({
-        url: '/Richkware-Manager-Server/user?email='+email,
+        url: '/Richkware-Manager-Server/user?email=' + email,
         type: 'DELETE',
-        success: function(result) {
-            $("#tableRow"+indexTableRow).remove();
+        success: function (result) {
+            $("#tableRow" + indexTableRow).remove();
         }
     });
 }

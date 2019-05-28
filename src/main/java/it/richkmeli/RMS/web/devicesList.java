@@ -174,7 +174,7 @@ public class devicesList extends HttpServlet {
         for (device device : devicesList) {
             String deviceJSON = *//*"'" + index + "' : {"*//* "{"
                     + "'name' : '" + device.getName() + "', "
-                    + "'IP' : '" + device.getIP() + "', "
+                    + "'IP' : '" + device.getIp() + "', "
                     + "'serverPort' : '" + device.getServerPort() + "', "
                     + "'lastConnection' : '" + device.getLastConnection() + "', "
                     + "'encryptionKey' : '" + device.getEncryptionKey() + "'}";

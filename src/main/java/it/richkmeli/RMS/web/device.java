@@ -72,10 +72,10 @@ public class device extends HttpServlet {
 
                     Device device = session.getDeviceDatabaseManager().getDevice(name);
 
-                    if(device.getUserAssociated().compareTo(session.getUser())==0 ||
-                            session.isAdmin()){
+                    if (device.getUserAssociated().compareTo(session.getUser()) == 0 ||
+                            session.isAdmin()) {
                         out = GenerateDevicesListJSON(device);
-                    }else {
+                    } else {
                         // TODO rimanda da qualche parte perche c'è errore
                         httpSession.setAttribute("error", "non hai i privilegi");
                         request.getRequestDispatcher("login.html").forward(request, response);
@@ -83,7 +83,7 @@ public class device extends HttpServlet {
                     }
 
 
-                }else{
+                } else {
                     // TODO rimanda da qualche parte perche c'è errore
                     httpSession.setAttribute("error", "dispositivo non specificato");
                     request.getRequestDispatcher("login.html").forward(request, response);
@@ -155,7 +155,7 @@ public class device extends HttpServlet {
                         encryptionKey,
                         userAssociated);
 
-                Logger.i("SERVLET device, doGet: Device: "+ name + " "+ req.getRemoteAddr() + " "+ serverPort + " "+ timeStamp + " "+ encryptionKey + " "+ userAssociated + " ");
+                Logger.i("SERVLET device, doGet: Device: " + name + " " + req.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + userAssociated + " ");
 
                 if (oldDevice == null) {
                     deviceDatabaseManager.addDevice(newDevice);
@@ -166,7 +166,7 @@ public class device extends HttpServlet {
                 }
 
                 //req.getRequestDispatcher("index.html").forward(req, resp);
-            }else{
+            } else {
                 // argomenti non presenti
                 // TODO rimanda da qualche parte perche c'è errore
                 Logger.e("SERVLET device, doGet: argomenti non presenti");
@@ -174,7 +174,7 @@ public class device extends HttpServlet {
                 req.getRequestDispatcher("login.html").forward(req, resp);
             }
         } catch (Exception e) {
-            Logger.e("SERVLET device, doGet",e);
+            Logger.e("SERVLET device, doGet", e);
             httpSession.setAttribute("error", e);
             req.getRequestDispatcher("JSP/error.jsp").forward(req, resp);
         }
@@ -199,17 +199,17 @@ public class device extends HttpServlet {
 
                     Device device = session.getDeviceDatabaseManager().getDevice(name);
 
-                    if(device.getUserAssociated().compareTo(session.getUser())==0 ||
-                            session.isAdmin()){
+                    if (device.getUserAssociated().compareTo(session.getUser()) == 0 ||
+                            session.isAdmin()) {
                         session.getDeviceDatabaseManager().removeDevice(name);
                         out = "deleted";
-                    }else {
+                    } else {
                         // TODO rimanda da qualche parte perche c'è errore
                         httpSession.setAttribute("error", "non hai i privilegi");
                         req.getRequestDispatcher("login.html").forward(req, resp);
                     }
 
-                }else{
+                } else {
                     // TODO rimanda da qualche parte perche c'è errore
                     httpSession.setAttribute("error", "dispositivo non specificato");
                     req.getRequestDispatcher("login.html").forward(req, resp);

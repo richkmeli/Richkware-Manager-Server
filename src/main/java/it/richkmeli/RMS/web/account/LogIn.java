@@ -45,47 +45,47 @@ public class LogIn extends HttpServlet {
             if (session.getUser() == null) {
 
                 String email = request.getParameter("email");
-            String pass = request.getParameter("password");
+                String pass = request.getParameter("password");
 
-            if (email != null) {
-                if (session.getAuthDatabaseManager().isUserPresent(email)) {
-                    if (pass != null) {
-                        Boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);
-                        if (session.getAuthDatabaseManager().checkPassword(email, pass)) {
-                            // set userID into the session
-                            session.setUser(email);
-                            session.setAdmin(isAdmin);
+                if (email != null) {
+                    if (session.getAuthDatabaseManager().isUserPresent(email)) {
+                        if (pass != null) {
+                            Boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);
+                            if (session.getAuthDatabaseManager().checkPassword(email, pass)) {
+                                // set userID into the session
+                                session.setUser(email);
+                                session.setAdmin(isAdmin);
 
-                            //httpSession.setAttribute("emailUser", email);
-                            response.sendRedirect("devices.html");
+                                //httpSession.setAttribute("emailUser", email);
+                                response.sendRedirect("devices.html");
 
-                            //request.getRequestDispatcher("controlPanel.html").forward(request, response);
+                                //request.getRequestDispatcher("controlPanel.html").forward(request, response);
+                            } else {
+                                // pass sbagliata
+                                // TODO rimanda da qualche parte perche c'è errore
+                                httpSession.setAttribute("error", "pass sbagliata");
+                                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+                            }
+
                         } else {
-                            // pass sbagliata
+                            // pass corta
                             // TODO rimanda da qualche parte perche c'è errore
-                            httpSession.setAttribute("error", "pass sbagliata");
+                            httpSession.setAttribute("error", "pass null");
                             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
                         }
-
                     } else {
-                        // pass corta
+                        // mancano email o password
                         // TODO rimanda da qualche parte perche c'è errore
-                        httpSession.setAttribute("error", "pass null");
+                        httpSession.setAttribute("error", "mancano email o password");
                         request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
                     }
                 } else {
                     // mancano email o password
                     // TODO rimanda da qualche parte perche c'è errore
-                    httpSession.setAttribute("error", "mancano email o password");
+                    httpSession.setAttribute("error", "email null");
                     request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
                 }
             } else {
-                // mancano email o password
-                // TODO rimanda da qualche parte perche c'è errore
-                httpSession.setAttribute("error", "email null");
-                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
-            }
-            }else{
                 // already logged
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "già loggato");
