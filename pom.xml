@@ -60,11 +60,11 @@
             <artifactId>JCrypto</artifactId>
             <version>1.0.1</version>
         </dependency>
-       <dependency>
-              <groupId>com.github.richkmeli</groupId>
-             <artifactId>JFramework</artifactId>
-            <version>1.0.1</version>
-       </dependency>
+        <dependency>
+            <groupId>com.github.richkmeli</groupId>
+            <artifactId>JFramework</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
 </project>

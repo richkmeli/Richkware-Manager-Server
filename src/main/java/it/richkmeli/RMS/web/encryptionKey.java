@@ -51,7 +51,7 @@ public class encryptionKey extends HttpServlet {
 
 
         try {
-            if (request.getParameterMap().containsKey("id")){
+            if (request.getParameterMap().containsKey("id")) {
 
                 String name = request.getParameter("id");
                 name = Crypto.DecryptRC4(name, password);
@@ -70,7 +70,7 @@ public class encryptionKey extends HttpServlet {
                 PrintWriter out = response.getWriter();
                 out.println(encryptionKey);
                 out.flush();
-            }else{
+            } else {
                 // argomenti non presenti
                 // TODO rimanda da qualche parte perche c'è errore
                 Logger.e("SERVLET encryptionKey, doGet: argomenti non presenti");
@@ -78,7 +78,7 @@ public class encryptionKey extends HttpServlet {
                 request.getRequestDispatcher("login.html").forward(request, response);
             }
         } catch (Exception e) {
-            Logger.e("SERVLET encryptionKey, doGet",e);
+            Logger.e("SERVLET encryptionKey, doGet", e);
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
         }

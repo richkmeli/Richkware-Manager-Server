@@ -11,27 +11,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceDatabaseManager extends DatabaseManager implements DeviceModel {
-    private String dbUrl;
-    private String dbUsername;
-    private String dbPassword;
-    //private String schemaDbName;
-    //private String tableDbName;
 
     public DeviceDatabaseManager() throws DatabaseException {
         schemaName = "DeviceSchema";
         tableName = schemaName + "." + "device";
         table = "(" +
-                "Name VARCHAR(50) NOT NULL PRIMARY KEY," +
-                "IP VARCHAR(25) NOT NULL," +
-                "ServerPort VARCHAR(10)," +
-                "LastConnection VARCHAR(25)," +
-                "EncryptionKey VARCHAR(32)," +
-                "UserAssociated VARCHAR(50) REFERENCES user(email)" +
+                "name VARCHAR(50) NOT NULL PRIMARY KEY," +
+                "ip VARCHAR(25) NOT NULL," +
+                "serverPort VARCHAR(10)," +
+                "lastConnection VARCHAR(25)," +
+                "encryptionKey VARCHAR(32)," +
+                "userAssociated VARCHAR(50) REFERENCES user(email)" +
                 ")";
 
         init();
     }
-    
+
 
     public List<Device> refreshDevice() throws DatabaseException {
         List<Device> deviceList = new ArrayList<Device>();
@@ -47,12 +42,12 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
 
             while (resultSet.next()) {
                 Device tmp = new Device(
-                        resultSet.getString("Name"),
-                        resultSet.getString("IP"),
-                        resultSet.getString("ServerPort"),
-                        resultSet.getString("LastConnection"),
-                        resultSet.getString("EncryptionKey"),
-                        resultSet.getString("UserAssociated"));
+                        resultSet.getString("name"),
+                        resultSet.getString("ip"),
+                        resultSet.getString("serverPort"),
+                        resultSet.getString("lastConnection"),
+                        resultSet.getString("encryptionKey"),
+                        resultSet.getString("userAssociated"));
                 deviceList.add(tmp);
             }
         } catch (SQLException e) {
@@ -78,14 +73,14 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
 
             while (resultSet.next()) {
                 Device tmp = new Device(
-                        resultSet.getString("Name"),
-                        resultSet.getString("IP"),
-                        resultSet.getString("ServerPort"),
-                        resultSet.getString("LastConnection"),
-                        resultSet.getString("EncryptionKey"),
-                        resultSet.getString("UserAssociated"));
+                        resultSet.getString("name"),
+                        resultSet.getString("ip"),
+                        resultSet.getString("serverPort"),
+                        resultSet.getString("lastConnection"),
+                        resultSet.getString("encryptionKey"),
+                        resultSet.getString("userAssociated"));
                 // add to the list the devices of the relative user.
-                if (user.compareTo(resultSet.getString("UserAssociated")) == 0) {
+                if (user.compareTo(resultSet.getString("userAssociated")) == 0) {
                     deviceList.add(tmp);
                 }
             }
@@ -97,15 +92,19 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
         return deviceList;
     }
 
+    /*public boolean addDevice(Device device) throws DatabaseException {
+        return add(device);
+    }*/
+
     public boolean addDevice(Device device) throws DatabaseException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("INSERT INTO " + tableName + " (name, ip, serverport, lastconnection, encryptionkey, userAssociated) VALUES (?,?,?,?,?,?)");
+            preparedStatement = connection.prepareStatement("INSERT IGNORE INTO " + tableName + " (name, ip, serverPort, lastConnection, encryptionKey, userAssociated) VALUES (?,?,?,?,?,?)");
             preparedStatement.setString(1, device.getName());
-            preparedStatement.setString(2, device.getIP());
+            preparedStatement.setString(2, device.getIp());
             preparedStatement.setString(3, device.getServerPort());
             preparedStatement.setString(4, device.getLastConnection());
             preparedStatement.setString(5, device.getEncryptionKey());
@@ -126,9 +125,9 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("UPDATE " + tableName + " SET ip = ?, serverport = ?, lastconnection = ?, encryptionkey = ?, userassociated = ? WHERE name = ?");
+            preparedStatement = connection.prepareStatement("UPDATE " + tableName + " SET ip = ?, serverPort = ?, lastConnection = ?, encryptionKey = ?, userAssociated = ? WHERE name = ?");
             // arguments that will be edited
-            preparedStatement.setString(1, device.getIP());
+            preparedStatement.setString(1, device.getIp());
             preparedStatement.setString(2, device.getServerPort());
             preparedStatement.setString(3, device.getLastConnection());
             preparedStatement.setString(4, device.getEncryptionKey());
@@ -159,7 +158,7 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next())
-                device = new Device(resultSet.getString("Name"), resultSet.getString("IP"), resultSet.getString("ServerPort"), resultSet.getString("LastConnection"), resultSet.getString("EncryptionKey"), resultSet.getString("UserAssociated"));
+                device = new Device(resultSet.getString("name"), resultSet.getString("ip"), resultSet.getString("serverPort"), resultSet.getString("lastConnection"), resultSet.getString("encryptionKey"), resultSet.getString("userAssociated"));
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, resultSet);
         }
@@ -199,7 +198,7 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                encryptionKey = resultSet.getString("EncryptionKey");
+                encryptionKey = resultSet.getString("encryptionKey");
             }
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, resultSet);

@@ -1,9 +1,8 @@
-
 function bodyOnLoad() {
     accountInformation();
 
     loadDevicesTable();
-    window.setInterval(function(){
+    window.setInterval(function () {
         loadDevicesTable();
     }, 5000);
 
@@ -19,7 +18,7 @@ function accountInformation() {
             // load name near to the brand
             var string = " - " + user.email;
             if (user.isAdmin == true) {
-                string = string +" (ADMIN)";
+                string = string + " (ADMIN)";
             }
             document.getElementById("userNearBrand").innerHTML = string;
 
@@ -171,12 +170,12 @@ function loadDevicesJSONtoTable(devicesListJSON) {
     devicesTable.appendChild(tbody);
 }
 
-function deleteDevice(device, indexTableRow){
+function deleteDevice(device, indexTableRow) {
     $.ajax({
-        url: '/Richkware-Manager-Server/device?name='+device,
+        url: '/Richkware-Manager-Server/device?name=' + device,
         type: 'DELETE',
-        success: function(result) {
-            $("#tableRow"+indexTableRow).remove();
+        success: function (result) {
+            $("#tableRow" + indexTableRow).remove();
         }
     });
 }

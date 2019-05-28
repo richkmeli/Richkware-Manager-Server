@@ -7,7 +7,7 @@ function accountInformation() {
             // load name near to the brand
             var string = " - " + user.email;
             if (user.isAdmin == true) {
-                string = string +" (ADMIN)";
+                string = string + " (ADMIN)";
             }
             document.getElementById("userNearBrand").innerHTML = string;
 

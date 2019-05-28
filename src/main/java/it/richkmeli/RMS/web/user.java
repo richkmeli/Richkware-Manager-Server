@@ -58,13 +58,13 @@ public class user extends HttpServlet {
             if (user != null) {
 
                 //if (session.isAdmin()) {
-                    out = GenerateUserListJSON(session);
+                out = GenerateUserListJSON(session);
 
-                    // servlet response
-                    PrintWriter printWriter = response.getWriter();
-                    printWriter.println(out);
-                    printWriter.flush();
-                    printWriter.close();
+                // servlet response
+                PrintWriter printWriter = response.getWriter();
+                printWriter.println(out);
+                printWriter.flush();
+                printWriter.close();
                 /*} else {
                     // non ha privilegi
                     // TODO rimanda da qualche parte perche c'è errore
@@ -112,17 +112,17 @@ public class user extends HttpServlet {
                 if (req.getParameterMap().containsKey("email")) {
                     String email = req.getParameter("email");
 
-                    if(email.compareTo(session.getUser())==0 ||
-                            session.isAdmin()){
+                    if (email.compareTo(session.getUser()) == 0 ||
+                            session.isAdmin()) {
                         session.getAuthDatabaseManager().removeUser(email);
                         out = "deleted";
-                    }else {
+                    } else {
                         // TODO rimanda da qualche parte perche c'è errore
                         httpSession.setAttribute("error", "non hai i privilegi");
                         req.getRequestDispatcher("login.html").forward(req, resp);
                     }
 
-                }else{
+                } else {
                     // TODO rimanda da qualche parte perche c'è errore
                     httpSession.setAttribute("error", "dispositivo non specificato");
                     req.getRequestDispatcher("login.html").forward(req, resp);
@@ -149,7 +149,7 @@ public class user extends HttpServlet {
     private String GenerateUserListJSON(Session session) {
         //DatabaseManager databaseManager = session.getDatabaseManager();
         List<User> userList = new ArrayList<>();//databaseManager.refreshUser();
-        userList.add(new User(session.getUser(),"hidden",session.isAdmin()));
+        userList.add(new User(session.getUser(), "hidden", session.isAdmin()));
 
         Type type = new TypeToken<List<User>>() {
         }.getType();

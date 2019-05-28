@@ -19,11 +19,13 @@
 
 </head>
 
-<body class="bg-dark"onload="bodyOnLoad()">
+<body class="bg-dark" onload="bodyOnLoad()">
 
 
 <nav class="navbar navbar-toggleable-md navbar-dark bg-faded">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+            aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="index.html">
@@ -47,17 +49,17 @@
         </ul>
         <ul class="nav <!--justify-content-end-->">
             <li class="nav-item" id="signupNavBar">
-                <a class="nav-link" href="signup.html" >
+                <a class="nav-link" href="signup.html">
                     <span class="fa fa-user-plus"></span> Sign Up
                 </a>
             </li>
             <li class="nav-item" id="loginNavBar">
-                <a class="nav-link" href="login.html" >
+                <a class="nav-link" href="login.html">
                     <span class="fa fa-sign-in"></span> Login
                 </a>
             </li>
             <li class="nav-item" id="logoutNavBar">
-                <a class="nav-link" href="/Richkware-Manager-Server/LogOut" >
+                <a class="nav-link" href="/Richkware-Manager-Server/LogOut">
                     <span class="fa fa-sign-out"></span> Logout
                 </a>
             </li>
@@ -76,58 +78,58 @@
 
 <div class="container bg-light">
     <div class="card mx-auto mt-5">
-    <div class="panel panel-default">
-        <div class="card-header"></div>
-        <div class="panel-body">
-            <button type="button" class="btn btn-default btn-sm pull-right" onclick="loadUsersTable()">
-                <span class="fa fa-refresh"></span> Refresh
-            </button>
-            <!-- <form id = "AddForm"
-              action="addDevice"
-              method="post">
-              <table style="background-color: green">
-                  <tr>
-                    <td>name: <input id = "name" name = "name" type = "text"value = ""/></td>
-                    <td>IP: <input id = "IP" name = "IP" type = "text"value = ""/></td>
-                    <td>serverPort: <input id = "serverPort" name = "serverPort" type = "text"value = ""/></td>
-                    <td>lastConnection: <input id = "lastConnection" name = "lastConnection" type = "text"value = ""/></td>
+        <div class="panel panel-default">
+            <div class="card-header"></div>
+            <div class="panel-body">
+                <button type="button" class="btn btn-default btn-sm pull-right" onclick="loadUsersTable()">
+                    <span class="fa fa-refresh"></span> Refresh
+                </button>
+                <!-- <form id = "AddForm"
+                  action="addDevice"
+                  method="post">
+                  <table style="background-color: green">
+                      <tr>
+                        <td>name: <input id = "name" name = "name" type = "text"value = ""/></td>
+                        <td>IP: <input id = "IP" name = "IP" type = "text"value = ""/></td>
+                        <td>serverPort: <input id = "serverPort" name = "serverPort" type = "text"value = ""/></td>
+                        <td>lastConnection: <input id = "lastConnection" name = "lastConnection" type = "text"value = ""/></td>
 
-                    <td><input id = "submit"
-                            type = "submit"
-                            value = "Add device">
-                  </tr>
-              </table>
-              </form>
-             <br>
-            -->
+                        <td><input id = "submit"
+                                type = "submit"
+                                value = "Add device">
+                      </tr>
+                  </table>
+                  </form>
+                 <br>
+                -->
 
-            <!--   <form action="EditUser" method="post" id="EditForm"
-                     style="display: none;">
-                   <table class="table">
-                       <tr>
-                           <td><input id="name_E" name="name" type="text" value=""/></td>
-                           <td><input id="name_OE" name="OLDname" type="text" value=""
-                                      style="display: none"/></td>
-                           <td><input id="IP_E" name="IP" type="text" value=""/></td>
-                           <td><input id="IP_OE" name="OLDIP" type="text" value=""
-                                      style="display: none"/></td>
-                           <td><input id="serverPort_E" name="serverPort" type="text"
-                                      value=""/></td>
-                           <td><input id="serverPort_OE" name="OLDserverPort"
-                                      type="text" value="" style="display: none"/></td>
+                <!--   <form action="EditUser" method="post" id="EditForm"
+                         style="display: none;">
+                       <table class="table">
+                           <tr>
+                               <td><input id="name_E" name="name" type="text" value=""/></td>
+                               <td><input id="name_OE" name="OLDname" type="text" value=""
+                                          style="display: none"/></td>
+                               <td><input id="IP_E" name="IP" type="text" value=""/></td>
+                               <td><input id="IP_OE" name="OLDIP" type="text" value=""
+                                          style="display: none"/></td>
+                               <td><input id="serverPort_E" name="serverPort" type="text"
+                                          value=""/></td>
+                               <td><input id="serverPort_OE" name="OLDserverPort"
+                                          type="text" value="" style="display: none"/></td>
 
 
-                           <td><input id="submit" type="submit" value="Edit device">
-                       </tr>
-                   </table>
-               </form>-->
+                               <td><input id="submit" type="submit" value="Edit device">
+                           </tr>
+                       </table>
+                   </form>-->
 
-            <div class="table-responsive">
-                <table class="table table-hover" id="usersTable">
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="usersTable">
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 </div>
 
