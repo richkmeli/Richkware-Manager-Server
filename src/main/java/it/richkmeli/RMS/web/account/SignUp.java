@@ -1,10 +1,10 @@
 package it.richkmeli.RMS.web.account;
 
-import it.richkmeli.RMS.Session;
+import it.richkmeli.RMS.web.util.Session;
+import it.richkmeli.RMS.web.util.ServletException;
+import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.jframework.auth.model.User;
-import it.richkmeli.jframework.database.DatabaseException;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,25 +22,18 @@ public class SignUp extends HttpServlet {
         super();
     }
 
-    private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        Session session = (Session) httpSession.getAttribute("session");
-        if (session == null) {
-            try {
-                session = new Session();
-                httpSession.setAttribute("session", session);
-            } catch (DatabaseException e) {
-                httpSession.setAttribute("error", e);
-                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
-            }
-        }
-        return session;
-    }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         HttpSession httpSession = request.getSession();
-        Session session = getServerSession(request, response);
+        Session session = null;
+        try {
+            session = ServletManager.getServerSession(httpSession);
+        }catch (ServletException e){
+            httpSession.setAttribute("error", e);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+
+        }
 
         try {
             // check if is not already logged
@@ -75,13 +68,13 @@ public class SignUp extends HttpServlet {
                                 // pass corta
                                 // TODO rimanda da qualche parte perche c'è errore
                                 httpSession.setAttribute("error", "pass corta");
-                                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+                                request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
                             }
                         } else {
                             // mancano email o password
                             // TODO rimanda da qualche parte perche c'è errore
                             httpSession.setAttribute("error", "mancano email o password");
-                            request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+                            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
                         }
                     }
 
@@ -90,7 +83,7 @@ public class SignUp extends HttpServlet {
                 // already logged
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "già loggato");
-                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+                request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
             }
 
 
@@ -104,12 +97,12 @@ public class SignUp extends HttpServlet {
 
         } catch (Exception e) {
             httpSession.setAttribute("error", e);
-            request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
         }
 
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         this.doGet(request, response);
     }
 

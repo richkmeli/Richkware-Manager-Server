@@ -1,6 +1,7 @@
 package it.richkmeli.RMS.web;
 
-import it.richkmeli.RMS.Session;
+import it.richkmeli.RMS.web.util.ServletManager;
+import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.ServletException;
@@ -22,15 +23,12 @@ public class devicesListSync extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession httpSession = request.getSession();
-        Session session = (Session) httpSession.getAttribute("session");
-        if (session == null) {
-            try {
-                session = new Session();
-                httpSession.setAttribute("session", session);
-            } catch (DatabaseException e) {
-                httpSession.setAttribute("error", e);
-                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
-            }
+        Session session = null;
+        try {
+            session = ServletManager.getServerSession(httpSession);
+        }catch (it.richkmeli.RMS.web.util.ServletException e){
+            httpSession.setAttribute("error", e);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
         }
 
         try {
@@ -40,7 +38,7 @@ public class devicesListSync extends HttpServlet {
 
         } catch (DatabaseException e) {
             httpSession.setAttribute("error", e);
-            request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
         }
 
     }

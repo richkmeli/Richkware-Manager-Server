@@ -1,12 +1,12 @@
 package it.richkmeli.RMS.web;
 
 import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
+import it.richkmeli.RMS.web.util.ServletException;
+import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.jcrypto.Crypto;
-import it.richkmeli.RMS.Session;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.util.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,26 +29,18 @@ public class encryptionKey extends HttpServlet {
 
     }
 
-    private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        Session session = (Session) httpSession.getAttribute("session");
-        if (session == null) {
-            try {
-                session = new Session();
-                httpSession.setAttribute("session", session);
-            } catch (DatabaseException e) {
-                httpSession.setAttribute("error", e);
-                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
-            }
-        }
-        return session;
-    }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         HttpSession httpSession = request.getSession();
-        Session session = getServerSession(request, response);
+        Session session = null;
+        try {
+            session = ServletManager.getServerSession(httpSession);
+        }catch (ServletException e){
+            httpSession.setAttribute("error", e);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
 
+        }
 
         try {
             if (request.getParameterMap().containsKey("id")) {
@@ -75,17 +67,17 @@ public class encryptionKey extends HttpServlet {
                 // TODO rimanda da qualche parte perche c'è errore
                 Logger.e("SERVLET encryptionKey, doGet: argomenti non presenti");
                 httpSession.setAttribute("error", "argomenti non presenti");
-                request.getRequestDispatcher("login.html").forward(request, response);
+                request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
             }
         } catch (Exception e) {
             Logger.e("SERVLET encryptionKey, doGet", e);
             httpSession.setAttribute("error", e);
-            request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         doGet(request, response);
     }
 

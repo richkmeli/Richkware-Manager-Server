@@ -1,4 +1,4 @@
-package it.richkmeli.RMS;
+package it.richkmeli.RMS.web.util;
 
 import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
 import it.richkmeli.RMS.data.device.model.Device;
@@ -6,6 +6,7 @@ import it.richkmeli.jframework.auth.AuthDatabaseManager;
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
+import sun.rmi.runtime.Log;
 
 import java.sql.SQLException;
 
@@ -18,28 +19,9 @@ public class Session {
 
     public Session() throws DatabaseException {
         deviceDatabaseManager = new DeviceDatabaseManager();
-        authDatabaseManager = new AuthDatabaseManager("mysql");
+        authDatabaseManager = new AuthDatabaseManager();
         userID = null;
         isAdmin = false;
-
-        //TODO: load data for testing
-        try {
-            authDatabaseManager.addUser(new User("richk@i.it", "00000000", true));
-            authDatabaseManager.addUser(new User("er@fv.it", "00000000", false));
-            authDatabaseManager.addUser(new User("richk@i.it", "00000000", true));
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-            Logger.e("Session TEST USERS", e);
-        }
-
-        try {
-            deviceDatabaseManager.addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-            deviceDatabaseManager.addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-            deviceDatabaseManager.addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it"));
-        } catch (DatabaseException e) {
-            Logger.e("Session TEST DEVICES", e);
-        }
-
     }
 
     /*public DatabaseManager getDatabaseManager() {
@@ -47,6 +29,7 @@ public class Session {
     }*/
 
     public DeviceDatabaseManager getDeviceDatabaseManager() throws DatabaseException {
+        //Logger.i("deviceDatabaseManager" + deviceDatabaseManager);
         if (deviceDatabaseManager != null) {
             return deviceDatabaseManager;
         } else {
@@ -56,6 +39,7 @@ public class Session {
     }
 
     public AuthDatabaseManager getAuthDatabaseManager() throws DatabaseException {
+        //Logger.i("authDatabaseManager" + authDatabaseManager);
         if (authDatabaseManager != null) {
             return authDatabaseManager;
         } else {

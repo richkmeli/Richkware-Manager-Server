@@ -2,12 +2,13 @@ package it.richkmeli.RMS.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.richkmeli.RMS.Session;
+import it.richkmeli.RMS.web.util.Session;
+import it.richkmeli.RMS.web.util.ServletException;
+import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.database.DatabaseException;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,25 +30,17 @@ public class usersList extends HttpServlet {
         super();
     }
 
-    private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        Session session = (Session) httpSession.getAttribute("session");
-        if (session == null) {
-            try {
-                session = new Session();
-                httpSession.setAttribute("session", session);
-            } catch (DatabaseException e) {
-                httpSession.setAttribute("error", e);
-                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
-            }
-        }
-        return session;
-    }
-
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         HttpSession httpSession = request.getSession();
-        Session session = getServerSession(request, response);
+        Session session = null;
+        try {
+            session = ServletManager.getServerSession(httpSession);
+        }catch (ServletException e){
+            httpSession.setAttribute("error", e);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+
+        }
 
         try {
 
@@ -69,24 +62,24 @@ public class usersList extends HttpServlet {
                     // non ha privilegi
                     // TODO rimanda da qualche parte perche c'è errore
                     httpSession.setAttribute("error", "non ha privilegi");
-                    request.getRequestDispatcher("login.html").forward(request, response);
+                    request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
                 }
 
             } else {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "non loggato");
-                request.getRequestDispatcher("login.html").forward(request, response);
+                request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
             httpSession.setAttribute("error", e);
-            request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         doGet(request, response);
     }
 

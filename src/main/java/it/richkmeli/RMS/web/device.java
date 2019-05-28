@@ -4,13 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
 import it.richkmeli.RMS.data.device.model.Device;
+import it.richkmeli.RMS.web.util.ServletException;
+import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.jcrypto.Crypto;
-import it.richkmeli.RMS.Session;
+import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jcrypto.util.RandomStringGenerator;
-import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,26 +40,18 @@ public class device extends HttpServlet {
         password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
     }
 
-    private Session getServerSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        Session session = (Session) httpSession.getAttribute("session");
-        if (session == null) {
-            try {
-                session = new Session();
-                httpSession.setAttribute("session", session);
-            } catch (DatabaseException e) {
-                httpSession.setAttribute("error", e);
-                request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
-            }
-        }
-        return session;
-    }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         HttpSession httpSession = request.getSession();
-        Session session = getServerSession(request, response);
+        Session session = null;
+        try {
+            session = ServletManager.getServerSession(httpSession);
+        }catch (ServletException e){
+            httpSession.setAttribute("error", e);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
 
+        }
         try {
 
             String out = null;
@@ -78,7 +70,7 @@ public class device extends HttpServlet {
                     } else {
                         // TODO rimanda da qualche parte perche c'è errore
                         httpSession.setAttribute("error", "non hai i privilegi");
-                        request.getRequestDispatcher("login.html").forward(request, response);
+                        request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
 
                     }
 
@@ -86,7 +78,7 @@ public class device extends HttpServlet {
                 } else {
                     // TODO rimanda da qualche parte perche c'è errore
                     httpSession.setAttribute("error", "dispositivo non specificato");
-                    request.getRequestDispatcher("login.html").forward(request, response);
+                    request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
                 }
 
                 // servlet response
@@ -98,25 +90,32 @@ public class device extends HttpServlet {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "non loggato");
-                request.getRequestDispatcher("login.html").forward(request, response);
+                request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
             httpSession.setAttribute("error", e);
-            request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         doGet(request, response);
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {
         //super.doPut(req, resp);
         HttpSession httpSession = req.getSession();
-        Session session = getServerSession(req, resp);
+        Session session = null;
+        try {
+            session = ServletManager.getServerSession(httpSession);
+        }catch (ServletException e){
+            httpSession.setAttribute("error", e);
+            req.getRequestDispatcher(ServletManager.ERROR_JSP).forward(req, resp);
+
+        }
 
         try {
             if (req.getParameterMap().containsKey("data0") &&
@@ -171,22 +170,28 @@ public class device extends HttpServlet {
                 // TODO rimanda da qualche parte perche c'è errore
                 Logger.e("SERVLET device, doGet: argomenti non presenti");
                 httpSession.setAttribute("error", "argomenti non presenti");
-                req.getRequestDispatcher("login.html").forward(req, resp);
+                req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
             }
         } catch (Exception e) {
             Logger.e("SERVLET device, doGet", e);
             httpSession.setAttribute("error", e);
-            req.getRequestDispatcher("JSP/error.jsp").forward(req, resp);
+            req.getRequestDispatcher(ServletManager.ERROR_JSP).forward(req, resp);
         }
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {
         //if the code below is de-commented, this servlet disables DELETE
         //super.doDelete(req, resp);
-
         HttpSession httpSession = req.getSession();
-        Session session = getServerSession(req, resp);
+        Session session = null;
+        try {
+            session = ServletManager.getServerSession(httpSession);
+        }catch (ServletException e){
+            httpSession.setAttribute("error", e);
+            req.getRequestDispatcher(ServletManager.ERROR_JSP).forward(req, resp);
+
+        }
 
         try {
             String out = null;
@@ -206,13 +211,13 @@ public class device extends HttpServlet {
                     } else {
                         // TODO rimanda da qualche parte perche c'è errore
                         httpSession.setAttribute("error", "non hai i privilegi");
-                        req.getRequestDispatcher("login.html").forward(req, resp);
+                        req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
                     }
 
                 } else {
                     // TODO rimanda da qualche parte perche c'è errore
                     httpSession.setAttribute("error", "dispositivo non specificato");
-                    req.getRequestDispatcher("login.html").forward(req, resp);
+                    req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
                 }
                 // servlet response
                 PrintWriter printWriter = resp.getWriter();
@@ -223,12 +228,12 @@ public class device extends HttpServlet {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "non loggato");
-                req.getRequestDispatcher("login.html").forward(req, resp);
+                req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
             httpSession.setAttribute("error", e);
-            req.getRequestDispatcher("JSP/error.jsp").forward(req, resp);
+            req.getRequestDispatcher(ServletManager.ERROR_JSP).forward(req, resp);
         }
 
     }
