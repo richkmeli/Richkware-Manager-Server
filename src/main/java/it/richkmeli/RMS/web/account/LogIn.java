@@ -1,9 +1,11 @@
 package it.richkmeli.RMS.web.account;
 
+import it.richkmeli.RMS.web.response.KOResponse;
+import it.richkmeli.RMS.web.response.OKResponse;
+import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.jframework.util.Logger;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet({"/LogIn"})
 public class LogIn extends HttpServlet {
@@ -26,14 +29,17 @@ public class LogIn extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         HttpSession httpSession = request.getSession();
         Session session = null;
+        PrintWriter out = response.getWriter();
         //Logger.i(ServletManager.printHTTPsession(httpSession));
         try {
             session = ServletManager.getServerSession(httpSession);
         }catch (ServletException e){
             httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+//            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
 
         }
+
+        //TODO: togliere caso in cui almeno 1 campo è vuoto -> gestito lato client
 
         try {
             // check if is not already logged
@@ -51,46 +57,32 @@ public class LogIn extends HttpServlet {
                                 session.setUser(email);
                                 session.setAdmin(isAdmin);
 
-                                //httpSession.setAttribute("emailUser", email);
-                                response.sendRedirect(ServletManager.DEVICES_HTML);
-
-                                //request.getRequestDispatcher("controlPanel.html").forward(request, response);
+                                out.println((new OKResponse(StatusCode.SUCCESS)).json());
                             } else {
                                 // pass sbagliata
-                                // TODO rimanda da qualche parte perche c'è errore
-                                httpSession.setAttribute("error", "pass sbagliata");
-                                request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+                                out.println((new KOResponse(StatusCode.WRONG_PASSWORD)).json());
                             }
 
                         } else {
-                            // pass corta
-                            // TODO rimanda da qualche parte perche c'è errore
-                            httpSession.setAttribute("error", "pass null");
-                            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+                            // manca pass
+                            out.println((new KOResponse(StatusCode.MISSING_FIELD)).json());
                         }
                     } else {
-                        // mancano email o password
-                        // TODO rimanda da qualche parte perche c'è errore
-                        httpSession.setAttribute("error", "mancano email o password");
-                        request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+                        // mail non trovata
+                        out.println((new KOResponse(StatusCode.ACCOUNT_NOT_FOUND)).json());
                     }
                 } else {
-                    // mancano email o password
-                    // TODO rimanda da qualche parte perche c'è errore
-                    httpSession.setAttribute("error", "email null");
-                    request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+                    // manca email o pass
+                    out.println((new KOResponse(StatusCode.MISSING_FIELD)).json());
                 }
             } else {
                 // already logged
-                // TODO rimanda da qualche parte perche c'è errore
-                httpSession.setAttribute("error", "già loggato");
-                request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+                out.println((new KOResponse(StatusCode.ALREADY_LOGGED)).json());
             }
 
 
         } catch (Exception e) {
-            httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
 
     }
