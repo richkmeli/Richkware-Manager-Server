@@ -27,6 +27,7 @@ public class LogIn extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+//        System.out.println("Received request! data contained: " + request.getParameterNames());
         HttpSession httpSession = request.getSession();
         Session session = null;
         PrintWriter out = response.getWriter();
@@ -47,6 +48,8 @@ public class LogIn extends HttpServlet {
 
                 String email = request.getParameter("email");
                 String pass = request.getParameter("password");
+
+                System.out.println("email: " + email + " password: " + pass);
 
                 if (email != null) {
                     if (session.getAuthDatabaseManager().isUserPresent(email)) {
