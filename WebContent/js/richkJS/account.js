@@ -1,20 +1,22 @@
-function accountInformation() {
+$(document).ready(function () {
 
-    $(document).ready(function () {
+    $.get("user", function(data) {
+        console.log(data)
+        var JSONdata = JSON.parse(data)
+        if (JSONdata.statusCode == 1000) {
+            console.log(JSONdata.message + " " + typeof(JSONdata.message))
 
-        $("#Login").click(function() {
-            username = $("#exampleInputEmail1").val()
-            password = $("#exampleInputPassword1").val()
-            console.log("username: " + username + " password: " + password)
-            $.post("LogIn", { email: username, password: password }, function(data) {
-                if (data.includes("OK")) {
-                    window.location.replace("/Richkware-Manager-Server/devices.html")
-                } else {
-                    alert("Credentials are not correct!")
-                }
-            })
-        })
+            $("#signupNavBar").hide()
+            $("#loginNavBar").hide()
 
-     });
+            var JSONmessage = JSON.parse(JSONdata.message)
+            if (JSONmessage.admin == true) {
+                $("#userNearBrand").html(" - " + JSONmessage.user + " (ADMIN)")
+                $("#usersNavBar").show()
+            } else {
+                $("#userNearBrand").html(" - " + JSONmessage.user)
+            }
+        }
+    })
 
-}
+ });
