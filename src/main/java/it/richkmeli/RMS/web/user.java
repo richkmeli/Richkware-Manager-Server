@@ -2,10 +2,14 @@ package it.richkmeli.RMS.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import it.richkmeli.RMS.web.response.KOResponse;
+import it.richkmeli.RMS.web.response.OKResponse;
+import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.jframework.auth.model.User;
+import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,31 +37,34 @@ public class user extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        PrintWriter out = response.getWriter();
         HttpSession httpSession = request.getSession();
         Session session = null;
         try {
             session = ServletManager.getServerSession(httpSession);
         }catch (ServletException e){
-            httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+//            httpSession.setAttribute("error", e);
+//            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
 
         }
         try {
 
-            String out = null;
-
             String user = session.getUser();
+            boolean isAdmin = session.getAuthDatabaseManager().isAdmin(user);
             // Authentication
             if (user != null) {
 
                 //if (session.isAdmin()) {
-                out = GenerateUserListJSON(session);
+//                out = GenerateUserListJSON(session);
+                JSONObject message = new JSONObject();
+                message.put("user", user);
+                message.put("admin", isAdmin);
+                out.println((new OKResponse(StatusCode.SUCCESS, message.toString()).json()));
 
                 // servlet response
-                PrintWriter printWriter = response.getWriter();
-                printWriter.println(out);
-                printWriter.flush();
-                printWriter.close();
+                out.flush();
+                out.close();
                 /*} else {
                     // non ha privilegi
                     // TODO rimanda da qualche parte perche c'è errore
@@ -68,14 +75,16 @@ public class user extends HttpServlet {
             } else {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
-                httpSession.setAttribute("error", "non loggato");
-                response.sendRedirect(ServletManager.LOGIN_HTML);
+                out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
+//                httpSession.setAttribute("error", "non loggato");
+//                response.sendRedirect(ServletManager.LOGIN_HTML);
                 // request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
-            httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+//            httpSession.setAttribute("error", e);
+//            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
         }
     }
 

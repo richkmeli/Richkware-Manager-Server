@@ -54,7 +54,7 @@ public class LogIn extends HttpServlet {
                 if (email != null) {
                     if (session.getAuthDatabaseManager().isUserPresent(email)) {
                         if (pass != null) {
-                            Boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);
+                            boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);
                             if (session.getAuthDatabaseManager().checkPassword(email, pass)) {
                                 // set userID into the session
                                 session.setUser(email);
@@ -87,6 +87,9 @@ public class LogIn extends HttpServlet {
         } catch (Exception e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
+
+        out.flush();
+        out.close();
 
     }
 

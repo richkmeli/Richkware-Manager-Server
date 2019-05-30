@@ -14,10 +14,11 @@ public enum StatusCode {
 
     SUCCESS(1000, ""),
     GENERIC_ERROR(2000, ""),
-    ALREADY_LOGGED(2100, "Already logged in"),
-    MISSING_FIELD(2101, "Check input fields"),
-    WRONG_PASSWORD(2102, "Wrong password"),
-    ACCOUNT_NOT_FOUND(2103, "Account not found");
+    NOT_LOGGED(2100, "User is not logged"),
+    ALREADY_LOGGED(2101, "Already logged in"),
+    MISSING_FIELD(2102, "Check input fields"),
+    WRONG_PASSWORD(2103, "Wrong password"),
+    ACCOUNT_NOT_FOUND(2104, "Account not found");
 
 
     private int code;
