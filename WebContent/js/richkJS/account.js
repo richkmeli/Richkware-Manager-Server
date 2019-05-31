@@ -24,7 +24,7 @@ $(document).ready(function () {
         $("#usersNavBar").hide()
     })
 
-    $("#logout").click(function() {
+    $("#logoutBtn").click(function() {
         console.log("logout clicked")
         $.get("LogOut", function(data) {
             var JSONdata = JSON.parse(data)

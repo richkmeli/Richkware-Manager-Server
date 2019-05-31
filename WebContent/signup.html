@@ -31,6 +31,7 @@
     +
 
     <script src="js/richkJS/account.js"></script>
+    <script src="js/richkJS/signup.js"></script>
 
     <script>
         var userLang = $.cookie("userLang");
@@ -96,7 +97,7 @@
                 </a>
             </li>
             <li class="nav-item" id="logoutNavBar" style="display:none;">
-                <a class="nav-link" href="/Richkware-Manager-Server/LogOut">
+                <a class="nav-link" href="#" id="loginBtn">
                     <span class="fa fa-sign-out"></span> Logout
                 </a>
             </li>
@@ -111,7 +112,7 @@
     <div class="card card-register mx-auto mt-5">
         <div class="card-header" id="Registertitle"></div>
         <div class="card-body">
-            <form action="SignUp" method="POST">
+            <form>
                 <div class="form-group">
                     <div class="form-row">
                         <div class="col-md-6">
@@ -146,7 +147,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" value="submit" class="btn btn-primary btn-block" id="Register"></button>
+                <button class="btn btn-primary btn-block" id="Register" type="button" value="submit"></button>
             </form>
             <div class="text-center">
                 <a class="d-block small mt-3" href="login.html" id="Loginpage"></a>
