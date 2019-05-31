@@ -20,7 +20,7 @@
 
 </head>
 
-<body class="bg-dark" onload="bodyOnLoad()">
+<body class="bg-dark">
 
 <nav class="navbar navbar-toggleable-md navbar-dark bg-faded">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
@@ -37,9 +37,10 @@
                 <a class="nav-link" href="index.html">Home </a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="#">Devices List <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#" style="display:none;">Devices List <span
+                        class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item" id="usersNavBar" hidden="true">
+            <li class="nav-item" id="usersNavBar" style="display:none;">
                 <a class="nav-link" href="users.html">Users List</a>
             </li>
             <!--DISABLED<li class="nav-item">
@@ -57,8 +58,8 @@
                     <span class="fa fa-sign-in"></span> Login
                 </a>
             </li>
-            <li class="nav-item" id="logoutNavBar">
-                <a class="nav-link" href="/Richkware-Manager-Server/LogOut">
+            <li class="nav-item" id="logoutNavBar" style="display:none;">
+                <a class="nav-link" id="logoutBtn">
                     <span class="fa fa-sign-out"></span> Logout
                 </a>
             </li>
@@ -80,7 +81,7 @@
         <div class="panel panel-default">
             <div class="card-header"></div>
             <div class="panel-body">
-                <button type="button" class="btn btn-default btn-sm pull-right" onclick="loadDevicesTable()">
+                <button class="btn btn-default btn-sm pull-right" type="button">
                     <span class="fa fa-refresh"></span> Refresh
                 </button>
                 <!-- <form id = "AddForm"

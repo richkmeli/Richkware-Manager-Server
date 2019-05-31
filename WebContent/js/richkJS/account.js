@@ -31,7 +31,7 @@ $(document).ready(function () {
             if (JSONdata.statusCode == 1000) {
                 window.location.replace("/Richkware-Manager-Server/index.html")
             } else {
-                //chiama pagina di errore
+                alert(JSONdata.message)
             }
         })
     })

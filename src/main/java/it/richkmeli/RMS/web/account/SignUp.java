@@ -1,6 +1,7 @@
 package it.richkmeli.RMS.web.account;
 
 import it.richkmeli.RMS.web.response.KOResponse;
+import it.richkmeli.RMS.web.response.OKResponse;
 import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
@@ -43,46 +44,22 @@ public class SignUp extends HttpServlet {
                 //    String name = request.getParameter("name");
                 //    String lastname = request.getParameter("lastname");
 
+                // se l'email è già presente nel DB
+                if (session.getAuthDatabaseManager().isUserPresent(email)) {
+                    // TODO password gia presente vuoi recuperarla? guarda se html o popup js
+                    out.println((new KOResponse(StatusCode.ALREADY_REGISTERED)).json());
+                } else {
 
-                if (email != null) {
-                    // se l'email è già presente nel DB
-                    if (session.getAuthDatabaseManager().isUserPresent(email)) {
-                        // TODO password gia presente vuoi recuperarla? guarda se html o popup js
-                    } else {
-                        if (pass != null) {
-                            if (pass.length() >= 8) {
+                    session.getAuthDatabaseManager().addUser(new User(email, pass, false));
+                    // set userID into the session
+                    session.setUser(email);
 
-                                session.getAuthDatabaseManager().addUser(new User(email, pass, false));
-                                // set userID into the session
-                                session.setUser(email);
-
-                                //httpSession.setAttribute("emailUser", email);
-                                //response.sendRedirect("controlPanel.html");
-
-                                //response.setHeader("Location", "/controlPanel.html");
-
-                                response.sendRedirect("devices.html");
-                                //request.getRequestDispatcher("controlPanel.html").forward(request, response);
-                            } else {
-                                // pass corta
-                                // TODO rimanda da qualche parte perche c'è errore
-                                httpSession.setAttribute("error", "pass corta");
-                                request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
-                            }
-                        } else {
-                            // mancano email o password
-                            // TODO rimanda da qualche parte perche c'è errore
-                            httpSession.setAttribute("error", "mancano email o password");
-                            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
-                        }
-                    }
+                    out.println((new OKResponse(StatusCode.SUCCESS)).json());
 
                 }
             } else {
                 // already logged
-                // TODO rimanda da qualche parte perche c'è errore
-                httpSession.setAttribute("error", "già loggato");
-                request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+                out.println((new KOResponse(StatusCode.ALREADY_LOGGED)).json());
             }
 
             out.flush();
@@ -91,21 +68,6 @@ public class SignUp extends HttpServlet {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         } catch (DatabaseException e) {
             e.printStackTrace();
-        }
-
-        try {
-
-
-            //PrintWriter printWriter = response.getWriter();
-            //printWriter.println("PTO");
-
-//            String data = request.getParameter("email");
-//            printWriter.println(data);
-//            printWriter.flush();
-
-
-        } catch (Exception e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
 
     }

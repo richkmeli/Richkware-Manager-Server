@@ -14,7 +14,7 @@ $(document).ready(function() {
                 } else if (JSONdata.statusCode == 2103 || JSONdata.statusCode == 2104) {
                     alert("Credentials are not correct!")
                 } else if (JSONdata.statusCode == 2000) {
-                    //chiama pagina di errore
+                    alert(JSONdata.message)
                 }
             })
         } else {
