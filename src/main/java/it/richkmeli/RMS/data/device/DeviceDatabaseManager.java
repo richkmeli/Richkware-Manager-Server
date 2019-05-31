@@ -6,7 +6,10 @@ import it.richkmeli.jcrypto.Crypto;
 import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.database.DatabaseManager;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,30 +34,32 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
     public List<Device> refreshDevice() throws DatabaseException {
         List<Device> deviceList = new ArrayList<Device>();
 
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = connect();
-            preparedStatement = connection.prepareStatement("SELECT * FROM " + tableName);
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Device tmp = new Device(
-                        resultSet.getString("name"),
-                        resultSet.getString("ip"),
-                        resultSet.getString("serverPort"),
-                        resultSet.getString("lastConnection"),
-                        resultSet.getString("encryptionKey"),
-                        resultSet.getString("userAssociated"));
-                deviceList.add(tmp);
-            }
-        } catch (SQLException e) {
-            disconnect(connection, preparedStatement, resultSet);
-            throw new DatabaseException(e);
-        }
-        disconnect(connection, preparedStatement, resultSet);
+        deviceList = refreshDevice("");
+//
+//        Connection connection = null;
+//        PreparedStatement preparedStatement = null;
+//        ResultSet resultSet = null;
+//
+//        try {
+//            connection = connect();
+//            preparedStatement = connection.prepareStatement("SELECT * FROM " + tableName);
+//            resultSet = preparedStatement.executeQuery();
+//
+//            while (resultSet.next()) {
+//                Device tmp = new Device(
+//                        resultSet.getString("name"),
+//                        resultSet.getString("ip"),
+//                        resultSet.getString("serverPort"),
+//                        resultSet.getString("lastConnection"),
+//                        resultSet.getString("encryptionKey"),
+//                        resultSet.getString("userAssociated"));
+//                deviceList.add(tmp);
+//            }
+//        } catch (SQLException e) {
+//            disconnect(connection, preparedStatement, resultSet);
+//            throw new DatabaseException(e);
+//        }
+//        disconnect(connection, preparedStatement, resultSet);
         return deviceList;
     }
 
@@ -68,7 +73,11 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("SELECT * FROM " + tableName);
+            String query = user == "" ? "SELECT * FROM " + tableName : "SELECT * FROM " + tableName + " WHERE userAssociated = ?";
+            preparedStatement = connection.prepareStatement(query);
+            if (user != "") {
+                preparedStatement.setString(1, user);
+            }
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -80,9 +89,8 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
                         resultSet.getString("encryptionKey"),
                         resultSet.getString("userAssociated"));
                 // add to the list the devices of the relative user.
-                if (user.compareTo(resultSet.getString("userAssociated")) == 0) {
-                    deviceList.add(tmp);
-                }
+                deviceList.add(tmp);
+
             }
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, resultSet);

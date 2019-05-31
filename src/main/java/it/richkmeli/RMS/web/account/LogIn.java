@@ -3,9 +3,10 @@ package it.richkmeli.RMS.web.account;
 import it.richkmeli.RMS.web.response.KOResponse;
 import it.richkmeli.RMS.web.response.OKResponse;
 import it.richkmeli.RMS.web.response.StatusCode;
-import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
+import it.richkmeli.RMS.web.util.Session;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,15 +35,7 @@ public class LogIn extends HttpServlet {
         //Logger.i(ServletManager.printHTTPsession(httpSession));
         try {
             session = ServletManager.getServerSession(httpSession);
-        }catch (ServletException e){
-            httpSession.setAttribute("error", e);
-//            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
 
-        }
-
-        //TODO: togliere caso in cui almeno 1 campo è vuoto -> gestito lato client
-
-        try {
             // check if is not already logged
             if (session.getUser() == null) {
 
@@ -51,45 +44,36 @@ public class LogIn extends HttpServlet {
 
                 System.out.println("email: " + email + " password: " + pass);
 
-                if (email != null) {
-                    if (session.getAuthDatabaseManager().isUserPresent(email)) {
-                        if (pass != null) {
-                            boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);
-                            if (session.getAuthDatabaseManager().checkPassword(email, pass)) {
-                                // set userID into the session
-                                session.setUser(email);
-                                session.setAdmin(isAdmin);
 
-                                out.println((new OKResponse(StatusCode.SUCCESS)).json());
-                            } else {
-                                // pass sbagliata
-                                out.println((new KOResponse(StatusCode.WRONG_PASSWORD)).json());
-                            }
+                if (session.getAuthDatabaseManager().isUserPresent(email)) {
+                    boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);
+                    if (session.getAuthDatabaseManager().checkPassword(email, pass)) {
+                        // set userID into the session
+                        session.setUser(email);
+                        session.setAdmin(isAdmin);
 
-                        } else {
-                            // manca pass
-                            out.println((new KOResponse(StatusCode.MISSING_FIELD)).json());
-                        }
+                        out.println((new OKResponse(StatusCode.SUCCESS)).json());
                     } else {
-                        // mail non trovata
-                        out.println((new KOResponse(StatusCode.ACCOUNT_NOT_FOUND)).json());
+                        // pass sbagliata
+                        out.println((new KOResponse(StatusCode.WRONG_PASSWORD)).json());
                     }
                 } else {
-                    // manca email o pass
-                    out.println((new KOResponse(StatusCode.MISSING_FIELD)).json());
+                    // mail non trovata
+                    out.println((new KOResponse(StatusCode.ACCOUNT_NOT_FOUND)).json());
                 }
             } else {
                 // already logged
                 out.println((new KOResponse(StatusCode.ALREADY_LOGGED)).json());
             }
 
+            out.flush();
+            out.close();
+        } catch (ServletException e) {
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
 
-        } catch (Exception e) {
+        } catch (DatabaseException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
-
-        out.flush();
-        out.close();
 
     }
 

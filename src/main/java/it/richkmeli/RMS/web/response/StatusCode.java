@@ -18,7 +18,8 @@ public enum StatusCode {
     ALREADY_LOGGED(2101, "Already logged in"),
     MISSING_FIELD(2102, "Check input fields"),
     WRONG_PASSWORD(2103, "Wrong password"),
-    ACCOUNT_NOT_FOUND(2104, "Account not found");
+    ACCOUNT_NOT_FOUND(2104, "Account not found"),
+    DB_ERROR(3000, "Error in DB");
 
 
     private int code;

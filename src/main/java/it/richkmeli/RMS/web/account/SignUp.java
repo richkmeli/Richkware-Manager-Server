@@ -1,9 +1,12 @@
 package it.richkmeli.RMS.web.account;
 
-import it.richkmeli.RMS.web.util.Session;
+import it.richkmeli.RMS.web.response.KOResponse;
+import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
+import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.auth.model.User;
+import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet({"/SignUp"})
 public class SignUp extends HttpServlet {
@@ -25,17 +29,12 @@ public class SignUp extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        PrintWriter out = response.getWriter();
         HttpSession httpSession = request.getSession();
         Session session = null;
         try {
             session = ServletManager.getServerSession(httpSession);
-        }catch (ServletException e){
-            httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
 
-        }
-
-        try {
             // check if is not already logged
             if (session.getUser() == null) {
 
@@ -86,6 +85,16 @@ public class SignUp extends HttpServlet {
                 request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
             }
 
+            out.flush();
+            out.close();
+        } catch (ServletException e) {
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+
+        try {
+
 
             //PrintWriter printWriter = response.getWriter();
             //printWriter.println("PTO");
@@ -96,8 +105,7 @@ public class SignUp extends HttpServlet {
 
 
         } catch (Exception e) {
-            httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
 
     }

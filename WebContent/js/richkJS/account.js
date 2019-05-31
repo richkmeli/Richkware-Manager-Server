@@ -8,6 +8,7 @@ $(document).ready(function () {
 
             $("#signupNavBar").hide()
             $("#loginNavBar").hide()
+            $("#logoutNavBar").show()
 
             var JSONmessage = JSON.parse(JSONdata.message)
             if (JSONmessage.admin == true) {
@@ -17,6 +18,22 @@ $(document).ready(function () {
                 $("#userNearBrand").html(" - " + JSONmessage.user)
             }
         }
+    }).fail(function() {
+        $("#signupNavBar").show()
+        $("#loginNavBar").show()
+        $("#usersNavBar").hide()
+    })
+
+    $("#logout").click(function() {
+        console.log("logout clicked")
+        $.get("LogOut", function(data) {
+            var JSONdata = JSON.parse(data)
+            if (JSONdata.statusCode == 1000) {
+                window.location.replace("/Richkware-Manager-Server/index.html")
+            } else {
+                //chiama pagina di errore
+            }
+        })
     })
 
  });

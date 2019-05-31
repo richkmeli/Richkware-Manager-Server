@@ -16,6 +16,7 @@
     <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 
     <script type="text/javascript" src="js/richkJS/users.js"></script>
+    <script src="js/richkJS/account.js"></script>
 
 </head>
 
@@ -37,10 +38,10 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">Home</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="display:none;">
                 <a class="nav-link" href="devices.html">Devices List</a>
             </li>
-            <li class="nav-item active" id="usersNavBar" hidden="true">
+            <li class="nav-item active" id="usersNavBar" style="display:none;">
                 <a class="nav-link" href="#">Users List <span class="sr-only">(current)</span></a>
             </li>
             <!--DISABLED<li class="nav-item">
@@ -58,8 +59,8 @@
                     <span class="fa fa-sign-in"></span> Login
                 </a>
             </li>
-            <li class="nav-item" id="logoutNavBar">
-                <a class="nav-link" href="/Richkware-Manager-Server/LogOut">
+            <li class="nav-item" id="logoutNavBar" style="display:none;">
+                <a class="nav-link" id="logoutBtn">
                     <span class="fa fa-sign-out"></span> Logout
                 </a>
             </li>
