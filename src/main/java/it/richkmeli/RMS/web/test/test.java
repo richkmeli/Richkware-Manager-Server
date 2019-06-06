@@ -45,7 +45,7 @@ public class test extends HttpServlet {
                session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
             } catch (DatabaseException e) {
                 e.printStackTrace();
-                Logger.e("Session TEST USERS", e);
+                Logger.error("Session TEST USERS", e);
             }
 
             try {
@@ -53,7 +53,7 @@ public class test extends HttpServlet {
                 session.getDeviceDatabaseManager().addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
                 session.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it"));
             } catch (DatabaseException e) {
-                Logger.e("Session TEST DEVICES", e);
+                Logger.error("Session TEST DEVICES", e);
             }
 
         try {
@@ -66,7 +66,7 @@ public class test extends HttpServlet {
                 }
             }
         } catch (DatabaseException e) {
-            Logger.e("Session ",e);
+            Logger.error("Session ",e);
         }
 
         out = "OK";

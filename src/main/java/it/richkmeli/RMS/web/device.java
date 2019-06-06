@@ -154,7 +154,7 @@ public class device extends HttpServlet {
                         encryptionKey,
                         userAssociated);
 
-                Logger.i("SERVLET device, doGet: Device: " + name + " " + req.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + userAssociated + " ");
+                Logger.info("SERVLET device, doGet: Device: " + name + " " + req.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + userAssociated + " ");
 
                 if (oldDevice == null) {
                     deviceDatabaseManager.addDevice(newDevice);
@@ -168,12 +168,12 @@ public class device extends HttpServlet {
             } else {
                 // argomenti non presenti
                 // TODO rimanda da qualche parte perche c'è errore
-                Logger.e("SERVLET device, doGet: argomenti non presenti");
+                Logger.error("SERVLET device, doGet: argomenti non presenti");
                 httpSession.setAttribute("error", "argomenti non presenti");
                 req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
             }
         } catch (Exception e) {
-            Logger.e("SERVLET device, doGet", e);
+            Logger.error("SERVLET device, doGet", e);
             httpSession.setAttribute("error", e);
             req.getRequestDispatcher(ServletManager.ERROR_JSP).forward(req, resp);
         }
