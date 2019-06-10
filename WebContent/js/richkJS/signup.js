@@ -6,7 +6,10 @@ $(document).ready(function() {
 
         console.log(pass + " " + confirmPass)
 
-        if (checkMail(email) && checkPassword(pass, confirmPass)) {
+        var mailCheck = checkMail(email)
+        var passwordCheck = checkPassword(pass, confirmPass)
+
+        if (mailCheck == "OK" && passwordCheck == "OK") {
             console.log("checks passed")
             var send = {email: email, password: pass}
             $.post("SignUp", send, function(data) {
@@ -19,27 +22,33 @@ $(document).ready(function() {
                 }
             })
         } else {
-            alert("Some field is wrong, please check before registration!")
+            if (mailCheck != "OK") {
+                alert(mailCheck)
+            } else if (passwordCheck != "OK") {
+                alert(passwordCheck)
+            } else {
+                alert("Some field is wrong, please check before registration!")
+            }
         }
     })
 })
 
 function checkMail(mail) {
-    var pattern = new RegExp(/(\w+)(.|-|_)*@\w+.\w+/g);
+    var pattern = new RegExp(/(\w+)(\.|-|_)*@\w+\.\w+/g);
     if (pattern.test(mail)) {
-        return true
+        return "OK"
     }
-    console.log("Invalid mail")
-    return false
+    return "Invalid email!"
 }
 
-//TODO: fare controllo lunghezza password
 function checkPassword(password, confirmPassword) {
-    if (password == confirmPassword) {
+    if (password === confirmPassword) {
         if (password.length >= 8) {
-            return true
+            return "OK"
+        } else {
+            return "Password is too short!"
         }
+    } else {
+        return "Passwords does not match!"
     }
-    console.log("Passwords not matching")
-    return false
 }

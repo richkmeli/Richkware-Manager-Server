@@ -17,6 +17,7 @@ $(document).ready(function () {
             } else {
                 $("#userNearBrand").html(" - " + JSONmessage.user)
             }
+            $("#devicesNavBar").show()
         }
     }).fail(function() {
         $("#signupNavBar").show()
