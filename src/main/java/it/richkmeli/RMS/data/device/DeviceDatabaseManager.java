@@ -24,7 +24,8 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
                 "serverPort VARCHAR(10)," +
                 "lastConnection VARCHAR(25)," +
                 "encryptionKey VARCHAR(32)," +
-                "userAssociated VARCHAR(50) REFERENCES user(email)" +
+                "userAssociated VARCHAR(50) REFERENCES user(email)," +
+                "commands VARCHAR(100)" +
                 ")";
 
         init();
@@ -87,7 +88,8 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
                         resultSet.getString("serverPort"),
                         resultSet.getString("lastConnection"),
                         resultSet.getString("encryptionKey"),
-                        resultSet.getString("userAssociated"));
+                        resultSet.getString("userAssociated"),
+                        resultSet.getString("commands"));
                 // add to the list the devices of the relative user.
                 deviceList.add(tmp);
 
@@ -110,13 +112,14 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("INSERT IGNORE INTO " + tableName + " (name, ip, serverPort, lastConnection, encryptionKey, userAssociated) VALUES (?,?,?,?,?,?)");
+            preparedStatement = connection.prepareStatement("INSERT IGNORE INTO " + tableName + " (name, ip, serverPort, lastConnection, encryptionKey, userAssociated, commands) VALUES (?,?,?,?,?,?,?)");
             preparedStatement.setString(1, device.getName());
             preparedStatement.setString(2, device.getIp());
             preparedStatement.setString(3, device.getServerPort());
             preparedStatement.setString(4, device.getLastConnection());
             preparedStatement.setString(5, device.getEncryptionKey());
             preparedStatement.setString(6, device.getUserAssociated());
+            preparedStatement.setString(7, device.getCommands());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
@@ -166,7 +169,7 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next())
-                device = new Device(resultSet.getString("name"), resultSet.getString("ip"), resultSet.getString("serverPort"), resultSet.getString("lastConnection"), resultSet.getString("encryptionKey"), resultSet.getString("userAssociated"));
+                device = new Device(resultSet.getString("name"), resultSet.getString("ip"), resultSet.getString("serverPort"), resultSet.getString("lastConnection"), resultSet.getString("encryptionKey"), resultSet.getString("userAssociated"), resultSet.getString("commands"));
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, resultSet);
         }
@@ -214,6 +217,50 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
         }
         disconnect(connection, preparedStatement, resultSet);
         return encryptionKey;
+    }
+
+    public boolean editCommands(String deviceName, String commands) throws DatabaseException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("UPDATE " + tableName + " SET commands = ? WHERE name = ?");
+            // arguments that will be edited
+            preparedStatement.setString(1, commands);
+            preparedStatement.setString(2, deviceName);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            disconnect(connection, preparedStatement, null);
+            throw new DatabaseException(e);
+            //return false;
+        }
+        disconnect(connection, preparedStatement, null);
+        return true;
+    }
+
+    public String getCommands(String deviceName) throws DatabaseException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String commands = "";
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE name = ?");
+            preparedStatement.setString(1, deviceName);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                commands = resultSet.getString("commands");
+            }
+        } catch (SQLException | DatabaseException e) {
+            disconnect(connection, preparedStatement, resultSet);
+            throw new DatabaseException(e);
+        }
+        disconnect(connection, preparedStatement, resultSet);
+        return commands;
     }
 
 

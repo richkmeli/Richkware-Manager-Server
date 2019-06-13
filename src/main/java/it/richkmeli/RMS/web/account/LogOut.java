@@ -39,11 +39,12 @@ public class LogOut extends HttpServlet {
 
             out.println((new OKResponse(StatusCode.SUCCESS)).json());
 
-            out.flush();
-            out.close();
         } catch (ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
+
+        out.flush();
+        out.close();
 
     }
 
