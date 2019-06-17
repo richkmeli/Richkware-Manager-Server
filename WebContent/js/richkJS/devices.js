@@ -78,8 +78,8 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td>" + encryptionKey + "</td>" +
             "<td>" + userAssociated + "</td>" +
             "<td>" + commands + "</td>" +
-            "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"EditDevicesTableField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Manage</button></td>" +
-            "<td><button type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-warning\">Remove</button></td>");
+            "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommands('" + name + "')\">Send Reverse Commands</button></td>" +
+            "<td><button type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-warning\" onclick=\"deleteDevice('" + name + "', '" + i + "')\">Remove</button></td>");
 
         //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
 
@@ -87,6 +87,10 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         //      index++
     }
     devicesTable.appendChild(tbody);
+}
+
+function openReverseCommands(name) {
+    window.location.replace("/Richkware-Manager-Server/reverse-commands.html?device=" + name)
 }
 
 function deleteDevice(device, indexTableRow) {
@@ -138,7 +142,7 @@ function newConnection() {
 
 $(document).ready(function() {
     loadDevicesTable();
-    setInterval(loadDevicesTable, 5000);
+    setInterval(loadDevicesTable, 30000);
 
     $("[id*=remove]").click(function () {
         var dev = event.target.id.split("#")[1];
@@ -149,7 +153,9 @@ $(document).ready(function() {
     });
 
     $("[id*=manage]").click(function () {
-        //TODO: chiamare pagina per la gestione del dispositivo
+        console.log("element clicked -> redirecting")
+        var name = event.target.id.split("#")[1]
+        window.location.replace = "/Richkware-Manager-Server/reverse-commands.html?device=" + name;
     });
 
     /* sc.onload = function () {
