@@ -2,7 +2,7 @@ $(document).ready(function () {
     var search = window.location.search
     var device = search.split("=")[1]
 
-    $("#deviceId").html(device)
+    $("#deviceId").html("Device: " + device)
 
     $("#submit-commands").click(function () {
         var commands = $("#text-area").val().split("\n");

