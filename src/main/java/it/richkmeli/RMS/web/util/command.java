@@ -30,33 +30,22 @@ public class command extends HttpServlet {
             if (req.getParameterMap().containsKey("data0") && req.getParameterMap().containsKey("data1")) {
 
                 String deviceName = req.getParameter("data0");
-                String remainingCommands = req.getParameter("data1");
+                String requestor = req.getParameter("data1");
 
-                String commands = session.getDeviceDatabaseManager().getCommands(deviceName);
+                String output = null;
 
-                //TODO: capire se i comandi sono già criptati o no
-                //encrypt commands
-//                String kpubC = null;
-//                if (req.getParameterMap().containsKey("Kpub")) {
-//                    kpubC = req.getParameter("Kpub");
-//                }
-//                // generation of public e private key of server
-//                KeyPair keyPair = Crypto.GetGeneratedKeyPairRSA();
-//
-//                // [enc_(KpubC)(AESKey) , sign_(KprivS)(AESKey) , KpubS]
-//                List<Object> res = Crypto.KeyExchangeAESRSA(keyPair, kpubC);
-//                KeyExchangePayloadCompat keyExchangePayload = (KeyExchangePayloadCompat) res.get(0);
-//                SecretKey AESsecretKey = (SecretKey) res.get(1);
-//
-//                // encrypt data (devices List) with AES secret key
-//                String enc = Crypto.EncryptAES(commands, AESsecretKey);
-//                ;
-//                // add data to the object
-//                keyExchangePayload.setData(enc);
-//
-//                String encPayload = GenerateKeyExchangePayloadJSON(keyExchangePayload);
+                if (requestor.equalsIgnoreCase("agent")) {
+                    output = session.getDeviceDatabaseManager().getCommands(deviceName);
+                } else if (requestor.equalsIgnoreCase("client")) {
+                    output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
+                }
 
-                out.println((new OKResponse(StatusCode.SUCCESS, commands)).json());
+                if (output != null) {
+                    out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
+                } else {
+                    out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Cannot retrieve correct output")).json());
+                }
+
 
             } else {
                 out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
@@ -89,6 +78,31 @@ public class command extends HttpServlet {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        PrintWriter out = resp.getWriter();
+        HttpSession httpSession = req.getSession();
+        Session session = null;
+
+        try {
+            session = ServletManager.getServerSession(httpSession);
+
+            if (req.getParameterMap().containsKey("data0") && req.getParameterMap().containsKey("data1")) {
+                String deviceName = req.getParameter("data0");
+                String commandsOutput = req.getParameter("data1"); //base64(base64(cmd1)##base64(cmd2)...)
+                session.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
+                session.getDeviceDatabaseManager().editCommands(deviceName, "");
+                out.println((new OKResponse(StatusCode.SUCCESS)).json());
+            } else {
+                out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
+            }
+        } catch (it.richkmeli.RMS.web.util.ServletException | DatabaseException e/* | CryptoException e*/) {
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+        }
+    }
+
+    //TODO: fare metodo per gestire la richiesta degli output da client -> modificare anche webapp
 
     private String GenerateKeyExchangePayloadJSON(KeyExchangePayloadCompat keyExchangePayload) {
         String keyExchangePayloadJSON;// = "[ ";

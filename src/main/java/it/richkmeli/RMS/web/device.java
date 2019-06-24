@@ -148,6 +148,7 @@ public class device extends HttpServlet {
                         timeStamp,
                         encryptionKey,
                         userAssociated,
+                        "",
                         "");
 
                 Logger.info("SERVLET device, doGet: Device: " + name + " " + req.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + userAssociated + " ");

@@ -49,9 +49,9 @@ public class test extends HttpServlet {
             }
 
             try {
-                session.getDeviceDatabaseManager().addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "start##start##start"));
-                session.getDeviceDatabaseManager().addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", ""));
-                session.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it", ""));
+                session.getDeviceDatabaseManager().addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "start##start##start", ""));
+                session.getDeviceDatabaseManager().addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", ""));
+                session.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it", "", ""));
             } catch (DatabaseException e) {
                 Logger.error("Session TEST DEVICES", e);
             }
@@ -62,7 +62,7 @@ public class test extends HttpServlet {
                 User u = new User(RandomStringGenerator.GenerateAlphanumericString(8)+"@"+RandomStringGenerator.GenerateAlphanumericString(8)+"."+RandomStringGenerator.GenerateAlphanumericString(2),RandomStringGenerator.GenerateAlphanumericString(10), false);
                 session.getAuthDatabaseManager().addUser(u);
                 for(int i2 = 0; i2<5; i2++){
-                    session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.GenerateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.GenerateAlphanumericString(32), u.getEmail(), "start##start##start##start"));
+                    session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.GenerateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.GenerateAlphanumericString(32), u.getEmail(), "start##start##start##start", ""));
                 }
             }
         } catch (DatabaseException e) {

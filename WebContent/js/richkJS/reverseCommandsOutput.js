@@ -1,17 +1,31 @@
 $(document).ready(function () {
     var search = window.location.search
-    var output = search.split("=\"")[1]
+    var deviceName = search.split("=")[1]
     console.log(search + "\n")
-    console.log(output)
+    console.log(deviceName)
 
-    var decryptedOutput = atob(output)
-    var commands = decryptedOutput.split("##")
+    $("#back").click(function () {
+        window.location.replace("/Richkware-Manager-Server/devices.html")
+    })
 
-    for (var i = 0; i < commands.length; ++i) {
-        $('#text-area').val(function (i, text) {
-            return text + commands[i] + "\n";
-        });
-    }
+    $.get("command", {data0: deviceName, data1: "client"}, function (response) {
+        var JSONdata = JSON.parse(response)
+        if (JSONdata.statusCode == 1000) {
+            var output = JSONdata.message
+            var decryptedOutput = atob(output)
+            var commands = decryptedOutput.split("##")
+            console.log(commands)
+
+            var previous = ""
+            for (var i = 0; i < commands.length; ++i) {
+                previous = $("#text-area").val()
+                $('#text-area').val(previous + "\n" + commands[i])
+            }
+        } else {
+            alert("Error, retrieving reverse commands output: " + response)
+        }
+    })
+
 
 
 })
