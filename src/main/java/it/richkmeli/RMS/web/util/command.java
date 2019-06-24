@@ -5,6 +5,8 @@ import it.richkmeli.RMS.web.response.OKResponse;
 import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.jcrypto.KeyExchangePayloadCompat;
 import it.richkmeli.jframework.database.DatabaseException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -64,17 +67,18 @@ public class command extends HttpServlet {
         Session session = null;
 
         try {
+            BufferedReader br = req.getReader();
+            String data = br.readLine();
+            JSONObject JSONData = new JSONObject(data);
+            String deviceName = JSONData.getString("device");
+            String commands = JSONData.getString("commands");
+
             session = ServletManager.getServerSession(httpSession);
 
-            if (req.getParameterMap().containsKey("device") && req.getParameterMap().containsKey("commands")) {
-                String deviceName = req.getParameter("device");
-                String commands = req.getParameter("commands"); //base64(base64(cmd1)##base64(cmd2)...)
-                session.getDeviceDatabaseManager().editCommands(deviceName, commands);
-                out.println((new OKResponse(StatusCode.SUCCESS)).json());
-            } else {
-                out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
-            }
-        } catch (it.richkmeli.RMS.web.util.ServletException | DatabaseException e/* | CryptoException e*/) {
+            session.getDeviceDatabaseManager().editCommands(deviceName, commands);
+            out.println((new OKResponse(StatusCode.SUCCESS)).json());
+            br.close();
+        } catch (it.richkmeli.RMS.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
