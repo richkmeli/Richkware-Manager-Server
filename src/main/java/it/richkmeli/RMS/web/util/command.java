@@ -8,7 +8,6 @@ import it.richkmeli.jframework.database.DatabaseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,7 @@ import java.io.PrintWriter;
 public class command extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         PrintWriter out = resp.getWriter();
         HttpSession httpSession = req.getSession();
         Session session = null;
@@ -41,14 +40,17 @@ public class command extends HttpServlet {
                     output = session.getDeviceDatabaseManager().getCommands(deviceName);
                 } else if (requestor.equalsIgnoreCase("client")) {
                     output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
+                    if (output.isEmpty()) {
+
+                    }
+                    session.getDeviceDatabaseManager().setCommandsOutput(deviceName, "");
                 }
 
-                if (output != null) {
+                if (!output.isEmpty()) {
                     out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
                 } else {
-                    out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Cannot retrieve correct output")).json());
+                    out.println((new KOResponse(StatusCode.FIELD_EMPTY)).json());
                 }
-
 
             } else {
                 out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
@@ -59,7 +61,7 @@ public class command extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         //TODO: gestire richieste per multipli device
 
         PrintWriter out = resp.getWriter();
@@ -84,7 +86,7 @@ public class command extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         PrintWriter out = resp.getWriter();
         HttpSession httpSession = req.getSession();
         Session session = null;
