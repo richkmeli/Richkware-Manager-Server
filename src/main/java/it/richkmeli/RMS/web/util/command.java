@@ -90,18 +90,24 @@ public class command extends HttpServlet {
         Session session = null;
 
         try {
+            BufferedReader br = req.getReader();
+            String response = br.readLine();
+            String a;
+            while ((a = br.readLine()) != null) {
+                System.out.println(a);
+            }
+            JSONObject JSONData = new JSONObject(response);
+            String deviceName = JSONData.getString("device");
+            String commandsOutput = JSONData.getString("data");
+
             session = ServletManager.getServerSession(httpSession);
 
-            if (req.getParameterMap().containsKey("data0") && req.getParameterMap().containsKey("data1")) {
-                String deviceName = req.getParameter("data0");
-                String commandsOutput = req.getParameter("data1"); //base64(base64(cmd1)##base64(cmd2)...)
-                session.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
-                session.getDeviceDatabaseManager().editCommands(deviceName, "");
-                out.println((new OKResponse(StatusCode.SUCCESS)).json());
-            } else {
-                out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
-            }
-        } catch (it.richkmeli.RMS.web.util.ServletException | DatabaseException e/* | CryptoException e*/) {
+            session.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
+            session.getDeviceDatabaseManager().editCommands(deviceName, "");
+
+            out.println((new OKResponse(StatusCode.SUCCESS)).json());
+            br.close();
+        } catch (it.richkmeli.RMS.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
