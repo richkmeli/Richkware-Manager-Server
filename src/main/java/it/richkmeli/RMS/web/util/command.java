@@ -27,22 +27,23 @@ public class command extends HttpServlet {
         Session session = null;
 
         try {
+
+            BufferedReader br = req.getReader();
+            String response = br.readLine();
+
             session = ServletManager.getServerSession(httpSession);
 
-            if (req.getParameterMap().containsKey("data0") && req.getParameterMap().containsKey("data1")) {
+            JSONObject JSONData = new JSONObject(response);
+            String deviceName = JSONData.getString("data0");
+            String requestor = JSONData.getString("data1");
 
-                String deviceName = req.getParameter("data0");
-                String requestor = req.getParameter("data1");
-
+            if (deviceName != null && requestor != null) {
                 String output = null;
 
                 if (requestor.equalsIgnoreCase("agent")) {
                     output = session.getDeviceDatabaseManager().getCommands(deviceName);
                 } else if (requestor.equalsIgnoreCase("client")) {
                     output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
-                    if (output.isEmpty()) {
-
-                    }
                     session.getDeviceDatabaseManager().setCommandsOutput(deviceName, "");
                 }
 
@@ -51,10 +52,38 @@ public class command extends HttpServlet {
                 } else {
                     out.println((new KOResponse(StatusCode.FIELD_EMPTY)).json());
                 }
-
-            } else {
-                out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
             }
+
+            br.close();
+
+//            session = ServletManager.getServerSession(httpSession);
+//
+//            if (req.getParameterMap().containsKey("data0") && req.getParameterMap().containsKey("data1")) {
+//
+//                String deviceName = req.getParameter("data0");
+//                String requestor = req.getParameter("data1");
+//
+//                String output = null;
+//
+//                if (requestor.equalsIgnoreCase("agent")) {
+//                    output = session.getDeviceDatabaseManager().getCommands(deviceName);
+//                } else if (requestor.equalsIgnoreCase("client")) {
+//                    output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
+//                    if (output.isEmpty()) {
+//
+//                    }
+//                    session.getDeviceDatabaseManager().setCommandsOutput(deviceName, "");
+//                }
+//
+//                if (!output.isEmpty()) {
+//                    out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
+//                } else {
+//                    out.println((new KOResponse(StatusCode.FIELD_EMPTY)).json());
+//                }
+//
+//            } else {
+//                out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
+//            }
         } catch (it.richkmeli.RMS.web.util.ServletException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
@@ -77,8 +106,10 @@ public class command extends HttpServlet {
 
             session = ServletManager.getServerSession(httpSession);
 
-            session.getDeviceDatabaseManager().editCommands(deviceName, commands);
-            out.println((new OKResponse(StatusCode.SUCCESS)).json());
+            if (session.getDeviceDatabaseManager().editCommands(deviceName, commands))
+                out.println((new OKResponse(StatusCode.SUCCESS)).json());
+            else
+                out.println((new KOResponse(StatusCode.FIELD_EMPTY)).json());
             br.close();
         } catch (it.richkmeli.RMS.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
@@ -94,10 +125,7 @@ public class command extends HttpServlet {
         try {
             BufferedReader br = req.getReader();
             String response = br.readLine();
-            String a;
-            while ((a = br.readLine()) != null) {
-                System.out.println(a);
-            }
+
             JSONObject JSONData = new JSONObject(response);
             String deviceName = JSONData.getString("device");
             String commandsOutput = JSONData.getString("data");

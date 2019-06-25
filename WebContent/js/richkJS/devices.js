@@ -166,6 +166,11 @@ $(document).ready(function() {
         window.location.replace = "/Richkware-Manager-Server/reverse-commands.html?device=" + name;
     });
 
+    $("#refreshButton").click(function () {
+        console.log("clicked refresh button")
+        loadDevicesTable()
+    })
+
     /* sc.onload = function () {
          document.getElementById("Logout").innerHTML = lang.logout;
          document.getElementById("Lang").innerHTML = lang.lang;
