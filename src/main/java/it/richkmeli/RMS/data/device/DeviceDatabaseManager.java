@@ -25,7 +25,7 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
                 "lastConnection VARCHAR(25)," +
                 "encryptionKey VARCHAR(32)," +
                 "userAssociated VARCHAR(50) REFERENCES user(email)," +
-                "commands VARCHAR(100)," +
+                "commands TEXT," +
                 "commandsOutput TEXT" +
                 ")";
 
