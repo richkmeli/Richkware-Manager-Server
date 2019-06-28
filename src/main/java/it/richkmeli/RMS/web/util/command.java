@@ -5,6 +5,7 @@ import it.richkmeli.RMS.web.response.OKResponse;
 import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.jcrypto.KeyExchangePayloadCompat;
 import it.richkmeli.jframework.database.DatabaseException;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.*;
 
 @WebServlet({"/command"})
 public class command extends HttpServlet {
@@ -100,15 +102,24 @@ public class command extends HttpServlet {
             BufferedReader br = req.getReader();
             String data = br.readLine();
             JSONObject JSONData = new JSONObject(data);
-            String deviceName = JSONData.getString("device");
+            JSONArray devicesName = JSONData.getJSONArray("devices");
             String commands = JSONData.getString("commands");
 
             session = ServletManager.getServerSession(httpSession);
 
-            if (session.getDeviceDatabaseManager().editCommands(deviceName, commands))
+            List<String> failedResponse = new ArrayList<>();
+            for (Object device : devicesName) {
+                if (!session.getDeviceDatabaseManager().editCommands((String) device, commands)) {
+                    failedResponse.add((String) device);
+                }
+            }
+
+            if (failedResponse.isEmpty())
                 out.println((new OKResponse(StatusCode.SUCCESS)).json());
-            else
-                out.println((new KOResponse(StatusCode.FIELD_EMPTY)).json());
+            else {
+                out.println((new KOResponse(StatusCode.FIELD_EMPTY, Arrays.toString(failedResponse.toArray()))).json());
+            }
+
             br.close();
         } catch (it.richkmeli.RMS.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
