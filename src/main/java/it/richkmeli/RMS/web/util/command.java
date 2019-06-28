@@ -17,7 +17,9 @@ import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @WebServlet({"/command"})
 public class command extends HttpServlet {
@@ -142,10 +144,13 @@ public class command extends HttpServlet {
 
             session = ServletManager.getServerSession(httpSession);
 
-            session.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
-            session.getDeviceDatabaseManager().editCommands(deviceName, "");
-
-            out.println((new OKResponse(StatusCode.SUCCESS)).json());
+            boolean result = session.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
+            if (result) {
+                session.getDeviceDatabaseManager().editCommands(deviceName, "");
+                out.println((new OKResponse(StatusCode.SUCCESS)).json());
+            } else {
+                out.println((new KOResponse(StatusCode.FIELD_EMPTY, "Field not found in DB")).json());
+            }
             br.close();
         } catch (it.richkmeli.RMS.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());

@@ -284,14 +284,18 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
             preparedStatement.setString(1, commandsOutput);
             preparedStatement.setString(2, deviceName);
 
-            preparedStatement.executeUpdate();
+            int result = preparedStatement.executeUpdate();
+            disconnect(connection, preparedStatement, null);
+            if (result == 0) {
+                return false;
+            } else {
+                return true;
+            }
         } catch (SQLException e) {
             disconnect(connection, preparedStatement, null);
             throw new DatabaseException(e);
             //return false;
         }
-        disconnect(connection, preparedStatement, null);
-        return true;
     }
 
     public String getCommandsOutput(String deviceName) throws DatabaseException {
