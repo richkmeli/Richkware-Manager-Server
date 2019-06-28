@@ -5,9 +5,9 @@ import com.google.gson.reflect.TypeToken;
 import it.richkmeli.RMS.web.response.KOResponse;
 import it.richkmeli.RMS.web.response.OKResponse;
 import it.richkmeli.RMS.web.response.StatusCode;
-import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
+import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.auth.model.User;
 import org.json.JSONObject;
 
@@ -63,8 +63,6 @@ public class user extends HttpServlet {
                 out.println((new OKResponse(StatusCode.SUCCESS, message.toString()).json()));
 
                 // servlet response
-                out.flush();
-                out.close();
                 /*} else {
                     // non ha privilegi
                     // TODO rimanda da qualche parte perche c'è errore
@@ -86,6 +84,8 @@ public class user extends HttpServlet {
 //            httpSession.setAttribute("error", e);
 //            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
         }
+        out.flush();
+        out.close();
     }
 
     @Override

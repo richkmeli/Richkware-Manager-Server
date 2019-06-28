@@ -3,11 +3,9 @@ package it.richkmeli.RMS.web.account;
 import it.richkmeli.RMS.web.response.KOResponse;
 import it.richkmeli.RMS.web.response.OKResponse;
 import it.richkmeli.RMS.web.response.StatusCode;
-import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.auth.model.User;
-import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -62,13 +60,12 @@ public class SignUp extends HttpServlet {
                 out.println((new KOResponse(StatusCode.ALREADY_LOGGED)).json());
             }
 
-            out.flush();
-            out.close();
-        } catch (ServletException e) {
+        } catch (Exception e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
-        } catch (DatabaseException e) {
-            e.printStackTrace();
         }
+
+        out.flush();
+        out.close();
 
     }
 
