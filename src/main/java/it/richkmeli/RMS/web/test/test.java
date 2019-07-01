@@ -1,9 +1,9 @@
 package it.richkmeli.RMS.web.test;
 
-import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.RMS.data.device.model.Device;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
+import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jcrypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.database.DatabaseException;
@@ -45,13 +45,15 @@ public class test extends HttpServlet {
                session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
             } catch (DatabaseException e) {
                 e.printStackTrace();
-                Logger.error("Session TEST USERS", e);
+               Logger.error("Session TEST USERS", e);
             }
 
             try {
-                session.getDeviceDatabaseManager().addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-                session.getDeviceDatabaseManager().addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-                session.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it"));
+                session.getDeviceDatabaseManager().addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "start##start##start", ""));
+                session.getDeviceDatabaseManager().addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", ""));
+                session.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it", "", ""));
+                //used for reverse commands
+                session.getDeviceDatabaseManager().addDevice(new Device("DESKTOP-1EVF5Q8/win_10_desktop1", "172.24.9.142", "none", "20-10-18", "ckeroivervioeon", "richk@i.it", "YzNSaGNuUT0jI2MzUmhjblE9IyNjM1JoY25RPQ==", ""));
             } catch (DatabaseException e) {
                 Logger.error("Session TEST DEVICES", e);
             }
@@ -62,11 +64,11 @@ public class test extends HttpServlet {
                 User u = new User(RandomStringGenerator.GenerateAlphanumericString(8)+"@"+RandomStringGenerator.GenerateAlphanumericString(8)+"."+RandomStringGenerator.GenerateAlphanumericString(2),RandomStringGenerator.GenerateAlphanumericString(10), false);
                 session.getAuthDatabaseManager().addUser(u);
                 for(int i2 = 0; i2<5; i2++){
-                    session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.GenerateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.GenerateAlphanumericString(32), u.getEmail()));
+                    session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.GenerateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.GenerateAlphanumericString(32), u.getEmail(), "start##start##start##start", ""));
                 }
             }
         } catch (DatabaseException e) {
-            Logger.error("Session ",e);
+            Logger.error("Session ", e);
         }
 
         out = "OK";

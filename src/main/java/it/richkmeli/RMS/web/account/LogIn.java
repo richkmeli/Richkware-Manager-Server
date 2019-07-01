@@ -3,10 +3,9 @@ package it.richkmeli.RMS.web.account;
 import it.richkmeli.RMS.web.response.KOResponse;
 import it.richkmeli.RMS.web.response.OKResponse;
 import it.richkmeli.RMS.web.response.StatusCode;
-import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.RMS.web.util.Session;
-import it.richkmeli.jframework.database.DatabaseException;
+import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,7 +51,10 @@ public class LogIn extends HttpServlet {
                         session.setUser(email);
                         session.setAdmin(isAdmin);
 
-                        out.println((new OKResponse(StatusCode.SUCCESS)).json());
+                        JSONObject adminInfo = new JSONObject();
+                        adminInfo.put("admin", isAdmin);
+
+                        out.println((new OKResponse(StatusCode.SUCCESS, adminInfo.toString())).json());
                     } else {
                         // pass sbagliata
                         out.println((new KOResponse(StatusCode.WRONG_PASSWORD)).json());
@@ -65,15 +67,12 @@ public class LogIn extends HttpServlet {
                 // already logged
                 out.println((new KOResponse(StatusCode.ALREADY_LOGGED)).json());
             }
-
-            out.flush();
-            out.close();
-        } catch (ServletException e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
-
-        } catch (DatabaseException e) {
+        } catch (Exception e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
+
+        out.flush();
+        out.close();
 
     }
 

@@ -7,14 +7,18 @@ public class Device {
     private String lastConnection;
     private String encryptionKey;
     private String userAssociated;
+    private String commands;
+    private String commandsOutput;
 
-    public Device(String name, String ip, String serverPort, String lastConnection, String encryptionKey, String userAssociated) {
+    public Device(String name, String ip, String serverPort, String lastConnection, String encryptionKey, String userAssociated, String commands, String commandsOutput) {
         this.name = name;
         this.ip = ip;
         this.serverPort = serverPort;
         this.lastConnection = lastConnection;
         this.encryptionKey = encryptionKey;
         this.userAssociated = userAssociated;
+        this.commands = commands;
+        this.commandsOutput = commandsOutput;
     }
 
     public String getIp() {
@@ -63,5 +67,21 @@ public class Device {
 
     public void setUserAssociated(String userAssociated) {
         this.userAssociated = userAssociated;
+    }
+
+    public String getCommands() {
+        return commands;
+    }
+
+    public void setCommands(String commands) {
+        this.commands = commands;
+    }
+
+    public String getCommandsOutput() {
+        return commandsOutput;
+    }
+
+    public void setCommandsOutput(String commandsOutput) {
+        this.commandsOutput = commandsOutput;
     }
 }

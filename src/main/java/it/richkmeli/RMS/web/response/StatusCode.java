@@ -20,7 +20,8 @@ public enum StatusCode {
     WRONG_PASSWORD(2103, "Wrong password"),
     ACCOUNT_NOT_FOUND(2104, "Account not found"),
     ALREADY_REGISTERED(2105, "Email already registered"),
-    DB_ERROR(3000, "Error in DB");
+    DB_ERROR(3000, "Error in DB"),
+    FIELD_EMPTY(3001, "Field empty in DB");
 
 
     private int code;
