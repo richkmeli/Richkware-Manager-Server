@@ -10,12 +10,10 @@ import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.RMS.web.util.Session;
-import it.richkmeli.jcrypto.Crypto;
 import it.richkmeli.jcrypto.KeyExchangePayloadCompat;
 import it.richkmeli.jcrypto.exception.CryptoException;
 import it.richkmeli.jframework.database.DatabaseException;
 
-import javax.crypto.SecretKey;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +22,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.security.KeyPair;
 import java.util.List;
 
 /**
@@ -55,7 +52,7 @@ public class devicesList extends HttpServlet {
                 if (request.getParameterMap().containsKey("encryption")) {
                     String encryption = request.getParameter("encryption");
                     if (encryption.compareTo("true") == 0) {
-                        // encryption enabled
+                        /*// encryption enabled
                         String kpubC = null;
                         if (request.getParameterMap().containsKey("Kpub")) {
                             kpubC = request.getParameter("Kpub");
@@ -69,13 +66,14 @@ public class devicesList extends HttpServlet {
                         SecretKey AESsecretKey = (SecretKey) res.get(1);
 
                         // encrypt data (devices List) with AES secret key
-                        String enc = Crypto.EncryptAES(GenerateDevicesListJSON(session), AESsecretKey);
-                        ;
+                        String enc = Crypto.encryptRC4(GenerateDevicesListJSON(session), AESsecretKey);
+
                         // add data to the object
                         keyExchangePayload.setData(enc);
 
                         String encPayload = GenerateKeyExchangePayloadJSON(keyExchangePayload);
-
+*/
+                        String encPayload = session.getCryptoServer().encrypt(GenerateDevicesListJSON(session));
                         out.println((new OKResponse(StatusCode.SUCCESS, encPayload)).json());
                     }
                 } else {
@@ -92,8 +90,8 @@ public class devicesList extends HttpServlet {
             }
         }catch (ServletException e){
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
-        } catch (CryptoException e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+//        } catch (CryptoException e) {
+//            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         } catch (DatabaseException e) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
         }

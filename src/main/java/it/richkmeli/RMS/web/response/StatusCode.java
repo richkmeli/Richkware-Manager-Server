@@ -14,14 +14,18 @@ public enum StatusCode {
 
     SUCCESS(1000, ""),
     GENERIC_ERROR(2000, ""),
+    // account error 21xx
     NOT_LOGGED(2100, "User is not logged"),
     ALREADY_LOGGED(2101, "Already logged in"),
     MISSING_FIELD(2102, "Check input fields"),
     WRONG_PASSWORD(2103, "Wrong password"),
     ACCOUNT_NOT_FOUND(2104, "Account not found"),
     ALREADY_REGISTERED(2105, "Email already registered"),
-    DB_ERROR(3000, "Error in DB"),
-    FIELD_EMPTY(3001, "Field empty in DB");
+    // db error 22xx
+    DB_ERROR(3000, "Error in DB"), // TODO cambiare in 2200, controllare che in RMC non siano
+    FIELD_EMPTY(3001, "Field empty in DB"),
+    // crypto error 23xx
+    SECURE_CONNECTION(2300, "Secure Connection error");
 
 
     private int code;

@@ -1,20 +1,16 @@
 package it.richkmeli.RMS.web.util;
 
 import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
-import it.richkmeli.RMS.data.device.model.Device;
+import it.richkmeli.jcrypto.Crypto;
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
-import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.database.DatabaseException;
-import it.richkmeli.jframework.util.Logger;
-import sun.rmi.runtime.Log;
-
-import java.sql.SQLException;
 
 public class Session {
     private DeviceDatabaseManager deviceDatabaseManager;
     private AuthDatabaseManager authDatabaseManager;
     private String userID;
     private Boolean isAdmin;
+    private Crypto.Server cryptoServer;
 
 
     public Session() throws DatabaseException {
@@ -22,6 +18,7 @@ public class Session {
         authDatabaseManager = new AuthDatabaseManager();
         userID = null;
         isAdmin = false;
+        cryptoServer = new Crypto.Server();
     }
 
     /*public DatabaseManager getDatabaseManager() {
@@ -68,4 +65,7 @@ public class Session {
         isAdmin = admin;
     }
 
+    public Crypto.Server getCryptoServer() {
+        return cryptoServer;
+    }
 }

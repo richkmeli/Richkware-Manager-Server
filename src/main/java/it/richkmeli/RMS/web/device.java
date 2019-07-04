@@ -130,11 +130,11 @@ public class device extends HttpServlet {
                 String userAssociated = req.getParameter("data2");
 
                 if (oldDevice == null) {
-                    serverPort = Crypto.DecryptRC4(serverPort, password);
-                    userAssociated = Crypto.DecryptRC4(userAssociated, password);
+                    serverPort = Crypto.decryptRC4(serverPort, password);
+                    userAssociated = Crypto.decryptRC4(userAssociated, password);
                 } else {
-                    serverPort = Crypto.DecryptRC4(serverPort, oldDevice.getEncryptionKey());
-                    userAssociated = Crypto.DecryptRC4(userAssociated, oldDevice.getEncryptionKey());
+                    serverPort = Crypto.decryptRC4(serverPort, oldDevice.getEncryptionKey());
+                    userAssociated = Crypto.decryptRC4(userAssociated, oldDevice.getEncryptionKey());
                 }
 
                 String encryptionKey = RandomStringGenerator.GenerateAlphanumericString(keyLength);

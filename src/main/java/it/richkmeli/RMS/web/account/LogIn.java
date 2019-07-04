@@ -38,8 +38,14 @@ public class LogIn extends HttpServlet {
             // check if is not already logged
             if (session.getUser() == null) {
 
-                String email = request.getParameter("email");
-                String pass = request.getParameter("password");
+                String payload = request.getParameter("data");
+                String decryptedPayload = session.getCryptoServer().decrypt(payload);
+                JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
+                String email = decryptedPayloadJSON.getString("email");
+                String pass = decryptedPayloadJSON.getString("password");
+
+                //String email = request.getParameter("email");
+                //String pass = request.getParameter("password");
 
                 System.out.println("email: " + email + " password: " + pass);
 
