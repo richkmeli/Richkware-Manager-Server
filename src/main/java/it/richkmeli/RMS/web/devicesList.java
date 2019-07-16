@@ -47,36 +47,16 @@ public class devicesList extends HttpServlet {
             String user = session.getUser();
             // Authentication
             if (user != null) {
-                // devicesList ? encryption = true/false & phase = 1,2,3,... & kpub = ...
-                //                 |                         |                   |            |
+
+                // TODO remove this option
                 if (request.getParameterMap().containsKey("encryption")) {
-                    String encryption = request.getParameter("encryption");
-                    if (encryption.compareTo("true") == 0) {
-                        /*// encryption enabled
-                        String kpubC = null;
-                        if (request.getParameterMap().containsKey("Kpub")) {
-                            kpubC = request.getParameter("Kpub");
-                        }
-                        // generation of public e private key of server
-                        KeyPair keyPair = Crypto.GetGeneratedKeyPairRSA();
-
-                        // [enc_(KpubC)(AESKey) , sign_(KprivS)(AESKey) , KpubS]
-                        List<Object> res = Crypto.KeyExchangeAESRSA(keyPair, kpubC);
-                        KeyExchangePayloadCompat keyExchangePayload = (KeyExchangePayloadCompat) res.get(0);
-                        SecretKey AESsecretKey = (SecretKey) res.get(1);
-
-                        // encrypt data (devices List) with AES secret key
-                        String enc = Crypto.encryptRC4(GenerateDevicesListJSON(session), AESsecretKey);
-
-                        // add data to the object
-                        keyExchangePayload.setData(enc);
-
-                        String encPayload = GenerateKeyExchangePayloadJSON(keyExchangePayload);
-*/
+                    if("true".equalsIgnoreCase(request.getParameter("encryption"))){
+                        // RMC
                         String encPayload = session.getCryptoServer().encrypt(GenerateDevicesListJSON(session));
                         out.println((new OKResponse(StatusCode.SUCCESS, encPayload)).json());
                     }
                 } else {
+                    // WEBAPP
                     // encryption disabled
                     String message = GenerateDevicesListJSON(session);
                     out.println((new OKResponse(StatusCode.SUCCESS, message)).json());

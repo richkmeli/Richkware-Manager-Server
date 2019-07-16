@@ -95,6 +95,8 @@ public class secureConnection extends HttpServlet {
             session = ServletManager.getServerSession(httpSession);
 
            // TODO cancella utente specifico, decidi se farlo solo da autenticato, magari con email o altro fattore di auth
+            session.getCryptoServer().deleteClientData();
+
 
         }catch (ServletException e){
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());

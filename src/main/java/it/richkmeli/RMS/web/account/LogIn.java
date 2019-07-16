@@ -24,7 +24,6 @@ public class LogIn extends HttpServlet {
     }
 
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 //        System.out.println("Received request! data contained: " + request.getParameterNames());
@@ -38,11 +37,24 @@ public class LogIn extends HttpServlet {
             // check if is not already logged
             if (session.getUser() == null) {
 
-                String payload = request.getParameter("data");
-                String decryptedPayload = session.getCryptoServer().decrypt(payload);
-                JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
-                String email = decryptedPayloadJSON.getString("email");
-                String pass = decryptedPayloadJSON.getString("password");
+                String email = "";// = request.getParameter("email");
+                String pass = "";// = request.getParameter("password");
+
+                if (request.getParameterMap().containsKey("encryption")) {
+                    if ("true".equalsIgnoreCase(request.getParameter("encryption"))) {
+                        // RMC
+                        String payload = request.getParameter("data");
+                        String decryptedPayload = session.getCryptoServer().decrypt(payload);
+                        JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
+                        email = decryptedPayloadJSON.getString("email");
+                        pass = decryptedPayloadJSON.getString("password");
+                    }
+                } else {
+                    // WEBAPP
+                    email = request.getParameter("email");
+                    pass = request.getParameter("password");
+                }
+
 
                 //String email = request.getParameter("email");
                 //String pass = request.getParameter("password");

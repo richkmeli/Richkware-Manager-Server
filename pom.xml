@@ -43,7 +43,7 @@
             <!--            <groupId>it.richkmeli.jcrypto</groupId>-->
             <groupId>com.github.richkmeli</groupId>
             <artifactId>JCrypto</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <!--<groupId>it.richkmeli.jframework</groupId>-->
