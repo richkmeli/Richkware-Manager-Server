@@ -48,13 +48,18 @@ public class devicesList extends HttpServlet {
             // Authentication
             if (user != null) {
 
-                // TODO remove this option
+                //TODO change into client=RMC or client=WEB
+                boolean encryption = false;
                 if (request.getParameterMap().containsKey("encryption")) {
-                    if("true".equalsIgnoreCase(request.getParameter("encryption"))){
+                    if ("true".equalsIgnoreCase(request.getParameter("encryption"))) {
+                        encryption = true;
+                    }
+                }
+
+                if (encryption){
                         // RMC
                         String encPayload = session.getCryptoServer().encrypt(GenerateDevicesListJSON(session));
                         out.println((new OKResponse(StatusCode.SUCCESS, encPayload)).json());
-                    }
                 } else {
                     // WEBAPP
                     // encryption disabled

@@ -31,24 +31,32 @@ public class LogIn extends HttpServlet {
         Session session = null;
         PrintWriter out = response.getWriter();
         //Logger.i(ServletManager.printHTTPsession(httpSession));
+
+
         try {
             session = ServletManager.getServerSession(httpSession);
 
             // check if is not already logged
             if (session.getUser() == null) {
 
+                //TODO change into client=RMC or client=WEB
+                boolean encryption = false;
+                if (request.getParameterMap().containsKey("encryption")) {
+                    if ("true".equalsIgnoreCase(request.getParameter("encryption"))) {
+                        encryption = true;
+                    }
+                }
+
                 String email = "";// = request.getParameter("email");
                 String pass = "";// = request.getParameter("password");
 
-                if (request.getParameterMap().containsKey("encryption")) {
-                    if ("true".equalsIgnoreCase(request.getParameter("encryption"))) {
-                        // RMC
-                        String payload = request.getParameter("data");
-                        String decryptedPayload = session.getCryptoServer().decrypt(payload);
-                        JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
-                        email = decryptedPayloadJSON.getString("email");
-                        pass = decryptedPayloadJSON.getString("password");
-                    }
+                if (encryption) {  // RMC
+                    String payload = request.getParameter("data");
+                    String decryptedPayload = session.getCryptoServer().decrypt(payload);
+                    JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
+                    email = decryptedPayloadJSON.getString("email");
+                    pass = decryptedPayloadJSON.getString("password");
+
                 } else {
                     // WEBAPP
                     email = request.getParameter("email");
@@ -72,7 +80,14 @@ public class LogIn extends HttpServlet {
                         JSONObject adminInfo = new JSONObject();
                         adminInfo.put("admin", isAdmin);
 
-                        out.println((new OKResponse(StatusCode.SUCCESS, adminInfo.toString())).json());
+                        String adminInfoS = adminInfo.toString();
+
+                        // encrypt response
+                        if(encryption){
+                            adminInfoS = session.getCryptoServer().encrypt(adminInfoS);
+                        }
+
+                        out.println((new OKResponse(StatusCode.SUCCESS, adminInfoS)).json());
                     } else {
                         // pass sbagliata
                         out.println((new KOResponse(StatusCode.WRONG_PASSWORD)).json());

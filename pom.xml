@@ -40,8 +40,8 @@
 
     <dependencies>
         <dependency>
-            <!--            <groupId>it.richkmeli.jcrypto</groupId>-->
-            <groupId>com.github.richkmeli</groupId>
+                        <groupId>it.richkmeli.jcrypto</groupId>
+<!--            <groupId>com.github.richkmeli</groupId>-->
             <artifactId>JCrypto</artifactId>
             <version>1.1.1</version>
         </dependency>
