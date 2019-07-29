@@ -6,9 +6,9 @@ import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
 import it.richkmeli.RMS.data.device.model.Device;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.jcrypto.Crypto;
 import it.richkmeli.RMS.web.util.Session;
-import it.richkmeli.jcrypto.util.RandomStringGenerator;
+import it.richkmeli.jframework.crypto.Crypto;
+import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.util.Logger;
 
 import javax.servlet.annotation.WebServlet;
@@ -135,11 +135,11 @@ public class device extends HttpServlet {
                 String userAssociated = req.getParameter("data2");
 
                 if (oldDevice == null) {
-                    serverPort = Crypto.DecryptRC4(serverPort, password);
-                    userAssociated = Crypto.DecryptRC4(userAssociated, password);
+                    serverPort = Crypto.decryptRC4(serverPort, password);
+                    userAssociated = Crypto.decryptRC4(userAssociated, password);
                 } else {
-                    serverPort = Crypto.DecryptRC4(serverPort, oldDevice.getEncryptionKey());
-                    userAssociated = Crypto.DecryptRC4(userAssociated, oldDevice.getEncryptionKey());
+                    serverPort = Crypto.decryptRC4(serverPort, oldDevice.getEncryptionKey());
+                    userAssociated = Crypto.decryptRC4(userAssociated, oldDevice.getEncryptionKey());
                 }
 
                 String encryptionKey = RandomStringGenerator.GenerateAlphanumericString(keyLength);

@@ -2,7 +2,7 @@ package it.richkmeli.RMS.data.device;
 
 import it.richkmeli.RMS.data.device.model.Device;
 import it.richkmeli.RMS.data.device.model.DeviceModel;
-import it.richkmeli.jcrypto.Crypto;
+import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.database.DatabaseManager;
 
@@ -229,7 +229,7 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
             preparedStatement.setString(1, email);
             resultSet = preparedStatement.executeQuery();
 
-            String hash = Crypto.HashSHA256(pass);
+            String hash = Crypto.hash(pass);
 
             if (resultSet.next()) {
                 if (resultSet.getString("pass").compareTo(hash) == 0) {

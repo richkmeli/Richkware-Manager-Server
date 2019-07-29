@@ -1,14 +1,8 @@
 package it.richkmeli.RMS.web.util;
 
 import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
-import it.richkmeli.RMS.data.device.model.Device;
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
-import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.database.DatabaseException;
-import it.richkmeli.jframework.util.Logger;
-import sun.rmi.runtime.Log;
-
-import java.sql.SQLException;
 
 public class Session {
     private DeviceDatabaseManager deviceDatabaseManager;

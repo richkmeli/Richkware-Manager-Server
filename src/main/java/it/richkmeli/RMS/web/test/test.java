@@ -1,11 +1,11 @@
 package it.richkmeli.RMS.web.test;
 
-import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.RMS.data.device.model.Device;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.jcrypto.util.RandomStringGenerator;
+import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.auth.model.User;
+import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 

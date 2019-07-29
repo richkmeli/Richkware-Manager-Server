@@ -3,8 +3,8 @@ package it.richkmeli.RMS.web;
 import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.jcrypto.Crypto;
 import it.richkmeli.RMS.web.util.Session;
+import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.util.Logger;
 
 import javax.servlet.annotation.WebServlet;
@@ -46,7 +46,7 @@ public class encryptionKey extends HttpServlet {
             if (request.getParameterMap().containsKey("id")) {
 
                 String name = request.getParameter("id");
-                name = Crypto.DecryptRC4(name, password);
+                name = Crypto.decryptRC4(name, password);
 
                 DeviceDatabaseManager deviceDatabaseManager = session.getDeviceDatabaseManager();
                 String encryptionKey = deviceDatabaseManager.getEncryptionKey(name);
@@ -55,7 +55,7 @@ public class encryptionKey extends HttpServlet {
                 }
 
                 // encrypt key server-side generated or error message with pre-shared password
-                encryptionKey = Crypto.EncryptRC4(encryptionKey, password);
+                encryptionKey = Crypto.encryptRC4(encryptionKey, password);
 
                 encryptionKey = "$" + encryptionKey + "#";
 

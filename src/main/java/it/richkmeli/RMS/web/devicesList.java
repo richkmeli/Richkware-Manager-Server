@@ -10,9 +10,9 @@ import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.RMS.web.util.Session;
-import it.richkmeli.jcrypto.Crypto;
-import it.richkmeli.jcrypto.KeyExchangePayloadCompat;
-import it.richkmeli.jcrypto.exception.CryptoException;
+import it.richkmeli.jframework.crypto.CryptoCompat;
+import it.richkmeli.jframework.crypto.KeyExchangePayloadCompat;
+import it.richkmeli.jframework.crypto.exception.CryptoException;
 import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.crypto.SecretKey;
@@ -61,15 +61,15 @@ public class devicesList extends HttpServlet {
                             kpubC = request.getParameter("Kpub");
                         }
                         // generation of public e private key of server
-                        KeyPair keyPair = Crypto.GetGeneratedKeyPairRSA();
+                        KeyPair keyPair = CryptoCompat.getGeneratedKeyPairRSA();
 
                         // [enc_(KpubC)(AESKey) , sign_(KprivS)(AESKey) , KpubS]
-                        List<Object> res = Crypto.KeyExchangeAESRSA(keyPair, kpubC);
+                        List<Object> res = CryptoCompat.keyExchangeAESRSA(keyPair, kpubC);
                         KeyExchangePayloadCompat keyExchangePayload = (KeyExchangePayloadCompat) res.get(0);
                         SecretKey AESsecretKey = (SecretKey) res.get(1);
 
                         // encrypt data (devices List) with AES secret key
-                        String enc = Crypto.EncryptAES(GenerateDevicesListJSON(session), AESsecretKey);
+                        String enc = CryptoCompat.encryptAES(GenerateDevicesListJSON(session), String.valueOf(AESsecretKey));
                         ;
                         // add data to the object
                         keyExchangePayload.setData(enc);
