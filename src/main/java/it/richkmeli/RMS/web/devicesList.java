@@ -10,8 +10,7 @@ import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.RMS.web.util.Session;
-import it.richkmeli.jcrypto.KeyExchangePayloadCompat;
-import it.richkmeli.jcrypto.exception.CryptoException;
+import it.richkmeli.jframework.crypto.KeyExchangePayloadCompat;
 import it.richkmeli.jframework.database.DatabaseException;
 
 import javax.servlet.annotation.WebServlet;

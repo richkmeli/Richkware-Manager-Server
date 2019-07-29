@@ -6,6 +6,7 @@ import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.auth.model.User;
+import it.richkmeli.jframework.crypto.Crypto;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

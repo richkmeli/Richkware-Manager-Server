@@ -1,7 +1,6 @@
 package it.richkmeli.RMS.web;
 
 import it.richkmeli.RMS.web.response.KOResponse;
-import it.richkmeli.RMS.web.response.OKResponse;
 import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;

@@ -2,7 +2,7 @@ package it.richkmeli.RMS.data.device;
 
 import it.richkmeli.RMS.data.device.model.Device;
 import it.richkmeli.RMS.data.device.model.DeviceModel;
-import it.richkmeli.jcrypto.Crypto;
+import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.database.DatabaseManager;
 

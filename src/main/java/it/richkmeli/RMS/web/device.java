@@ -10,8 +10,8 @@ import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.RMS.web.util.ServletException;
 import it.richkmeli.RMS.web.util.ServletManager;
 import it.richkmeli.RMS.web.util.Session;
-import it.richkmeli.jcrypto.Crypto;
-import it.richkmeli.jcrypto.util.RandomStringGenerator;
+import it.richkmeli.jframework.crypto.Crypto;
+import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.util.Logger;
 
 import javax.servlet.annotation.WebServlet;

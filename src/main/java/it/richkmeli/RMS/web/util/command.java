@@ -3,7 +3,7 @@ package it.richkmeli.RMS.web.util;
 import it.richkmeli.RMS.web.response.KOResponse;
 import it.richkmeli.RMS.web.response.OKResponse;
 import it.richkmeli.RMS.web.response.StatusCode;
-import it.richkmeli.jcrypto.KeyExchangePayloadCompat;
+import it.richkmeli.jframework.crypto.KeyExchangePayloadCompat;
 import it.richkmeli.jframework.database.DatabaseException;
 import org.json.JSONArray;
 import org.json.JSONException;

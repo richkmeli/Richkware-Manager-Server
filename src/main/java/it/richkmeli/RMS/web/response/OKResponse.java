@@ -1,7 +1,5 @@
 package it.richkmeli.RMS.web.response;
 
-import org.json.JSONObject;
-
 public class OKResponse extends BasicResponse {
 
     public OKResponse(StatusCode statusCode, String message) {

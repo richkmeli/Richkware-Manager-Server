@@ -63,12 +63,10 @@ public class LogIn extends HttpServlet {
                     pass = request.getParameter("password");
                 }
 
-
                 //String email = request.getParameter("email");
                 //String pass = request.getParameter("password");
 
                 System.out.println("email: " + email + " password: " + pass);
-
 
                 if (session.getAuthDatabaseManager().isUserPresent(email)) {
                     boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);

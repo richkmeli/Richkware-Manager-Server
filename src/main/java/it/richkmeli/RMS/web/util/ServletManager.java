@@ -1,7 +1,6 @@
 package it.richkmeli.RMS.web.util;
 
 import it.richkmeli.jframework.database.DatabaseException;
-import it.richkmeli.jframework.util.Logger;
 
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;

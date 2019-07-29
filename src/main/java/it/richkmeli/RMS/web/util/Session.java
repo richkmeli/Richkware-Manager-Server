@@ -1,8 +1,8 @@
 package it.richkmeli.RMS.web.util;
 
 import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
-import it.richkmeli.jcrypto.Crypto;
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
+import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.database.DatabaseException;
 
 public class Session {
