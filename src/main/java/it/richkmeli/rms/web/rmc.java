@@ -2,7 +2,9 @@ package it.richkmeli.rms.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.response.KOResponse;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
@@ -67,5 +70,38 @@ public class rmc extends HttpServlet {
         String rmcListJSON = gson.toJson(clients, type);
 
         return rmcListJSON;
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+//        super.doDelete(req, resp);
+        PrintWriter out = resp.getWriter();
+        HttpSession httpSession = req.getSession();
+        Session session = null;
+
+        // todo controlla che stia cancellando un rmc di cui ha i permessi
+
+        // param crittati se rmc
+
+        if (req.getParameterMap().containsKey("rmc")) {
+            String rmc = req.getParameter("rmc");
+            File secureDataServer = new File("TESTsecureDataServer.txt");
+            String serverKey = "testkeyServer";
+            Crypto.Server cryptoServer = new Crypto.Server();
+            cryptoServer.init(secureDataServer, serverKey, rmc, "");
+            cryptoServer.deleteClientData();
+        }
+
+        try {
+            session = ServletManager.getServerSession(httpSession);
+
+            // TODO cancella utente specifico, decidi se farlo solo da autenticato, magari con email o altro fattore di auth
+            session.getCryptoServer().deleteClientData();
+
+
+        } catch (it.richkmeli.rms.web.util.ServletException e) {
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+        }
+
     }
 }

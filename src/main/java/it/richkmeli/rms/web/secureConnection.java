@@ -85,23 +85,5 @@ public class secureConnection extends HttpServlet {
         doGet(request, response);
     }
 
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        super.doDelete(req, resp);
-        PrintWriter out = resp.getWriter();
-        HttpSession httpSession = req.getSession();
-        Session session = null;
 
-        try {
-            session = ServletManager.getServerSession(httpSession);
-
-            // TODO cancella utente specifico, decidi se farlo solo da autenticato, magari con email o altro fattore di auth
-            session.getCryptoServer().deleteClientData();
-
-
-        } catch (ServletException e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
-        }
-
-    }
 }
