@@ -1,11 +1,11 @@
-package it.richkmeli.RMS.web;
+package it.richkmeli.rms.web;
 
-import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
-import it.richkmeli.RMS.web.util.ServletException;
-import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.rms.data.device.DeviceDatabaseManager;
+import it.richkmeli.rms.web.util.ServletException;
+import it.richkmeli.rms.web.util.ServletManager;
+import it.richkmeli.rms.web.util.Session;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

@@ -9,6 +9,7 @@ $(document).ready(function () {
             $("#signupNavBar").hide()
             $("#loginNavBar").hide()
             $("#logoutNavBar").show()
+            $("#rmcsNavBar").show()
 
             var JSONmessage = JSON.parse(JSONdata.message)
             if (JSONmessage.admin == true) {
@@ -23,6 +24,7 @@ $(document).ready(function () {
         $("#signupNavBar").show()
         $("#loginNavBar").show()
         $("#usersNavBar").hide()
+        $("#rmcsNavBar").hide()
     })
 
     $("#logoutBtn").click(function() {

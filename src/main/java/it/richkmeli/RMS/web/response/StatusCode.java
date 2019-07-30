@@ -1,4 +1,4 @@
-package it.richkmeli.RMS.web.response;
+package it.richkmeli.rms.web.response;
 
 public enum StatusCode {
 

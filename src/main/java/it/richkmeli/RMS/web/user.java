@@ -1,14 +1,14 @@
-package it.richkmeli.RMS.web;
+package it.richkmeli.rms.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.richkmeli.RMS.web.response.KOResponse;
-import it.richkmeli.RMS.web.response.OKResponse;
-import it.richkmeli.RMS.web.response.StatusCode;
-import it.richkmeli.RMS.web.util.ServletException;
-import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.auth.model.User;
+import it.richkmeli.rms.web.response.KOResponse;
+import it.richkmeli.rms.web.response.OKResponse;
+import it.richkmeli.rms.web.response.StatusCode;
+import it.richkmeli.rms.web.util.ServletException;
+import it.richkmeli.rms.web.util.ServletManager;
+import it.richkmeli.rms.web.util.Session;
 import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;

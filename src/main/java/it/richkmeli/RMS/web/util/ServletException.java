@@ -1,4 +1,4 @@
-package it.richkmeli.RMS.web.util;
+package it.richkmeli.rms.web.util;
 
 public class ServletException extends Exception {
 

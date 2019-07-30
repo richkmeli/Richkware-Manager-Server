@@ -1,10 +1,10 @@
-package it.richkmeli.RMS.data.device;
+package it.richkmeli.rms.data.device;
 
-import it.richkmeli.RMS.data.device.model.Device;
-import it.richkmeli.RMS.data.device.model.DeviceModel;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.database.DatabaseManager;
+import it.richkmeli.rms.data.device.model.Device;
+import it.richkmeli.rms.data.device.model.DeviceModel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ import java.util.List;
 public class DeviceDatabaseManager extends DatabaseManager implements DeviceModel {
 
     public DeviceDatabaseManager() throws DatabaseException {
-        schemaName = "DeviceSchema";
+        schemaName = "RichkwareSchema";
         tableName = schemaName + "." + "device";
         table = "(" +
                 "name VARCHAR(50) NOT NULL PRIMARY KEY," +
@@ -24,7 +24,7 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
                 "serverPort VARCHAR(10)," +
                 "lastConnection VARCHAR(25)," +
                 "encryptionKey VARCHAR(32)," +
-                "userAssociated VARCHAR(50) REFERENCES user(email)," +
+                "userAssociated VARCHAR(50) REFERENCES AuthSchema.auth(email)," +
                 "commands TEXT," +
                 "commandsOutput TEXT" +
                 ")";

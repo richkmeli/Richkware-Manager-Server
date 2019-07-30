@@ -1,4 +1,4 @@
-package it.richkmeli.RMS.data.device.model;
+package it.richkmeli.rms.data.device.model;
 
 import it.richkmeli.jframework.database.DatabaseException;
 

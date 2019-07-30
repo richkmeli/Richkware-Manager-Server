@@ -1,10 +1,11 @@
-package it.richkmeli.RMS.web.account;
+package it.richkmeli.rms.web.account;
 
-import it.richkmeli.RMS.web.response.KOResponse;
-import it.richkmeli.RMS.web.response.OKResponse;
-import it.richkmeli.RMS.web.response.StatusCode;
-import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.RMS.web.util.Session;
+import it.richkmeli.rms.data.rmc.model.RMC;
+import it.richkmeli.rms.web.response.KOResponse;
+import it.richkmeli.rms.web.response.OKResponse;
+import it.richkmeli.rms.web.response.StatusCode;
+import it.richkmeli.rms.web.util.ServletManager;
+import it.richkmeli.rms.web.util.Session;
 import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
@@ -74,6 +75,12 @@ public class LogIn extends HttpServlet {
                         // set userID into the session
                         session.setUser(email);
                         session.setAdmin(isAdmin);
+
+                        //TODO rimuovere
+//                        session.setRmcID("RMC-001");
+                        if (session.getRmcID() != null && session.getUser() != null) {
+                            session.getRmcDatabaseManager().addRMC(new RMC(session.getUser(), session.getRmcID()));
+                        }
 
                         JSONObject adminInfo = new JSONObject();
                         adminInfo.put("admin", isAdmin);

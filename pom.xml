@@ -41,7 +41,7 @@
     <dependencies>
         <dependency>
             <groupId>it.richkmeli.jframework</groupId>
-<!--            <groupId>com.github.richkmeli</groupId>-->
+            <!--            <groupId>com.github.richkmeli</groupId>-->
             <artifactId>JFramework</artifactId>
             <version>1.1.0</version>
         </dependency>

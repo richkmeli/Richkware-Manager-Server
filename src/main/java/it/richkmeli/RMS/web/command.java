@@ -1,10 +1,12 @@
-package it.richkmeli.RMS.web.util;
+package it.richkmeli.rms.web;
 
-import it.richkmeli.RMS.web.response.KOResponse;
-import it.richkmeli.RMS.web.response.OKResponse;
-import it.richkmeli.RMS.web.response.StatusCode;
 import it.richkmeli.jframework.crypto.KeyExchangePayloadCompat;
 import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.rms.web.response.KOResponse;
+import it.richkmeli.rms.web.response.OKResponse;
+import it.richkmeli.rms.web.response.StatusCode;
+import it.richkmeli.rms.web.util.ServletManager;
+import it.richkmeli.rms.web.util.Session;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,7 +89,7 @@ public class command extends HttpServlet {
             } else {
                 out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
             }
-        } catch (it.richkmeli.RMS.web.util.ServletException | DatabaseException e/* | CryptoException e*/) {
+        } catch (it.richkmeli.rms.web.util.ServletException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
@@ -123,7 +125,7 @@ public class command extends HttpServlet {
             }
 
             br.close();
-        } catch (it.richkmeli.RMS.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
+        } catch (it.richkmeli.rms.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
@@ -152,7 +154,7 @@ public class command extends HttpServlet {
                 out.println((new KOResponse(StatusCode.FIELD_EMPTY, "Field not found in DB")).json());
             }
             br.close();
-        } catch (it.richkmeli.RMS.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
+        } catch (it.richkmeli.rms.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }

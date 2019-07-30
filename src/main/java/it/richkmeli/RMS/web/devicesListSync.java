@@ -1,8 +1,8 @@
-package it.richkmeli.RMS.web;
+package it.richkmeli.rms.web;
 
-import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.rms.web.util.ServletManager;
+import it.richkmeli.rms.web.util.Session;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,7 +26,7 @@ public class devicesListSync extends HttpServlet {
         Session session = null;
         try {
             session = ServletManager.getServerSession(httpSession);
-        }catch (it.richkmeli.RMS.web.util.ServletException e){
+        } catch (it.richkmeli.rms.web.util.ServletException e) {
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
         }

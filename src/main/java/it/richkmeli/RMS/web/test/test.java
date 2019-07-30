@@ -1,13 +1,14 @@
-package it.richkmeli.RMS.web.test;
+package it.richkmeli.rms.web.test;
 
-import it.richkmeli.RMS.data.device.model.Device;
-import it.richkmeli.RMS.web.util.ServletException;
-import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.RMS.web.util.Session;
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.rms.data.device.model.Device;
+import it.richkmeli.rms.data.rmc.model.RMC;
+import it.richkmeli.rms.web.util.ServletException;
+import it.richkmeli.rms.web.util.ServletManager;
+import it.richkmeli.rms.web.util.Session;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -69,6 +70,19 @@ public class test extends HttpServlet {
                     session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.GenerateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.GenerateAlphanumericString(32), u.getEmail(), "start##start##start##start", ""));
                 }
             }
+        } catch (DatabaseException e) {
+            Logger.error("Session ", e);
+        }
+
+        try {
+
+            RMC rmc1 = new RMC("richk@i.it", "test_rmc_ID");
+            RMC rmc2 = new RMC("er@fv.it", "test_rmc_ID_2");
+            RMC rmc3 = new RMC("er@fv.it", "test_rmc_ID_3");
+
+            session.getRmcDatabaseManager().addRMC(rmc1);
+            session.getRmcDatabaseManager().addRMC(rmc2);
+            session.getRmcDatabaseManager().addRMC(rmc3);
         } catch (DatabaseException e) {
             Logger.error("Session ", e);
         }
