@@ -36,7 +36,7 @@ public class encryptionKey extends HttpServlet {
         Session session = null;
         try {
             session = ServletManager.getServerSession(httpSession);
-        }catch (ServletException e){
+        } catch (ServletException e) {
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
 

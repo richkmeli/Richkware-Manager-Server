@@ -26,13 +26,13 @@ public class ServletManager {
         return session;
     }
 
-    public static String printHTTPsession(HttpSession httpSession){
+    public static String printHTTPsession(HttpSession httpSession) {
         StringBuilder list = new StringBuilder();
         Enumeration<String> attributes = httpSession.getAttributeNames();
         list.append("{");
         while (attributes.hasMoreElements()) {
             String attribute = attributes.nextElement();
-            list.append(attribute + " : "+httpSession.getAttribute(attribute));
+            list.append(attribute + " : " + httpSession.getAttribute(attribute));
             list.append(attributes.hasMoreElements() ? " - " : "}");
         }
 

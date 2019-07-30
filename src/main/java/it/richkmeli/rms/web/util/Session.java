@@ -16,7 +16,6 @@ public class Session {
     private Crypto.Server cryptoServer;
 
 
-
     public Session() throws DatabaseException {
         deviceDatabaseManager = new DeviceDatabaseManager();
         authDatabaseManager = new AuthDatabaseManager();

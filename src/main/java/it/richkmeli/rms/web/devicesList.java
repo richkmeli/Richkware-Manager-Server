@@ -55,10 +55,10 @@ public class devicesList extends HttpServlet {
                     }
                 }
 
-                if (encryption){
-                        // RMC
-                        String encPayload = session.getCryptoServer().encrypt(GenerateDevicesListJSON(session));
-                        out.println((new OKResponse(StatusCode.SUCCESS, encPayload)).json());
+                if (encryption) {
+                    // RMC
+                    String encPayload = session.getCryptoServer().encrypt(GenerateDevicesListJSON(session));
+                    out.println((new OKResponse(StatusCode.SUCCESS, encPayload)).json());
                 } else {
                     // WEBAPP
                     // encryption disabled
@@ -72,7 +72,7 @@ public class devicesList extends HttpServlet {
                 // non loggato
                 out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
             }
-        }catch (ServletException e){
+        } catch (ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
 //        } catch (CryptoException e) {
 //            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
@@ -110,7 +110,7 @@ public class devicesList extends HttpServlet {
                 // non loggato
                 out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
             }
-        }catch (ServletException e){
+        } catch (ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
 

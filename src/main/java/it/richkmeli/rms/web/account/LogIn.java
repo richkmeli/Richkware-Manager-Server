@@ -88,7 +88,7 @@ public class LogIn extends HttpServlet {
                         String adminInfoS = adminInfo.toString();
 
                         // encrypt response
-                        if(encryption){
+                        if (encryption) {
                             adminInfoS = session.getCryptoServer().encrypt(adminInfoS);
                         }
 
