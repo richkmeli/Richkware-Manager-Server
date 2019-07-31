@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.database.DatabaseException;
-import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.response.KOResponse;
@@ -79,28 +78,76 @@ public class rmc extends HttpServlet {
         HttpSession httpSession = req.getSession();
         Session session = null;
 
-        // todo controlla che stia cancellando un rmc di cui ha i permessi
-
         // param crittati se rmc
 
-        if (req.getParameterMap().containsKey("rmc")) {
-            String rmc = req.getParameter("rmc");
-            File secureDataServer = new File("TESTsecureDataServer.txt");
-            String serverKey = "testkeyServer";
-            Crypto.Server cryptoServer = new Crypto.Server();
-            cryptoServer.init(secureDataServer, serverKey, rmc, "");
-            cryptoServer.deleteClientData();
-        }
+//        if (req.getParameterMap().containsKey("rmcid")) {
+//            String rmc = req.getParameter("rmcid");
+//            File secureDataServer = new File("TESTsecureDataServer.txt");
+//            String serverKey = "testkeyServer";
+//            Crypto.Server cryptoServer = new Crypto.Server();
+//            cryptoServer.init(secureDataServer, serverKey, rmc, "");
+//            cryptoServer.deleteClientData();
+//        }
 
         try {
             session = ServletManager.getServerSession(httpSession);
 
+            // todo controlla che stia cancellando un rmc di cui ha i permessi
+            if (req.getParameterMap().containsKey("user") && req.getParameterMap().containsKey("rmcId")) {
+                String user = req.getParameter("user");
+                String id = req.getParameter("rmcId");
+                boolean valid = true;
+                if (!session.isAdmin()) {
+                    if (session.getUser().equals(user)) {
+                        RMC temp = new RMC(user, id);
+                        if (!session.getRmcDatabaseManager().getRMCs(user).contains(temp)) {
+                            valid = false;
+                        }
+                    } else {
+                        out.println((new KOResponse(StatusCode.GENERIC_ERROR, "You are not allowed to delete this state.")).json());
+                    }
+                }
+                if (valid) {
+                    File secureDataServer = new File("TESTsecureDataServer.txt");
+                    String serverKey = "testkeyServer";
+                    Crypto.Server cryptoServer = new Crypto.Server();
+                    cryptoServer.init(secureDataServer, serverKey, id, "");
+                    cryptoServer.deleteClientData();
+                    session.getRmcDatabaseManager().removeRMC(id);
+                }
+
+                out.println((new OKResponse(StatusCode.SUCCESS)).json());
+//                if (session.getUser().equals(user)) {
+//                    if (!session.isAdmin()) {
+//                        //controlla che l'rmc sia associato all'utente
+//                        RMC temp = new RMC(user, id);
+//                        if (!session.getRmcDatabaseManager().getRMCs(user).contains(temp)) {
+//                            valid = false;
+//                        }
+//                    }
+//                    //cancella rmc se valid è true
+//                    if (valid) {
+//                        File secureDataServer = new File("TESTsecureDataServer.txt");
+//                        String serverKey = "testkeyServer";
+//                        Crypto.Server cryptoServer = new Crypto.Server();
+//                        cryptoServer.init(secureDataServer, serverKey, id, "");
+//                        cryptoServer.deleteClientData();
+//                        session.getRmcDatabaseManager().removeRMC(id);
+//                    }
+//                }
+            } else {
+                //TODO errore: user does not match
+                out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Error in parameters passed.")).json());
+            }
+
             // TODO cancella utente specifico, decidi se farlo solo da autenticato, magari con email o altro fattore di auth
-            session.getCryptoServer().deleteClientData();
+//            session.getCryptoServer().deleteClientData();
 
 
         } catch (it.richkmeli.rms.web.util.ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+        } catch (DatabaseException e1) {
+            out.println((new KOResponse(StatusCode.DB_ERROR, e1.getMessage())).json());
         }
 
     }

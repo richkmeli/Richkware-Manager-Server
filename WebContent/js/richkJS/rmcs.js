@@ -63,7 +63,7 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
             //"<td>" + (index + 1) + "</td>" +
             "<td>" + account + "</td>" +
             "<td>" + rmcId + "</td>" +
-            "<td><button type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-warning\" onclick=\"deleteDevice('" + name + "', '" + i + "')\">Remove</button></td>");
+            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteRmc('" + account + "', '" + i + "', '" + rmcId + "')\">Remove</button></td>");
 
         //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
 
@@ -73,16 +73,33 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
     rmcsTable.appendChild(tbody);
 }
 
+function deleteRmc(user, indexTableRow, rmcId) {
+    $.ajax({
+        url: '/Richkware-Manager-Server/rmc?user=' + user + '&rmcId=' + rmcId,
+        type: 'DELETE',
+        success: function (result) {
+            console.log("result from server: " + result)
+            var JSONdata = JSON.parse(result)
+            if (JSONdata.statusCode == 1000) {
+                $("#tableRow" + indexTableRow).remove();
+            } else {
+                alert(result)
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
-    loadDevicesTable();
+    loadRmcsTable();
     setInterval(loadDevicesTable, 30000);
 
-    $("[id*=remove]").click(function () {
-        var id = event.target.id.split("#")[1];
-        var index = event.target.id.split("#")[2];
-        $.delete("rmc", {rmcid: id}, function () {
-            $("#tableRow" + index).remove()
-        })
-    });
+    // $("[id*=remove]").click(function () {
+    //     var id = event.target.id.split("#")[1];
+    //     var index = event.target.id.split("#")[2];
+    //     var account = event.target.id.split('#')[3];
+    //     $.delete("rmc", {user: account, rmcid: id}, function () {
+    //         $("#tableRow" + index).remove()
+    //     })
+    // });
 
 })
