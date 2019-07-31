@@ -43,9 +43,7 @@ public class rmc extends HttpServlet {
 
             if (session.isAdmin()) {
                 //ottiene tutti i client presenti sul db
-                System.out.println("Sono qui");
                 clients = session.getRmcDatabaseManager().getRMCs();
-                System.out.println("query fatta");
             } else {
                 //ottiene tutti i client associati al suo account
                 clients = session.getRmcDatabaseManager().getRMCs(session.getUser());

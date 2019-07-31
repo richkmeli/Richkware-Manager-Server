@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 @WebServlet({"/LogIn"})
 public class LogIn extends HttpServlet {
@@ -40,29 +41,24 @@ public class LogIn extends HttpServlet {
             // check if is not already logged
             if (session.getUser() == null) {
 
-                //TODO change into client=RMC or client=WEB
-                boolean encryption = false;
-                if (request.getParameterMap().containsKey("encryption")) {
-                    if ("true".equalsIgnoreCase(request.getParameter("encryption"))) {
-                        encryption = true;
-                    }
-                }
 
-                String email = "";// = request.getParameter("email");
-                String pass = "";// = request.getParameter("password");
+                Map<String,String> attribMap = ServletManager.doDefaultProcess(request, ServletManager.HTTPVerb.GET);
 
-                if (encryption) {  // RMC
-                    String payload = request.getParameter("data");
-                    String decryptedPayload = session.getCryptoServer().decrypt(payload);
-                    JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
-                    email = decryptedPayloadJSON.getString("email");
-                    pass = decryptedPayloadJSON.getString("password");
+                String email = attribMap.get("email");// = request.getParameter("email");
+                String pass = attribMap.get("password");;// = request.getParameter("password");
 
-                } else {
-                    // WEBAPP
-                    email = request.getParameter("email");
-                    pass = request.getParameter("password");
-                }
+//                if (encryption) {  // RMC
+//                    String payload = request.getParameter("data");
+//                    String decryptedPayload = session.getCryptoServer().decrypt(payload);
+//                    JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
+//                    email = decryptedPayloadJSON.getString("email");
+//                    pass = decryptedPayloadJSON.getString("password");
+//
+//                } else {
+//                    // WEBAPP
+//                    email = request.getParameter("email");
+//                    pass = request.getParameter("password");
+//                }
 
                 //String email = request.getParameter("email");
                 //String pass = request.getParameter("password");
@@ -88,9 +84,9 @@ public class LogIn extends HttpServlet {
                         String adminInfoS = adminInfo.toString();
 
                         // encrypt response
-                        if (encryption) {
-                            adminInfoS = session.getCryptoServer().encrypt(adminInfoS);
-                        }
+//                        if (encryption) {
+//                            adminInfoS = session.getCryptoServer().encrypt(adminInfoS);
+//                        }
 
                         out.println((new OKResponse(StatusCode.SUCCESS, adminInfoS)).json());
                     } else {

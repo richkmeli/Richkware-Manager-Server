@@ -28,7 +28,6 @@ $(document).ready(function() {
     function hashPassword(password) {
         var salt = randomString(9)
         var tempPsw1 = sha256(password) + salt
-        console.log("GABO: " + base64Url(sha256("00000000")))
         var tempPsw2 = base64Url(salt + sha256(tempPsw1))
         return tempPsw2
     }

@@ -5,4 +5,8 @@ public class ServletException extends Exception {
     public ServletException(Exception exception) {
         super(exception);
     }
+
+    public ServletException(String e) {
+        super(e);
+    }
 }

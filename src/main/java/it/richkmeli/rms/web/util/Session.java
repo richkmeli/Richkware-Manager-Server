@@ -14,12 +14,13 @@ public class Session {
     private String rmcID;       //client id from RichkwareSchema
     private Boolean isAdmin;
     private Crypto.Server cryptoServer;
-
+    private String channel;
 
     public Session() throws DatabaseException {
         deviceDatabaseManager = new DeviceDatabaseManager();
         authDatabaseManager = new AuthDatabaseManager();
         rmcDatabaseManager = new RMCDatabaseManager();
+        channel = null;
         userID = null;
         rmcID = null;
         isAdmin = false;
@@ -90,4 +91,15 @@ public class Session {
     public Crypto.Server getCryptoServer() {
         return cryptoServer;
     }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+
 }
+
