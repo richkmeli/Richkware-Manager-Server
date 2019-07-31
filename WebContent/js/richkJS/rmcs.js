@@ -91,7 +91,7 @@ function deleteRmc(user, indexTableRow, rmcId) {
 
 $(document).ready(function () {
     loadRmcsTable();
-    setInterval(loadDevicesTable, 30000);
+    setInterval(loadRmcsTable, 30000);
 
     // $("[id*=remove]").click(function () {
     //     var id = event.target.id.split("#")[1];
