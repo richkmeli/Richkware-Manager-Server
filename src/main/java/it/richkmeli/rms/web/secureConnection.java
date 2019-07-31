@@ -1,6 +1,7 @@
 package it.richkmeli.rms.web;
 
 import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.response.KOResponse;
 import it.richkmeli.rms.web.response.StatusCode;
 import it.richkmeli.rms.web.util.ServletException;
@@ -63,6 +64,12 @@ public class secureConnection extends HttpServlet {
 
                     int serverState = new JSONObject(serverResponse).getInt("state");
                     String serverPayload = new JSONObject(serverResponse).getString("payload");
+
+                    if (serverState == 3) {
+                        if (session.getRmcID() != null) {
+                            session.getRmcDatabaseManager().addRMC(new RMC("", session.getRmcID()));
+                        }
+                    }
 
                     // TODO cambia con OKResponse
                     out.println(serverPayload);

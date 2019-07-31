@@ -14,6 +14,6 @@ public interface RMCModel {
 
     public List<RMC> getRMCs(String user) throws DatabaseException;
 
-    public List<String> getAccounts(String rmcID) throws DatabaseException;
+    public List<String> getUnassociatedRmcs(String rmcID) throws DatabaseException;
 
 }
