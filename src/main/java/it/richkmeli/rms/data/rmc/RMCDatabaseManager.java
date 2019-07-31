@@ -18,7 +18,7 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
         schemaName = "RichkwareSchema";
         tableName = schemaName + "." + "rmc";
         table = "(" +
-                "account VARCHAR(50) NOT NULL," +
+                "account VARCHAR(50)," +
                 "rmcId VARCHAR(25) NOT NULL," +
                 "PRIMARY KEY (account, rmcId)," +
                 "FOREIGN KEY (account) REFERENCES AuthSchema.auth(email)" +
@@ -111,7 +111,7 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
     }
 
     @Override
-    public List<String> getAccounts(String rmcID) throws DatabaseException {
+    public List<String> getUnassociatedRmcs(String rmcID) throws DatabaseException {
         Connection connnection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -119,7 +119,7 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
         try {
             connnection = connect();
-            preparedStatement = connnection.prepareStatement("SELECT * FROM " + tableName + "WHERE rmcId = ?");
+            preparedStatement = connnection.prepareStatement("SELECT * FROM " + tableName + "WHERE rmcId = ? AND account = ''");
             preparedStatement.setString(1, rmcID);
             resultSet = preparedStatement.executeQuery();
 

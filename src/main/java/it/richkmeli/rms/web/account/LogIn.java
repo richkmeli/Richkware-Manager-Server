@@ -76,9 +76,9 @@ public class LogIn extends HttpServlet {
                         session.setUser(email);
                         session.setAdmin(isAdmin);
 
-                        //TODO rimuovere
-//                        session.setRmcID("RMC-001");
-                        if (session.getRmcID() != null && session.getUser() != null) {
+                        if (session.getRmcDatabaseManager().getUnassociatedRmcs(session.getRmcID()).size() > 0) {
+                            session.getRmcDatabaseManager().editRMC(new RMC(session.getUser(), session.getRmcID()));
+                        } else { //aggiunge entry
                             session.getRmcDatabaseManager().addRMC(new RMC(session.getUser(), session.getRmcID()));
                         }
 
