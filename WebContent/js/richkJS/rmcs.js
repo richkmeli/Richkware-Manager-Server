@@ -53,7 +53,7 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
 //            var device = value;
         console.log(rmcsList[i])
 
-        var account = rmcsList[i].account;
+        var user = rmcsList[i].user;
         var rmcId = rmcsList[i].rmcId;
 
         var row = document.createElement("tr");
@@ -61,9 +61,9 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
 
         row.innerHTML = (
             //"<td>" + (index + 1) + "</td>" +
-            "<td>" + account + "</td>" +
+            "<td>" + user + "</td>" +
             "<td>" + rmcId + "</td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteRmc('" + account + "', '" + i + "', '" + rmcId + "')\">Remove</button></td>");
+            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteRmc('" + user + "', '" + i + "', '" + rmcId + "')\">Remove</button></td>");
 
         //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
 

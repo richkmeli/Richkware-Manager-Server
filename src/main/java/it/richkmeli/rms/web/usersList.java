@@ -5,6 +5,9 @@ import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.rms.web.response.KOResponse;
+import it.richkmeli.rms.web.response.OKResponse;
+import it.richkmeli.rms.web.response.StatusCode;
 import it.richkmeli.rms.web.util.ServletException;
 import it.richkmeli.rms.web.util.ServletManager;
 import it.richkmeli.rms.web.util.Session;
@@ -32,6 +35,7 @@ public class usersList extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        PrintWriter out = response.getWriter();
         HttpSession httpSession = request.getSession();
         Session session = null;
         try {
@@ -44,37 +48,43 @@ public class usersList extends HttpServlet {
 
         try {
 
-            String out = null;
-
             String user = session.getUser();
+
+            boolean encryption = false;
+            if (request.getParameterMap().containsKey("channel")) {
+                if ("rmc".equalsIgnoreCase(request.getParameter("channel"))) {
+                    encryption = true;
+                }
+            }
+
             // Authentication
             if (user != null) {
 
                 if (session.isAdmin()) {
-                    out = GenerateUsersListJSON(session);
+                    if (encryption) {  // RMC
+                        String encPayload = session.getCryptoServer().encrypt(GenerateUsersListJSON(session));
+                        out.println((new OKResponse(StatusCode.SUCCESS, encPayload)).json());
+                    } else {  // WEBAPP
+                        // Authentication
+                        out.println((new OKResponse(StatusCode.SUCCESS, GenerateUsersListJSON(session)).json()));
+                    }
 
-                    // servlet response
-                    PrintWriter printWriter = response.getWriter();
-                    printWriter.println(out);
-                    printWriter.flush();
-                    printWriter.close();
+                    out.flush();
+                    out.close();
                 } else {
                     // non ha privilegi
                     // TODO rimanda da qualche parte perche c'è errore
-                    httpSession.setAttribute("error", "non ha privilegi");
-                    request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
+                    out.println((new KOResponse(StatusCode.GENERIC_ERROR, "You are not admin!").json()));
                 }
 
             } else {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
-                httpSession.setAttribute("error", "non loggato");
-                request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
+                out.println((new KOResponse(StatusCode.NOT_LOGGED).json()));
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
-            httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage()).json()));
         }
     }
 

@@ -41,6 +41,7 @@ public class user extends HttpServlet {
         Session session = null;
         try {
             session = ServletManager.getServerSession(httpSession);
+
         } catch (ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
 //            httpSession.setAttribute("error", e);
@@ -51,31 +52,28 @@ public class user extends HttpServlet {
 
             String user = session.getUser();
             boolean isAdmin = session.getAuthDatabaseManager().isAdmin(user);
-            // Authentication
+
+            boolean encryption = false;
+            if (request.getParameterMap().containsKey("channel")) {
+                if ("rmc".equalsIgnoreCase(request.getParameter("channel"))) {
+                    encryption = true;
+                }
+            }
+
+            JSONObject message = new JSONObject();
+            message.put("user", user);
+            message.put("admin", isAdmin);
+
             if (user != null) {
-
-                //if (session.isAdmin()) {
-//                out = GenerateUserListJSON(session);
-                JSONObject message = new JSONObject();
-                message.put("user", user);
-                message.put("admin", isAdmin);
-                out.println((new OKResponse(StatusCode.SUCCESS, message.toString()).json()));
-
-                // servlet response
-                /*} else {
-                    // non ha privilegi
-                    // TODO rimanda da qualche parte perche c'è errore
-                    httpSession.setAttribute("error", "non ha privilegi");
-                    request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
-                }*/
-
+                if (encryption) {  // RMC
+                    String encPayload = session.getCryptoServer().encrypt(message.toString());
+                    out.println((new OKResponse(StatusCode.SUCCESS, encPayload)).json());
+                } else {  // WEBAPP
+                    // Authentication
+                    out.println((new OKResponse(StatusCode.SUCCESS, message.toString()).json()));
+                }
             } else {
-                // non loggato
-                // TODO rimanda da qualche parte perche c'è errore
                 out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
-//                httpSession.setAttribute("error", "non loggato");
-//                response.sendRedirect(ServletManager.LOGIN_HTML);
-                // request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
@@ -101,7 +99,7 @@ public class user extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {
         //if the code below is de-commented, this servlet disables DELETE
         //super.doDelete(req, resp);
-
+        PrintWriter out = resp.getWriter();
         HttpSession httpSession = req.getSession();
         Session session = null;
         try {
@@ -113,44 +111,44 @@ public class user extends HttpServlet {
         }
 
         try {
-            String out = null;
-
             String user = session.getUser();
+
+            boolean encryption = false;
+            if (req.getParameterMap().containsKey("channel")) {
+                if ("rmc".equalsIgnoreCase(req.getParameter("channel"))) {
+                    encryption = true;
+                }
+            }
+
             // Authentication
             if (user != null) {
                 if (req.getParameterMap().containsKey("email")) {
-                    String email = req.getParameter("email");
-
-                    if (email.compareTo(session.getUser()) == 0 ||
+                    String payload = req.getParameter("email");
+                    if (encryption) {  // RMC
+                        payload = session.getCryptoServer().decrypt(payload);
+                    }
+                    if (payload.compareTo(session.getUser()) == 0 ||
                             session.isAdmin()) {
-                        session.getAuthDatabaseManager().removeUser(email);
-                        out = "deleted";
+                        session.getAuthDatabaseManager().removeUser(payload);
+                        out.println((new OKResponse(StatusCode.SUCCESS).json()));
                     } else {
                         // TODO rimanda da qualche parte perche c'è errore
-                        httpSession.setAttribute("error", "non hai i privilegi");
-                        req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
+                        out.println((new KOResponse(StatusCode.GENERIC_ERROR, "You are not authorized to perform this action!").json()));
                     }
-
                 } else {
                     // TODO rimanda da qualche parte perche c'è errore
-                    httpSession.setAttribute("error", "dispositivo non specificato");
-                    req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
+                    out.println((new KOResponse(StatusCode.MISSING_FIELD).json()));
                 }
-                // servlet response
-                PrintWriter printWriter = resp.getWriter();
-                printWriter.println(out);
-                printWriter.flush();
-                printWriter.close();
+                out.flush();
+                out.close();
             } else {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
-                httpSession.setAttribute("error", "non loggato");
-                req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
+                out.println((new KOResponse(StatusCode.NOT_LOGGED).json()));
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
-            httpSession.setAttribute("error", e);
-            req.getRequestDispatcher(ServletManager.ERROR_JSP).forward(req, resp);
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage()).json()));
         }
 
     }

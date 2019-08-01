@@ -2,20 +2,20 @@ package it.richkmeli.rms.data.rmc.model;
 
 public class RMC {
 
-    public String account;
+    public String user;
     public String rmcId;
 
     public RMC(String user, String clientID) {
-        this.account = user;
+        this.user = user;
         this.rmcId = clientID;
     }
 
-    public String getAccount() {
-        return account;
+    public String getUser() {
+        return user;
     }
 
-    public void setAccount(String user) {
-        this.account = user;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public String getRmcId() {

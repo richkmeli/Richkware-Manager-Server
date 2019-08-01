@@ -49,8 +49,8 @@ public class devicesList extends HttpServlet {
 
                 //TODO change into client=RMC or client=WEB
                 boolean encryption = false;
-                if (request.getParameterMap().containsKey("encryption")) {
-                    if ("true".equalsIgnoreCase(request.getParameter("encryption"))) {
+                if (request.getParameterMap().containsKey("channel")) {
+                    if ("rmc".equalsIgnoreCase(request.getParameter("channel"))) {
                         encryption = true;
                     }
                 }

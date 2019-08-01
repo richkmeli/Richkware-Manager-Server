@@ -15,13 +15,13 @@ import java.util.List;
 public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
     public RMCDatabaseManager() throws DatabaseException {
-        schemaName = "RichkwareSchema";
+        schemaName = "AuthSchema";
         tableName = schemaName + "." + "rmc";
         table = "(" +
-                "account VARCHAR(50)," +
+                "user VARCHAR(50)," +
                 "rmcId VARCHAR(25) NOT NULL," +
-                "PRIMARY KEY (account, rmcId)," +
-                "FOREIGN KEY (account) REFERENCES AuthSchema.auth(email)" +
+                "PRIMARY KEY (user, rmcId)," +
+                "FOREIGN KEY (user) REFERENCES auth(email) ON DELETE CASCADE" +
                 ")";
 
         init();
@@ -41,9 +41,9 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("UPDATE " + tableName + " SET account = ?, rmcId = ?");
+            preparedStatement = connection.prepareStatement("UPDATE " + tableName + " SET user = ?, rmcId = ?");
             // arguments that will be edited
-            preparedStatement.setString(1, client.getAccount());
+            preparedStatement.setString(1, client.getUser());
             preparedStatement.setString(2, client.getRmcId());
 
             preparedStatement.executeUpdate();
@@ -87,7 +87,7 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
         try {
             connnection = connect();
-            String query = user == "" ? "SELECT * FROM " + tableName : "SELECT * FROM " + tableName + " WHERE account = ?";
+            String query = user == "" ? "SELECT * FROM " + tableName : "SELECT * FROM " + tableName + " WHERE user = ?";
             preparedStatement = connnection.prepareStatement(query);
             if (user != "") {
                 preparedStatement.setString(1, user);
@@ -96,7 +96,7 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
             while (resultSet.next()) {
                 RMC tmp = new RMC(
-                        resultSet.getString("account"),
+                        resultSet.getString("user"),
                         resultSet.getString("rmcId"));
                 // add to the list the devices of the relative user.
                 rmcs.add(tmp);
@@ -119,12 +119,12 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
         try {
             connnection = connect();
-            preparedStatement = connnection.prepareStatement("SELECT * FROM " + tableName + "WHERE rmcId = ? AND account = ''");
+            preparedStatement = connnection.prepareStatement("SELECT * FROM " + tableName + "WHERE rmcId = ? AND user = ''");
             preparedStatement.setString(1, rmcID);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                accounts.add(resultSet.getString("account"));
+                accounts.add(resultSet.getString("user"));
             }
         } catch (SQLException | DatabaseException e) {
             disconnect(connnection, preparedStatement, null);
