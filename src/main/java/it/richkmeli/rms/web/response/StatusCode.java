@@ -25,9 +25,9 @@ public enum StatusCode {
     DB_ERROR(3000, "Error in DB"), // TODO cambiare in 2200, controllare che in RMC non siano
     FIELD_EMPTY(3001, "Field empty in DB"),
     // crypto error 23xx
-    SECURE_CONNECTION(2300, "Secure Connection error");
-
-
+    SECURE_CONNECTION(2300, "Secure Connection error"),
+    // network protocol error 24xx
+    CHANNEL_UNKNOWN(2400, "Channel Unknown");
     private int code;
     private String defMessage;
 

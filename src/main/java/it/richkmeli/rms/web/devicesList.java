@@ -38,44 +38,21 @@ public class devicesList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
-        HttpSession httpSession = request.getSession();
-        Session session = null;
         try {
-            session = ServletManager.getServerSession(httpSession);
+            ServletManager.doDefaultProcessRequest(request, ServletManager.HTTPVerb.GET);
+            ServletManager.CheckLogin(request);
 
-            String user = session.getUser();
-            // Authentication
-            if (user != null) {
+            // server session
+            Session session = ServletManager.getServerSession(request);
+            String message = ServletManager.doDefaultProcessResponse(request, GenerateDevicesListJSON(session));
 
-                //TODO change into client=RMC or client=WEB
-                boolean encryption = false;
-                if (request.getParameterMap().containsKey("encryption")) {
-                    if ("true".equalsIgnoreCase(request.getParameter("encryption"))) {
-                        encryption = true;
-                    }
-                }
+            out.println((new OKResponse(StatusCode.SUCCESS, message)).json());
 
-                if (encryption) {
-                    // RMC
-                    String encPayload = session.getCryptoServer().encrypt(GenerateDevicesListJSON(session));
-                    out.println((new OKResponse(StatusCode.SUCCESS, encPayload)).json());
-                } else {
-                    // WEBAPP
-                    // encryption disabled
-                    String message = GenerateDevicesListJSON(session);
-                    out.println((new OKResponse(StatusCode.SUCCESS, message)).json());
-                }
+            out.flush();
+            out.close();
 
-                out.flush();
-                out.close();
-            } else {
-                // non loggato
-                out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
-            }
         } catch (ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
-//        } catch (CryptoException e) {
-//            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         } catch (DatabaseException e) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
         }

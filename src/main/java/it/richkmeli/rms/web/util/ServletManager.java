@@ -2,6 +2,8 @@ package it.richkmeli.rms.web.util;
 
 import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.rms.web.response.KOResponse;
+import it.richkmeli.rms.web.response.StatusCode;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,51 +30,95 @@ public class ServletManager {
         private static final String RICHKWARE = "richkware";
     }
 
-    public static Map<String, String> doDefaultProcess(HttpServletRequest request, HTTPVerb httpVerb) throws ServletException {
-        Map<String, String> attribMap = new HashMap<>();
-        HttpSession httpSession = request.getSession();
-        Session session = ServletManager.getServerSession(httpSession);
+    public static Map<String, String> doDefaultProcessRequest(HttpServletRequest request, HTTPVerb httpVerb) throws ServletException {
+        Map<String, String> attribMap = extractAttributes(request, httpVerb);
+        // server session
+        Session session = ServletManager.getServerSession(request);
 
         // check channel: rmc or webapp, if rmc secureconnection first (set something in session)
         if (request.getParameterMap().containsKey(Channel.CHANNEL)) {
             String channel = request.getParameter(Channel.CHANNEL);
             switch (channel) {
-                case Channel.RICHKWARE:
+                case Channel.RMC:
                     session.setChannel(Channel.RMC);
-                    String payload = request.getParameter(DATA_PARAMETER_KEY);
+                    // Extract encrypted data from map
+                    String payload = attribMap.get(DATA_PARAMETER_KEY);
                     String decryptedPayload = session.getCryptoServer().decrypt(payload);
                     JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
+                    // add each attribute inside encrypted data to map
                     for (String key : decryptedPayloadJSON.keySet()) {
                         String value = decryptedPayloadJSON.getString(key);
-                        attribMap.put(key,value);
+                        attribMap.put(key, value);
                     }
+                    // remove encrypted data from map
+                    attribMap.remove(DATA_PARAMETER_KEY);
                     break;
                 case Channel.WEBAPP:
                     session.setChannel(Channel.WEBAPP);
-
+                    // all attributes are already in map
+                    break;
+                case Channel.RICHKWARE:
+                    session.setChannel(Channel.RICHKWARE);
+                    // all attributes are already in map
                     break;
                 default:
                     Logger.error("ServletManager, channel " + channel + " unknown");
-                    throw new ServletException("ServletManager, channel " + channel + " unknown");
+                    throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
             }
 
         } else {
             Logger.error("ServletManager, channel key not present");
-            throw new ServletException("ServletManager, channel key not present");
+            throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel key not present"));
         }
-
-
-
-        // check login
-
-        // se rmc decritta e rendi trasparente
-
-        // lancia servlet exception cosi il try catch esterno sa cosa dire al client
 
         return attribMap;
     }
 
-    public static Map<String,String> extractAttributes(HttpServletRequest request, HTTPVerb httpVerb){
+
+    public static void CheckLogin(HttpServletRequest request) throws ServletException {
+        // server session
+        Session session = ServletManager.getServerSession(request);
+
+        String user = session.getUser();
+        // Authentication
+        if (user == null) {
+            Logger.error("ServletManager, user not logged");
+            throw new ServletException(new KOResponse(StatusCode.NOT_LOGGED, "user not logged"));
+        }
+
+    }
+
+    public static String doDefaultProcessResponse(HttpServletRequest request, String input) throws ServletException {
+        // default: input as output
+        String output = input;
+        // server session
+        Session session = ServletManager.getServerSession(request);
+
+        String channel = session.getChannel();
+        if (channel != null) {
+            switch (channel) {
+                case Channel.RMC:
+                    session.setChannel(Channel.RMC);
+                    output = session.getCryptoServer().encrypt(input);
+                    break;
+                case Channel.WEBAPP:
+                    session.setChannel(Channel.WEBAPP);
+                    break;
+                case Channel.RICHKWARE:
+                    session.setChannel(Channel.RICHKWARE);
+                    break;
+                default:
+                    Logger.error("ServletManager, channel " + channel + " unknown");
+                    throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
+            }
+        } else {
+            Logger.error("ServletManager, channel(server session) is null");
+            throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel(server session) is null"));
+        }
+        return output;
+    }
+
+    private static Map<String, String> extractAttributes(HttpServletRequest request, HTTPVerb httpVerb) {
         Map<String, String> attribMap = new HashMap<>();
         HttpSession httpSession = request.getSession();
 
@@ -88,6 +134,12 @@ public class ServletManager {
         return attribMap;
     }
 
+    public static Session getServerSession(HttpServletRequest request) throws ServletException {
+        // http session
+        HttpSession httpSession = request.getSession();
+        // server session
+        return ServletManager.getServerSession(httpSession);
+    }
 
     public static Session getServerSession(HttpSession httpSession) throws ServletException {
         Session session = (Session) httpSession.getAttribute("session");

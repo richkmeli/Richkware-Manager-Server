@@ -3,6 +3,7 @@ package it.richkmeli.rms.web;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.auth.model.User;
+import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.rms.web.response.KOResponse;
 import it.richkmeli.rms.web.response.OKResponse;
 import it.richkmeli.rms.web.response.StatusCode;
@@ -37,46 +38,33 @@ public class user extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         PrintWriter out = response.getWriter();
-        HttpSession httpSession = request.getSession();
-        Session session = null;
-        try {
-            session = ServletManager.getServerSession(httpSession);
-        } catch (ServletException e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
-//            httpSession.setAttribute("error", e);
-//            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
 
-        }
         try {
+            ServletManager.doDefaultProcessRequest(request, ServletManager.HTTPVerb.GET);
+            ServletManager.CheckLogin(request);
+
+            // server session
+            Session session = ServletManager.getServerSession(request);
 
             String user = session.getUser();
             boolean isAdmin = session.getAuthDatabaseManager().isAdmin(user);
-            // Authentication
-            if (user != null) {
 
-                //if (session.isAdmin()) {
-//                out = GenerateUserListJSON(session);
-                JSONObject message = new JSONObject();
-                message.put("user", user);
-                message.put("admin", isAdmin);
-                out.println((new OKResponse(StatusCode.SUCCESS, message.toString()).json()));
+            JSONObject messageJSON = new JSONObject();
+            messageJSON.put("user", user);
+            messageJSON.put("admin", isAdmin);
 
-                // servlet response
-                /*} else {
-                    // non ha privilegi
-                    // TODO rimanda da qualche parte perche c'è errore
-                    httpSession.setAttribute("error", "non ha privilegi");
-                    request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
-                }*/
+            String output = ServletManager.doDefaultProcessResponse(request, messageJSON.toString());
 
-            } else {
-                // non loggato
-                // TODO rimanda da qualche parte perche c'è errore
-                out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
-//                httpSession.setAttribute("error", "non loggato");
-//                response.sendRedirect(ServletManager.LOGIN_HTML);
-                // request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
-            }
+            out.println((new OKResponse(StatusCode.SUCCESS, output).json()));
+
+            out.flush();
+            out.close();
+
+        } catch (ServletException e) {
+            out.println(e.getKOResponseJSON());
+
+        } catch (DatabaseException e) {
+            out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
         } catch (Exception e) {
             // redirect to the JSP that handles errors
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());

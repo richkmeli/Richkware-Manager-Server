@@ -42,26 +42,11 @@ public class LogIn extends HttpServlet {
             if (session.getUser() == null) {
 
 
-                Map<String,String> attribMap = ServletManager.doDefaultProcess(request, ServletManager.HTTPVerb.GET);
+                Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(request, ServletManager.HTTPVerb.GET);
 
                 String email = attribMap.get("email");// = request.getParameter("email");
-                String pass = attribMap.get("password");;// = request.getParameter("password");
-
-//                if (encryption) {  // RMC
-//                    String payload = request.getParameter("data");
-//                    String decryptedPayload = session.getCryptoServer().decrypt(payload);
-//                    JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
-//                    email = decryptedPayloadJSON.getString("email");
-//                    pass = decryptedPayloadJSON.getString("password");
-//
-//                } else {
-//                    // WEBAPP
-//                    email = request.getParameter("email");
-//                    pass = request.getParameter("password");
-//                }
-
-                //String email = request.getParameter("email");
-                //String pass = request.getParameter("password");
+                String pass = attribMap.get("password");
+                ;// = request.getParameter("password");
 
                 System.out.println("email: " + email + " password: " + pass);
 
@@ -81,14 +66,9 @@ public class LogIn extends HttpServlet {
                         JSONObject adminInfo = new JSONObject();
                         adminInfo.put("admin", isAdmin);
 
-                        String adminInfoS = adminInfo.toString();
+                        String output = ServletManager.doDefaultProcessResponse(request, adminInfo.toString());
 
-                        // encrypt response
-//                        if (encryption) {
-//                            adminInfoS = session.getCryptoServer().encrypt(adminInfoS);
-//                        }
-
-                        out.println((new OKResponse(StatusCode.SUCCESS, adminInfoS)).json());
+                        out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
                     } else {
                         // pass sbagliata
                         out.println((new KOResponse(StatusCode.WRONG_PASSWORD)).json());
