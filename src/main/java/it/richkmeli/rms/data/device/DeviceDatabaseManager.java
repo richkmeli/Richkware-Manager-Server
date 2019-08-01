@@ -16,21 +16,49 @@ import java.util.List;
 public class DeviceDatabaseManager extends DatabaseManager implements DeviceModel {
 
     public DeviceDatabaseManager() throws DatabaseException {
-        schemaName = "RichkwareSchema";
+        schemaName = "AuthSchema";
         tableName = schemaName + "." + "device";
         table = "(" +
-                "name VARCHAR(50) NOT NULL PRIMARY KEY," +
+                "name VARCHAR(50) NOT NULL," +
                 "ip VARCHAR(25) NOT NULL," +
                 "serverPort VARCHAR(10)," +
                 "lastConnection VARCHAR(25)," +
                 "encryptionKey VARCHAR(32)," +
-                "userAssociated VARCHAR(50) REFERENCES AuthSchema.auth(email)," +
+                "userAssociated VARCHAR(50) REFERENCES auth(email)," +
                 "commands TEXT," +
-                "commandsOutput TEXT" +
-                ")";
+                "commandsOutput TEXT," +
+                "PRIMARY KEY (name)" +
+                ");";
 
         init();
+
+//        try {
+//            createTrigger();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
+
+//    private void createTrigger() throws SQLException {
+//        Connection connection = null;
+//
+//        try {
+//            connection = connect();
+//            Statement stmt = connection.createStatement();
+//            String trigger = "CREATE TRIGGER user_deletion\n" +
+//                    "BEFORE DELETE ON auth\n" +
+//                    "FOR EACH ROW\n" +
+//                    "BEGIN\n" +
+//                    "    UPDATE " + tableName + "\n" +
+//                    "    SET    userAssociated = CONCAT(OLD.email, ' (deleted)')\n" +
+//                    "    WHERE  userAssociated = OLD.email;\n" +
+//                    "END;";
+//            stmt.execute(trigger);
+//            connection.close();
+//        } catch (DatabaseException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     public List<Device> refreshDevice() throws DatabaseException {
@@ -38,8 +66,7 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
 
         deviceList = refreshDevice("");
 //
-//        Connection connection = null;
-//        PreparedStatement preparedStatement = null;
+//        Connection connection = null;//        PreparedStatement preparedStatement = null;
 //        ResultSet resultSet = null;
 //
 //        try {

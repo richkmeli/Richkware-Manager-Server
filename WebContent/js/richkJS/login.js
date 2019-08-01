@@ -8,7 +8,7 @@ $(document).ready(function() {
 
         console.log("username: " + username + " password: " + hashedPassword)
         if (username != "" && hashedPassword != "") {
-            $.post("LogIn", {email: username, password: hashedPassword}, function (data) {
+            $.post("LogIn", {email: username, password: hashedPassword, channel: "webapp"}, function (data) {
                 console.log(data)
                 var JSONdata = JSON.parse(data);
                 console.log(JSONdata + ", " + JSONdata.statusCode)

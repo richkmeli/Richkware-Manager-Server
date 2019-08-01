@@ -69,13 +69,13 @@ public class command extends HttpServlet {
             if (req.getParameterMap().containsKey("data0") && req.getParameterMap().containsKey("data1")) {
 
                 String deviceName = req.getParameter("data0");
-                String requestor = req.getParameter("data1");
+                String requestor = req.getParameter("channel");
 
                 String output = null;
 
-                if (requestor.equalsIgnoreCase("agent")) {
+                if (requestor.equalsIgnoreCase("richkware")) {
                     output = session.getDeviceDatabaseManager().getCommands(deviceName);
-                } else if (requestor.equalsIgnoreCase("client")) {
+                } else if (requestor.equalsIgnoreCase("rmc")) {
                     output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
                     session.getDeviceDatabaseManager().setCommandsOutput(deviceName, "");
                 }

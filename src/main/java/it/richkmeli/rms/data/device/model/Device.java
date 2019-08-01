@@ -84,4 +84,20 @@ public class Device {
     public void setCommandsOutput(String commandsOutput) {
         this.commandsOutput = commandsOutput;
     }
+
+    @Override
+    public String toString() {
+        String output = "";
+        output = "{" + getName() + ", "
+                + getIp() + ", "
+                + getServerPort() + ", "
+                + getLastConnection() + ", "
+                + getEncryptionKey() + ", "
+                + getUserAssociated() + ", "
+                + getCommands() + ", "
+                + getCommandsOutput()
+                + "}";
+
+        return output;
+    }
 }
