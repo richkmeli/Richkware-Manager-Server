@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $.get("user", function(data) {
+    $.get("user", {channel: "webapp"}, function (data) {
         console.log(data)
         var JSONdata = JSON.parse(data)
         if (JSONdata.statusCode == 1000) {

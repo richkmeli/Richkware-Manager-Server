@@ -28,20 +28,15 @@ public class LogIn extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-//        System.out.println("Received request! data contained: " + request.getParameterNames());
         HttpSession httpSession = request.getSession();
         Session session = null;
         PrintWriter out = response.getWriter();
-        //Logger.i(ServletManager.printHTTPsession(httpSession));
-
 
         try {
             session = ServletManager.getServerSession(httpSession);
 
             // check if is not already logged
             if (session.getUser() == null) {
-
-
                 Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(request, ServletManager.HTTPVerb.GET);
 
                 String email = attribMap.get("email");// = request.getParameter("email");
@@ -57,10 +52,11 @@ public class LogIn extends HttpServlet {
                         session.setUser(email);
                         session.setAdmin(isAdmin);
 
-                        if (session.getRmcDatabaseManager().getUnassociatedRmcs(session.getRmcID()).size() > 0) {
+
+                        if (session.getChannel().equalsIgnoreCase(ServletManager.Channel.RMC)) {
                             session.getRmcDatabaseManager().editRMC(new RMC(session.getUser(), session.getRmcID()));
                         } else { //aggiunge entry
-                            session.getRmcDatabaseManager().addRMC(new RMC(session.getUser(), session.getRmcID()));
+                            //session.getRmcDatabaseManager().addRMC(new RMC(session.getUser(), session.getRmcID()));
                         }
 
                         JSONObject adminInfo = new JSONObject();

@@ -87,7 +87,18 @@ public class test extends HttpServlet {
             Logger.error("Session ", e);
         }
 
-        out = "OK";
+        out = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "\t<head>\n" +
+                "\t\t<script src=\"js/jquery/jquery.min.js\"></script>\n" +
+                "\t\t\t<script>\n" +
+                "\t\t\t$(document).ready(function() {\n" +
+                "\t\t\t\tdocument.location.replace(\"login.html\")\n" +
+                "\t\t\t});\n" +
+                "\t\t</script>\n" +
+                "\t\t</head>\n" +
+                "\t\t<body></body>\n" +
+                "</html>";
 
         PrintWriter printWriter = response.getWriter();
         printWriter.println(out);

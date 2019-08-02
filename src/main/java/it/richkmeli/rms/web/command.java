@@ -66,7 +66,7 @@ public class command extends HttpServlet {
 
             session = ServletManager.getServerSession(httpSession);
 
-            if (req.getParameterMap().containsKey("data0") && req.getParameterMap().containsKey("data1")) {
+            if (req.getParameterMap().containsKey("data0") && req.getParameterMap().containsKey("channel")) {
 
                 String deviceName = req.getParameter("data0");
                 String requestor = req.getParameter("channel");

@@ -23,37 +23,46 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet({"/rmc"})
 public class rmc extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
         HttpSession httpSession = req.getSession();
         Session session = null;
+        PrintWriter out = resp.getWriter();
+
+        List<RMC> clients = null;
 
         try {
-//            BufferedReader br = req.getReader();
-//            String request = br.readLine();
-
             session = ServletManager.getServerSession(httpSession);
 
-            List<RMC> clients = null;
+            if (session.getUser() != null) {
+                Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req, ServletManager.HTTPVerb.GET);
 
-            if (session.isAdmin()) {
-                //ottiene tutti i client presenti sul db
-                clients = session.getRmcDatabaseManager().getRMCs();
+                if (session.isAdmin()) {
+                    //ottiene tutti i client presenti sul db
+                    clients = session.getRmcDatabaseManager().getRMCs();
+                } else {
+                    //ottiene tutti i client associati al suo account
+                    clients = session.getRmcDatabaseManager().getRMCs(session.getUser());
+                    String clientsFormatted = generateRmcListJSON(clients);
+                    System.out.println(clientsFormatted);
+                    String output = ServletManager.doDefaultProcessResponse(req, clientsFormatted);
+                    out.println(new OKResponse(StatusCode.SUCCESS, output).json());
+                }
             } else {
-                //ottiene tutti i client associati al suo account
-                clients = session.getRmcDatabaseManager().getRMCs(session.getUser());
+                out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
             }
 
-            out.println(new OKResponse(StatusCode.SUCCESS, generateRmcListJSON(clients)).json());
             out.flush();
             out.close();
-        } catch (it.richkmeli.rms.web.util.ServletException | DatabaseException e) {
+        } catch (it.richkmeli.rms.web.util.ServletException e) {
             out.println(new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage()).json());
+        } catch (DatabaseException e) {
+            out.println(new KOResponse(StatusCode.DB_ERROR, e.getMessage()).json());
         }
     }
 

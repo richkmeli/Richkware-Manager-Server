@@ -11,7 +11,7 @@ $(document).ready(function() {
 
         if (mailCheck == "OK" && passwordCheck == "OK") {
             console.log("checks passed")
-            var send = {email: email, password: pass}
+            var send = {email: email, password: pass, channel: "webapp"}
             $.post("SignUp", send, function(data) {
                 var JSONdata = JSON.parse(data)
                 console.log(JSONdata)

@@ -8,10 +8,7 @@ import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ServletManager {
     public static final String ERROR_JSP = "JSP/error.jsp";
@@ -23,21 +20,14 @@ public class ServletManager {
         GET, DELETE, POST, PUT
     }
 
-    static class Channel {
-        private static final String CHANNEL = "channel";
-        private static final String WEBAPP = "webapp";
-        private static final String RMC = "rmc";
-        private static final String RICHKWARE = "richkware";
-    }
-
     public static Map<String, String> doDefaultProcessRequest(HttpServletRequest request, HTTPVerb httpVerb) throws ServletException {
-        Map<String, String> attribMap = extractAttributes(request, httpVerb);
+        Map<String, String> attribMap = extractParameters(request, httpVerb);
         // server session
         Session session = ServletManager.getServerSession(request);
 
         // check channel: rmc or webapp, if rmc secureconnection first (set something in session)
-        if (request.getParameterMap().containsKey(Channel.CHANNEL)) {
-            String channel = request.getParameter(Channel.CHANNEL);
+        if (attribMap.containsKey(Channel.CHANNEL)) {
+            String channel = attribMap.get(Channel.CHANNEL);
             switch (channel) {
                 case Channel.RMC:
                     session.setChannel(Channel.RMC);
@@ -65,12 +55,27 @@ public class ServletManager {
                     Logger.error("ServletManager, channel " + channel + " unknown");
                     throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
             }
-
         } else {
-            Logger.error("ServletManager, channel key not present");
-            throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel key not present"));
+            Logger.error("ServletManager, channel key is not present");
+            throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel key is not present"));
         }
 
+        return attribMap;
+    }
+
+    private static Map<String, String> extractParameters(HttpServletRequest request, HTTPVerb httpVerb) {
+        Map<String, String> attribMap = new HashMap<>();
+        HttpSession httpSession = request.getSession();
+        List<String> list = Collections.list(request.getParameterNames());
+        if (httpVerb == HTTPVerb.GET) {
+            for (String parameter : list) {
+                String value = request.getParameter(parameter);
+                attribMap.put(parameter, value);
+            }
+        } else {
+            // todo search info in payload
+            Logger.error("search info in payload (POST) not supported yet");
+        }
         return attribMap;
     }
 
@@ -118,20 +123,11 @@ public class ServletManager {
         return output;
     }
 
-    private static Map<String, String> extractAttributes(HttpServletRequest request, HTTPVerb httpVerb) {
-        Map<String, String> attribMap = new HashMap<>();
-        HttpSession httpSession = request.getSession();
-
-        if (httpVerb == HTTPVerb.GET) {
-            for (String attribute : Collections.list(httpSession.getAttributeNames())) {
-                String value = (String) httpSession.getAttribute(attribute);
-                attribMap.put(attribute, value);
-            }
-        } else {
-            // todo search info in payload
-            Logger.error("search info in payload (POST) not supported yet");
-        }
-        return attribMap;
+    public static class Channel {
+        public static final String CHANNEL = "channel";
+        public static final String WEBAPP = "webapp";
+        public static final String RMC = "rmc";
+        public static final String RICHKWARE = "richkware";
     }
 
     public static Session getServerSession(HttpServletRequest request) throws ServletException {

@@ -1,6 +1,6 @@
 function loadRmcsTable() {
     console.log("loadRmcsTable")
-    $.get("rmc", function (data) {
+    $.get("rmc", {channel: "webapp"}, function (data) {
         var JSONdata = JSON.parse(data)
 
         //device = JSON.parse(DeviceJSON);
