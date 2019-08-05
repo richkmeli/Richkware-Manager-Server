@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.response.KOResponse;
@@ -40,19 +41,22 @@ public class rmc extends HttpServlet {
             session = ServletManager.getServerSession(httpSession);
 
             if (session.getUser() != null) {
+                Logger.info("rmc: user is logged correctly");
                 Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req, ServletManager.HTTPVerb.GET);
 
                 if (session.isAdmin()) {
                     //ottiene tutti i client presenti sul db
+                    Logger.info("rmc: Admin user");
                     clients = session.getRmcDatabaseManager().getRMCs();
                 } else {
                     //ottiene tutti i client associati al suo account
+                    Logger.info("rmc: Regular user");
                     clients = session.getRmcDatabaseManager().getRMCs(session.getUser());
-                    String clientsFormatted = generateRmcListJSON(clients);
-                    System.out.println(clientsFormatted);
-                    String output = ServletManager.doDefaultProcessResponse(req, clientsFormatted);
-                    out.println(new OKResponse(StatusCode.SUCCESS, output).json());
                 }
+                String clientsFormatted = generateRmcListJSON(clients);
+                Logger.info("rmc: clientsFormatted: " + clientsFormatted);
+                String output = ServletManager.doDefaultProcessResponse(req, clientsFormatted);
+                out.println(new OKResponse(StatusCode.SUCCESS, output).json());
             } else {
                 out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
             }
