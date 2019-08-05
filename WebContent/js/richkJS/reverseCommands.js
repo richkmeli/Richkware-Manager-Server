@@ -10,13 +10,16 @@ $(document).ready(function () {
             commands[i] = encryptCommand(commands[i])
         }
         var encryptedString = encryptCommand(commands.join("##"))
+        var devicesArray = new Array()
+        devicesArray.push(device)
+        console.log(devicesArray)
         $.ajax({
             url: '/Richkware-Manager-Server/command',
             type: 'PUT',
             contentType: 'application/json',
-            data: JSON.stringify({device: device, commands: encryptedString}),
+            data: JSON.stringify({devices: [device], commands: encryptedString}),
             success: function (result) {
-                console.log(result)
+                // alert(result)
                 window.location.replace("/Richkware-Manager-Server/devices.html")
             }
         });

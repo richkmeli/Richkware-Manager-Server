@@ -75,7 +75,7 @@ public class command extends HttpServlet {
 
                 if (requestor.equalsIgnoreCase("richkware")) {
                     output = session.getDeviceDatabaseManager().getCommands(deviceName);
-                } else if (requestor.equalsIgnoreCase("rmc")) {
+                } else {
                     output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
                     session.getDeviceDatabaseManager().setCommandsOutput(deviceName, "");
                 }
