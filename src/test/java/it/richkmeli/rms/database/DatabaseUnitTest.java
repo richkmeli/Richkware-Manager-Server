@@ -1,4 +1,4 @@
-package unitTests;
+package it.richkmeli.rms.database;
 
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
 import it.richkmeli.jframework.auth.model.User;
@@ -15,7 +15,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseTest {
+public class DatabaseUnitTest {
 
     private AuthDatabaseManager adm;
     private DeviceDatabaseManager ddm;
