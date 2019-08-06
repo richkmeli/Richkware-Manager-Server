@@ -19,7 +19,7 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
         tableName = schemaName + "." + "rmc";
         table = "(" +
                 "user VARCHAR(50)," +
-                "rmcId VARCHAR(25) NOT NULL," +
+                "rmcId VARCHAR(68) NOT NULL," +
                 "PRIMARY KEY (user, rmcId)," +
                 "FOREIGN KEY (user) REFERENCES auth(email) ON DELETE CASCADE" +
                 ")";
@@ -41,10 +41,11 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
         try {
             connection = connect();
-            preparedStatement = connection.prepareStatement("UPDATE " + tableName + " SET user = ?, rmcId = ?");
+            preparedStatement = connection.prepareStatement("UPDATE " + tableName + " SET user = ? WHERE rmcId = ? AND user = ?");
             // arguments that will be edited
             preparedStatement.setString(1, client.getUser());
             preparedStatement.setString(2, client.getRmcId());
+            preparedStatement.setString(3, "");
 
             preparedStatement.executeUpdate();
         } catch (SQLException | DatabaseException e) {

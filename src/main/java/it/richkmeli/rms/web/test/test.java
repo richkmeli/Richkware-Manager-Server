@@ -43,6 +43,7 @@ public class test extends HttpServlet {
         try {
             session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
             session.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
+            session.getAuthDatabaseManager().addUser(new User("", "00000000", false));
             session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
         } catch (DatabaseException e) {
             e.printStackTrace();
@@ -79,10 +80,12 @@ public class test extends HttpServlet {
             RMC rmc1 = new RMC("richk@i.it", "test_rmc_ID");
             RMC rmc2 = new RMC("er@fv.it", "test_rmc_ID_2");
             RMC rmc3 = new RMC("er@fv.it", "test_rmc_ID_3");
+            RMC rmc4 = new RMC("", "test_rmc_ID_3");
 
             session.getRmcDatabaseManager().addRMC(rmc1);
             session.getRmcDatabaseManager().addRMC(rmc2);
             session.getRmcDatabaseManager().addRMC(rmc3);
+            session.getRmcDatabaseManager().addRMC(rmc4);
         } catch (DatabaseException e) {
             Logger.error("Session ", e);
         }
