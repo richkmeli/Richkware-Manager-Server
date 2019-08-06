@@ -58,8 +58,9 @@ function loadUsersTable() {
                 var users = JSONdata.message
                 loadUsersJSONtoTable(users)
             } else if (JSONdata.statusCode == 2100) {
-                alert("You are not logged in. You are being redirected to the Login Page");
-                window.location.replace = "/Richkware-Manager-Server/login.html";
+                var choice = confirm(JSONdata.message)
+                if (choice)
+                    window.location.replace("/Richkware-Manager-Server/index.html")
             } else {
                 alert(JSONdata.message)
             }

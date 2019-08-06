@@ -19,6 +19,11 @@ $(document).ready(function () {
                 $("#userNearBrand").html(" - " + JSONmessage.user)
             }
             $("#devicesNavBar").show()
+        } else if (JSONdata.statusCode == 2100) {
+            var JSONmessage = JSON.parse(JSONdata.message)
+            var choice = confirm(JSONmessage)
+            if (choice)
+                window.location.replace("/Richkware-Manager-Server/index.html")
         }
     }).fail(function() {
         $("#signupNavBar").show()
