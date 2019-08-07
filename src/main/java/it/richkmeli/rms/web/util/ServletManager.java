@@ -33,15 +33,19 @@ public class ServletManager {
                     session.setChannel(Channel.RMC);
                     // Extract encrypted data from map
                     String payload = attribMap.get(DATA_PARAMETER_KEY);
-                    String decryptedPayload = session.getCryptoServer().decrypt(payload);
-                    JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
-                    // add each attribute inside encrypted data to map
-                    for (String key : decryptedPayloadJSON.keySet()) {
-                        String value = decryptedPayloadJSON.getString(key);
-                        attribMap.put(key, value);
+                    if (!"".equalsIgnoreCase(payload)) {
+                        String decryptedPayload = session.getCryptoServer().decrypt(payload);
+                        if (!"".equalsIgnoreCase(decryptedPayload)) {
+                            JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
+                            // add each attribute inside encrypted data to map
+                            for (String key : decryptedPayloadJSON.keySet()) {
+                                String value = decryptedPayloadJSON.getString(key);
+                                attribMap.put(key, value);
+                            }
+                        }
+                        // remove encrypted data from map
+                        attribMap.remove(DATA_PARAMETER_KEY);
                     }
-                    // remove encrypted data from map
-                    attribMap.remove(DATA_PARAMETER_KEY);
                     break;
                 case Channel.WEBAPP:
                     session.setChannel(Channel.WEBAPP);

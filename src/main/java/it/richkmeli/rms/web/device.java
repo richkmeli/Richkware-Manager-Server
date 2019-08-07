@@ -117,7 +117,7 @@ public class device extends HttpServlet {
                     req.getParameterMap().containsKey("data1") &&
                     req.getParameterMap().containsKey("data2")) {
                 //String data
-                String name = req.getParameter("data0");
+                String name = Crypto.decryptRC4(req.getParameter("data0"), password);
                 //String name = data.substring(1, data.indexOf(","));
 
                 // check in the DB if there is an entry with that name
