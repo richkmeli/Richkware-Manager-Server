@@ -68,6 +68,7 @@ public class secureConnection extends HttpServlet {
 
                     if (serverState == 3) {
                         if (session.getRmcID() != null) {
+                            //TODO fare controllo se rmcId è giò presente. se sì, allora non fare la add
                             session.getRmcDatabaseManager().addRMC(new RMC("", session.getRmcID()));
                         }
                     }

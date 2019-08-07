@@ -77,7 +77,7 @@ public class command extends HttpServlet {
                     output = session.getDeviceDatabaseManager().getCommands(deviceName);
                 } else {
                     output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
-                    session.getDeviceDatabaseManager().setCommandsOutput(deviceName, "");
+//                    session.getDeviceDatabaseManager().setCommandsOutput(deviceName, "");
                 }
 
                 if (!output.isEmpty()) {
