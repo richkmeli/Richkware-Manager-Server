@@ -1,175 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Riccardo Melioli">
     <!-- <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"> HTTP 1.1 -->
     <!-- <meta http-equiv="Pragma" content="no-cache"> HTTP 1.0 -->
     <!-- <meta http-equiv="Expires" content="0">  proxies -->
 
-    <title>RMS Login Page</title>
+    <!--<meta http-equiv="refresh" content="0; devices.html">-->
 
-    <!-- Bootstrap core CSS-->
-    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
-    <!-- Custom fonts for this template-->
-    <link href="fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin.css" rel="stylesheet">
+    <title>Richkware Manager Server</title>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="js/jquery/jquery.min.js"></script>
-    <script src="bootstrap/js/bootstrap.js"></script>
-    <!-- Core plugin JavaScript-->
-    <script src="js/jquery-easing/jquery.easing.min.js"></script>
-
-    <script src="js/cookie/src/jquery.cookie.js"></script>
-    <script src="js/languages.js"></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/simple-sidebar.css"/>
+    <link rel="stylesheet" href="fonts/font-awesome/css/font-awesome.css"/>
+    <script type="text/javascript" src="js/jquery/jquery.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 
     <script src="js/richkJS/account.js"></script>
     <script src="js/richkJS/login.js"></script>
 
-    <script>
-        var userLang = $.cookie("userLang");
-        if (!userLang) {
-            //Loading language file using the browser language
-            userLang = navigator.language || navigator.userLanguage;
-        }
-
-        var sc = document.createElement("script");
-        sc.setAttribute("type", "text/javascript");
-
-
-        switch (userLang) {
-            case "it-IT":
-                userLang = "it";
-            case "it":
-                sc.setAttribute("src", "lang/login/it.js");
-                break;
-            default:
-                userLang = "en";
-                sc.setAttribute("src", "lang/login/en.js");
-        }
-        document.head.appendChild(sc);
-
-    </script>
 </head>
+<body>
 
+<div class="d-flex" id="wrapper">
 
-<body class="bg-dark">
-
-<nav class="navbar navbar-toggleable-md navbar-dark bg-faded">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-            data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="index.html">
-        RMS<span id="userNearBrand"></span>
-    </a>
-    <div class="collapse navbar-collapse" id="navbarToggler">
-        <ul class="navbar-nav mr-auto mt-2 mt-md-0">
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">Home</a>
-            </li>
-            <li class="nav-item" id="devicesNavBar" style="display:none;">
-                <a class="nav-link" href="devices.html">Devices List</a>
-            </li>
-            <li class="nav-item" id="usersNavBar" style="display:none;">
-                <a class="nav-link" href="users.html">Users List</a>
-            </li>
-            <li class="nav-item" id="rmcsNavBar" style="display:none;">
-                <a class="nav-link" href="rmcs.html">RMCs List</a>
-            </li>
-            <!--DISABLED<li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>-->
-        </ul>
-        <ul class="nav <!--justify-content-end-->">
-            <li class="nav-item" id="signupNavBar">
-                <a class="nav-link" href="signup.html">
-                    <span class="fa fa-user-plus"></span> Sign Up
-                </a>
-            </li>
-            <li class="nav-item active" id="loginNavBar">
-                <a class="nav-link" href="#">
-                    <span class="fa fa-sign-in"></span> Login <span class="sr-only">(current)</span>
-                </a>
-            </li>
-            <li class="nav-item" id="logoutNavBar" style="display:none;">
-                <a class="nav-link" href="#" id="logoutBtn">
-                    <span class="fa fa-sign-out"></span> Logout
-                </a>
-            </li>
-            <!--<a class="nav-link active" href="#">Active</a>
-             <a class="nav-link disabled" href="#">Disabled</a>-->
-            </li>
-        </ul>
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+        <div class="sidebar-heading">RMS</div>
+        <div class="list-group list-group-flush">
+            <a href="index.html" class="list-group-item list-group-item-action bg-light">Home</a>
+            <a href="devices.html" class="list-group-item list-group-item-action bg-light">Devices List</a>
+            <a href="users.html" class="list-group-item list-group-item-action bg-light">Users List</a>
+            <a href="rmcs.html" id="rmcsNavBar" class="list-group-item list-group-item-action bg-light">RMCs List</a>
+        </div>
     </div>
-</nav>
+    <!-- /#sidebar-wrapper -->
 
-<div class="container">
-    <div class="card card-login mx-auto mt-5">
-        <div class="card-header" id="Logintitle"></div>
-        <div class="card-body">
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="exampleInputEmail1" id="Email"></label>
-                    <input class="form-control" id="exampleInputEmail1" name="email" type="email"
-                           aria-describedby="emailHelp" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input class="form-control" id="exampleInputPassword1" name="password" type="password"
-                           placeholder="Password">
-                </div>
-                <div class="form-group">
-                    <div class="form-check">
-                        <label class="form-check-label" id="Remember"></label>
-                    </div>
-                </div>
-                <!--<a class="btn btn-primary btn-block" href="index.html" id="Login"></a>-->
-                <button class="btn btn-primary btn-block" id="Login" type="button" value="submit"></button>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
 
-            </form>
-            <div class="text-center">
-                <a class="d-block small mt-3" href="signup.html" id="Registerpage"></a>
-                <a class="d-block small" href="forgot-password.html" id="Forgot"></a>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <button class="btn btn-primary" id="menu-toggle"><span class="navbar-toggler-icon"></span></button>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" role="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li class="nav-item dropdown show">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Welcome <span id="userNearBrand"></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" id="signupNavBar" href="signup.html">SignUp</a>
+                            <a class="dropdown-item" id="loginNavBar" href="login.html">Login</a>
+                            <a class="dropdown-item" id="logoutBtn" href="#">Logout</a>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <div class="text-left">
-                <a class="nav-link dropdown-toggle mr-lg-2" id="languageDropdown" href="#" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <label id="Lang"></label>
-                    <span class="d-lg-none"></span>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="languageDropdown" style="min-width: 30px;">
-                    <script>
-                        for (var lang in languages) {
-                            if (languages[lang] !== userLang) {
-                                document.write('<a class="dropdown-item" href="#" onClick="$.cookie(\'userLang\',\'' + languages[lang] + '\',7);location.reload(true);return false;">' + '<strong>' + languages[lang] + '</strong>' + '</a>'
-                                );
-                            }
-                        }
-                    </script>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="col-md-4 offset-md-4">
+                <div class="card card-login mx-auto mt-5">
+                    <div class="card-header" id="Logintitle">LogIn</div>
+                    <div class="card-body">
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" id="Email">E-Mail</label>
+                                <input class="form-control" id="exampleInputEmail1" name="email" type="email"
+                                       aria-describedby="emailHelp" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Password</label>
+                                <input class="form-control" id="exampleInputPassword1" name="password" type="password"
+                                       placeholder="Password">
+                            </div>
+                            <button class="btn btn-primary btn-block" id="Login" type="button" value="submit">Login</button>
+
+                        </form>
+                        <div class="text-center">
+                            <a class="d-block small mt-3" href="signup.html" id="Registerpage">SignUp</a>
+                            <a class="d-block small" href="forgot-password.html" id="Forgot">Forgot Password?</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <!-- /#page-content-wrapper -->
 
+</div>
+<!-- /#wrapper -->
+
+<!-- Bootstrap core JavaScript -->
+
+<!-- Menu Toggle Script -->
 <script>
-    sc.onload = function () {
-        document.getElementById("Logintitle").innerHTML = lang.logintitle;
-        document.getElementById("Forgot").innerHTML = lang.forgot;
-        document.getElementById("Lang").innerHTML = lang.lang;
-        document.getElementById("Email").innerHTML = lang.email;
-        document.getElementById("Remember").innerHTML = lang.remember;
-        document.getElementById("Login").innerHTML = lang.login;
-        document.getElementById("Registerpage").innerHTML = lang.registerpage;
-    };
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
 </script>
+
 </body>
+
+
 </html>
