@@ -4,6 +4,7 @@ import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.response.KOResponse;
 import it.richkmeli.rms.web.response.OKResponse;
 import it.richkmeli.rms.web.response.StatusCode;
+import it.richkmeli.rms.web.util.ServletException;
 import it.richkmeli.rms.web.util.ServletManager;
 import it.richkmeli.rms.web.util.Session;
 import org.json.JSONObject;
@@ -55,11 +56,13 @@ public class LogIn extends HttpServlet {
 
                         if (session.getChannel().equalsIgnoreCase(ServletManager.Channel.RMC)) {
                             RMC rmc = new RMC(session.getUser(), session.getRmcID());
-                            if (session.getRmcDatabaseManager().checkRmcUserPair(rmc))
-                                session.getRmcDatabaseManager().removeRMC(rmc);
-                            session.getRmcDatabaseManager().editRMC(new RMC(session.getUser(), session.getRmcID()));
-                        } else { //aggiunge entry
-                            //session.getRmcDatabaseManager().addRMC(new RMC(session.getUser(), session.getRmcID()));
+                            if (!session.getRmcDatabaseManager().checkRmcUserPair(rmc)) {
+                                if (session.getRmcDatabaseManager().checkRmcUserPair(new RMC("", session.getRmcID()))) {
+                                    session.getRmcDatabaseManager().editRMC(rmc);
+                                } else {
+                                    session.getRmcDatabaseManager().addRMC(rmc);
+                                }
+                            }
                         }
 
                         JSONObject adminInfo = new JSONObject();
@@ -74,11 +77,17 @@ public class LogIn extends HttpServlet {
                     }
                 } else {
                     // mail non trovata
-                    out.println((new KOResponse(StatusCode.ACCOUNT_NOT_FOUND)).json());
+                    out.println((new KOResponse(StatusCode.ACCOUNT_NOT_FOUND, "user: " + request.getAttribute("email") + "; password: " + request.getAttribute("password"))).json());
                 }
             } else {
                 // already logged
                 out.println((new KOResponse(StatusCode.ALREADY_LOGGED)).json());
+            }
+        } catch (ServletException e) {
+            if (e.getMessage().contains("java.lang.Exception: decrypt, crypto not initialized, current stare: 0")) {
+                out.println((new KOResponse(StatusCode.SECURE_CONNECTION, e.getMessage())).json());
+            } else {
+                out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
             }
         } catch (Exception e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());

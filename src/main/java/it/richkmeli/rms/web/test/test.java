@@ -43,6 +43,7 @@ public class test extends HttpServlet {
         try {
             session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
             session.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
+            //TODO da spostare nella creazione della tabella
             session.getAuthDatabaseManager().addUser(new User("", "00000000", false));
             session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
         } catch (DatabaseException e) {

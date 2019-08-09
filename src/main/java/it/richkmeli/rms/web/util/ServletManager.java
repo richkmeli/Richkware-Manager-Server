@@ -1,5 +1,6 @@
 package it.richkmeli.rms.web.util;
 
+import it.richkmeli.jframework.crypto.exception.CryptoException;
 import it.richkmeli.jframework.database.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.web.response.KOResponse;
@@ -34,7 +35,12 @@ public class ServletManager {
                     // Extract encrypted data from map
                     String payload = attribMap.get(DATA_PARAMETER_KEY);
                     if (!"".equalsIgnoreCase(payload)) {
-                        String decryptedPayload = session.getCryptoServer().decrypt(payload);
+                        String decryptedPayload = null;
+                        try {
+                            decryptedPayload = session.getCryptoServer().decrypt(payload);
+                        } catch (CryptoException e) {
+                            throw new ServletException(e);
+                        }
                         if (!"".equalsIgnoreCase(decryptedPayload)) {
                             JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
                             // add each attribute inside encrypted data to map
@@ -108,7 +114,11 @@ public class ServletManager {
             switch (channel) {
                 case Channel.RMC:
                     session.setChannel(Channel.RMC);
-                    output = session.getCryptoServer().encrypt(input);
+                    try {
+                        output = session.getCryptoServer().encrypt(input);
+                    } catch (CryptoException e) {
+                        throw new ServletException(e);
+                    }
                     break;
                 case Channel.WEBAPP:
                     session.setChannel(Channel.WEBAPP);

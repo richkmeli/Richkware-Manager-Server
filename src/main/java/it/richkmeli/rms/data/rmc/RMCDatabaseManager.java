@@ -119,6 +119,29 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
         return countResult != 0;
     }
 
+    @Override
+    public boolean checkRmc(String rmcID) throws DatabaseException {
+        Connection connnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        int countResult = 0;
+
+        try {
+            connnection = connect();
+            preparedStatement = connnection.prepareStatement("SELECT COUNT(*) count FROM " + tableName + " WHERE rmcId = ?");
+            preparedStatement.setString(1, rmcID);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                countResult = resultSet.getInt("count");
+        } catch (SQLException | DatabaseException e) {
+            disconnect(connnection, preparedStatement, null);
+            throw new DatabaseException(e);
+        }
+        disconnect(connnection, preparedStatement, null);
+        return countResult != 0;
+    }
+
 
     public List<RMC> getRMCs() throws DatabaseException {
         return getRMCs("");
@@ -179,4 +202,5 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
         disconnect(connnection, preparedStatement, null);
         return accounts;
     }
+
 }
