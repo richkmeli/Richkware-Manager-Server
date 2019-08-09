@@ -54,6 +54,9 @@ public class LogIn extends HttpServlet {
 
 
                         if (session.getChannel().equalsIgnoreCase(ServletManager.Channel.RMC)) {
+                            RMC rmc = new RMC(session.getUser(), session.getRmcID());
+                            if (session.getRmcDatabaseManager().checkRmcUserPair(rmc))
+                                session.getRmcDatabaseManager().removeRMC(rmc);
                             session.getRmcDatabaseManager().editRMC(new RMC(session.getUser(), session.getRmcID()));
                         } else { //aggiunge entry
                             //session.getRmcDatabaseManager().addRMC(new RMC(session.getUser(), session.getRmcID()));

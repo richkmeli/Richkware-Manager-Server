@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet({"/command"})
 public class command extends HttpServlet {
@@ -66,30 +67,26 @@ public class command extends HttpServlet {
 
             session = ServletManager.getServerSession(httpSession);
 
-            if (req.getParameterMap().containsKey("data0") && req.getParameterMap().containsKey("channel")) {
+            Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req, ServletManager.HTTPVerb.GET);
 
-                String deviceName = req.getParameter("data0");
-                String requestor = req.getParameter("channel");
+            String deviceName = new String(attribMap.get("data0"));
 
-                String output = null;
+            String output = null;
 
-                if (requestor.equalsIgnoreCase("richkware")) {
-                    output = session.getDeviceDatabaseManager().getCommands(deviceName);
-                } else {
-                    output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
-//                    session.getDeviceDatabaseManager().setCommandsOutput(deviceName, "");
-                }
-
-                if (!output.isEmpty()) {
-                    out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
-                } else {
-                    out.println((new KOResponse(StatusCode.FIELD_EMPTY)).json());
-                }
-
-            } else {
-                out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
+            if (ServletManager.Channel.RICHKWARE.equalsIgnoreCase(req.getParameter("channel")))
+                output = session.getDeviceDatabaseManager().getCommands(deviceName);
+            else {
+                output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
+                output = ServletManager.doDefaultProcessResponse(req, output);
             }
-        } catch (it.richkmeli.rms.web.util.ServletException | DatabaseException e/* | CryptoException e*/) {
+            if (!output.isEmpty()) {
+                out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
+            } else {
+                out.println((new KOResponse(StatusCode.FIELD_EMPTY)).json());
+            }
+        } catch (DatabaseException e) {
+            out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
+        } catch (Exception e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }

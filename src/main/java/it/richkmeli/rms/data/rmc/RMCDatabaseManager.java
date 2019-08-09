@@ -75,6 +75,51 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
         return false;
     }
 
+    @Override
+    public boolean removeRMC(RMC client) throws DatabaseException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connect();
+            preparedStatement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE rmcId = ? AND user = ?");
+            preparedStatement.setString(1, client.rmcId);
+            preparedStatement.setString(2, client.user);
+            preparedStatement.executeUpdate();
+        } catch (SQLException | DatabaseException e) {
+            disconnect(connection, preparedStatement, null);
+            throw new DatabaseException(e);
+            //return false;
+        }
+        disconnect(connection, preparedStatement, null);
+        return false;
+    }
+
+    @Override
+    public boolean checkRmcUserPair(RMC client) throws DatabaseException {
+        Connection connnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        int countResult = 0;
+
+        try {
+            connnection = connect();
+            preparedStatement = connnection.prepareStatement("SELECT count(*) count FROM " + tableName + " WHERE rmcId = ? AND user = ?");
+            preparedStatement.setString(1, client.rmcId);
+            preparedStatement.setString(2, client.user);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                countResult = resultSet.getInt("count");
+        } catch (SQLException | DatabaseException e) {
+            disconnect(connnection, preparedStatement, null);
+            throw new DatabaseException(e);
+        }
+        disconnect(connnection, preparedStatement, null);
+        return countResult != 0;
+    }
+
+
     public List<RMC> getRMCs() throws DatabaseException {
         return getRMCs("");
     }
