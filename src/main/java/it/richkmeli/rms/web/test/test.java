@@ -71,6 +71,7 @@ public class test extends HttpServlet {
                     session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.GenerateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.GenerateAlphanumericString(32), u.getEmail(), "start##start##start##start", ""));
                 }
             }
+            session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.GenerateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.GenerateAlphanumericString(32), "asd@asd.com", "", "WTJsaGJ3PT0="));
         } catch (DatabaseException e) {
             Logger.error("Session ", e);
         }

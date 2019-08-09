@@ -77,8 +77,8 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td>" + userAssociated + "</td>" +
             "<td>" + commands + "</td>" +
             "<td>" + commandsOutput + "</td>" +
-            "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommands('" + name + "')\"><span class=\"fa fa-terminal\"></span></button></td>" +
-            "<td><button type=\"button\" id=\"commandsOutput#" + name + "\" class=\"btn btn-primary\" onclick=\"openReverseCommandsOutput('" + name + "')\"><span class=\"fa fa-eye\"></span></button></td>" +
+            "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"commandsM('" + name + "')\"><span class=\"fa fa-terminal\"></span></button></td>" +
+            "<td><button type=\"button\" id=\"commandsOutput#" + name + "\" class=\"btn btn-primary\" onclick=\"outputM('" + name + "')\"><span class=\"fa fa-eye\"></span></button></td>" +
             "<td><button type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-danger\" onclick=\"deleteDevice('" + name + "', '" + i + "')\"><span class=\"fa fa-trash\"></span></button></td>");
 
 
@@ -106,12 +106,25 @@ function popInfo(){
     $("[data-toggle=popover]").popover();
 }
 
-function openReverseCommands(name) {
-    window.location.replace("/Richkware-Manager-Server/reverse-commands.html?device=" + name)
+//Open CommandsModal
+function commandsM(device){
+    console.log(device);
+    $('#ModalCommandTitle').text("Device: " + device);
+    $('#ModalCommandTitle').val(device);
+    $('#text-area').prop('readonly', false);
+    $('#submit-commands').show();
+    $('#ModalCommand').modal('show');
 }
 
-function openReverseCommandsOutput(deviceName) {
-    window.location.replace("/Richkware-Manager-Server/reverse-commands-output.html?device=" + deviceName)
+//Open CommandOutputModal
+function outputM(device){
+    console.log(device);
+    $('#ModalCommandTitle').text("Device: " + device);
+    $('#ModalCommandTitle').val(device);
+    $('#text-area').prop('readonly', true);
+    $('#submit-commands').hide();
+    getOutput(device);
+    $('#ModalCommand').modal('show');
 }
 
 function deleteDevice(device, indexTableRow) {
@@ -123,6 +136,7 @@ function deleteDevice(device, indexTableRow) {
         }
     });
 }
+
 
 /*
 function loadUsersTable() {

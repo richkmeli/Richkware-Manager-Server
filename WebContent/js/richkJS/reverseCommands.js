@@ -1,18 +1,16 @@
 $(document).ready(function () {
-    var search = window.location.search
-    var device = search.split("=")[1]
-
-    $("#deviceId").html("Device: " + device)
 
     $("#submit-commands").click(function () {
+        var device = getDevice();
+        console.error(device);
         var commands = $("#text-area").val().split("\n");
         for (var i = 0; i < commands.length; ++i) {
             commands[i] = encryptCommand(commands[i])
         }
-        var encryptedString = encryptCommand(commands.join("##"))
-        var devicesArray = new Array()
-        devicesArray.push(device)
-        console.log(devicesArray)
+        var encryptedString = encryptCommand(commands.join("##"));
+        var devicesArray = new Array();
+        devicesArray.push(device);
+        console.log(devicesArray);
         $.ajax({
             url: '/Richkware-Manager-Server/command',
             type: 'PUT',
@@ -29,6 +27,10 @@ $(document).ready(function () {
         // })
     })
 })
+
+function getDevice(){
+    return $('#ModalCommandTitle').val();
+}
 
 function encryptCommand(string) {
     return btoa(string)

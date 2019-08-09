@@ -1,13 +1,5 @@
-$(document).ready(function () {
-    var search = window.location.search
-    var deviceName = search.split("=")[1]
-    console.log(search + "\n")
-    console.log(deviceName)
-
-    $("#back").click(function () {
-        window.location.replace("/Richkware-Manager-Server/devices.html")
-    })
-
+function getOutput(deviceName) {
+    console.error(deviceName);
     $.get("command", {data0: deviceName, channel: "webapp"}, function (response) {
         var JSONdata = JSON.parse(response)
         if (JSONdata.statusCode == 1000) {
@@ -26,6 +18,4 @@ $(document).ready(function () {
         }
     })
 
-
-
-})
+}
