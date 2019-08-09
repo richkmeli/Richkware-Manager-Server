@@ -85,7 +85,9 @@ public class devicesList extends HttpServlet {
                 // TODO qui ci vuole la cancellazione di un singolo device o sempre di tutti?
             } else {
                 // non loggato
-                out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
+                KOResponse r = new KOResponse(StatusCode.NOT_LOGGED);
+                r.setMessage("You are not logged in. You will be redirected to the main page.");
+                out.println(r.json());
             }
         } catch (ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());

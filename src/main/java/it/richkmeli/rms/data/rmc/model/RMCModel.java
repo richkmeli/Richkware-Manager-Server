@@ -12,6 +12,10 @@ public interface RMCModel {
 
     public boolean removeRMC(String user) throws DatabaseException;
 
+    public boolean removeRMC(RMC client) throws DatabaseException;
+
+    public boolean checkRmcUserPair(RMC client) throws DatabaseException;
+
     public List<RMC> getRMCs(String user) throws DatabaseException;
 
     public List<String> getUnassociatedRmcs(String rmcID) throws DatabaseException;

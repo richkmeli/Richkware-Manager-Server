@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
 @WebServlet("/secureConnection")
@@ -51,7 +52,7 @@ public class secureConnection extends HttpServlet {
             // TODO rendere unico il client ID, che sarebbe il codice del RMC, vedi se passarlo come parametro o generato o altro fattore
 
             if (request.getParameterMap().containsKey("clientID")) {
-                String clientID = request.getParameter("clientID");
+                String clientID = new String(Base64.getUrlDecoder().decode(request.getParameter("clientID")));
 
                 session.setRmcID(clientID);
 
@@ -67,6 +68,7 @@ public class secureConnection extends HttpServlet {
 
                     if (serverState == 3) {
                         if (session.getRmcID() != null) {
+                            //TODO fare controllo se rmcId è giò presente. se sì, allora non fare la add
                             session.getRmcDatabaseManager().addRMC(new RMC("", session.getRmcID()));
                         }
                     }

@@ -47,15 +47,19 @@ public class user extends HttpServlet {
             Session session = ServletManager.getServerSession(request);
 
             String user = session.getUser();
-            boolean isAdmin = session.getAuthDatabaseManager().isAdmin(user);
+            if (user != null) {
+                boolean isAdmin = session.getAuthDatabaseManager().isAdmin(user);
 
-            JSONObject messageJSON = new JSONObject();
-            messageJSON.put("user", user);
-            messageJSON.put("admin", isAdmin);
+                JSONObject messageJSON = new JSONObject();
+                messageJSON.put("user", user);
+                messageJSON.put("admin", isAdmin);
 
-            String output = ServletManager.doDefaultProcessResponse(request, messageJSON.toString());
+                String output = ServletManager.doDefaultProcessResponse(request, messageJSON.toString());
 
-            out.println((new OKResponse(StatusCode.SUCCESS, output).json()));
+                out.println((new OKResponse(StatusCode.SUCCESS, output).json()));
+            } else {
+                out.println((new KOResponse(StatusCode.NOT_LOGGED, "You will be redirected to the home page").json()));
+            }
 
             out.flush();
             out.close();
@@ -117,14 +121,28 @@ public class user extends HttpServlet {
                     if (encryption) {  // RMC
                         payload = session.getCryptoServer().decrypt(payload);
                     }
-                    if (payload.compareTo(session.getUser()) == 0 ||
-                            session.isAdmin()) {
+                    if (session.getUser().equals(payload)) {
                         session.getAuthDatabaseManager().removeUser(payload);
+                        session.removeUser();
                         out.println((new OKResponse(StatusCode.SUCCESS).json()));
                     } else {
-                        // TODO rimanda da qualche parte perche c'è errore
-                        out.println((new KOResponse(StatusCode.GENERIC_ERROR, "You are not authorized to perform this action!").json()));
+                        if (session.isAdmin()) {
+                            session.getAuthDatabaseManager().removeUser(payload);
+                            out.println((new OKResponse(StatusCode.SUCCESS).json()));
+                        } else {
+                            //unauthorized
+                            out.println((new KOResponse(StatusCode.GENERIC_ERROR, "You are not authorized to perform this action!").json()));
+                        }
                     }
+//                    if (payload.compareTo(session.getUser()) == 0 ||
+//                            session.isAdmin()) {
+//                        session.getAuthDatabaseManager().removeUser(payload);
+//                        session.removeUser();
+//                        out.println((new OKResponse(StatusCode.SUCCESS).json()));
+//                    } else {
+//                        // TODO rimanda da qualche parte perche c'è errore
+//                        out.println((new KOResponse(StatusCode.GENERIC_ERROR, "You are not authorized to perform this action!").json()));
+//                    }
                 } else {
                     // TODO rimanda da qualche parte perche c'è errore
                     out.println((new KOResponse(StatusCode.MISSING_FIELD).json()));

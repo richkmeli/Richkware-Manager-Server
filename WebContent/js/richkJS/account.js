@@ -13,12 +13,20 @@ $(document).ready(function () {
 
             var JSONmessage = JSON.parse(JSONdata.message)
             if (JSONmessage.admin == true) {
-                $("#userNearBrand").html(" - " + JSONmessage.user + " (ADMIN)")
+                //$("#userNearBrand").html(" - " + JSONmessage.user + " (ADMIN)")
+                $("#userNearBrand").html("").append($("<p></p>").text(JSONmessage.user + " (ADMIN)"))
                 $("#usersNavBar").show()
             } else {
-                $("#userNearBrand").html(" - " + JSONmessage.user)
+                //$("#userNearBrand").html(" - " + JSONmessage.user)
+                $("#userNearBrand").html("").append($("<p></p>").text(JSONmessage.user))
             }
             $("#devicesNavBar").show()
+            append($("<p></p>").text(response.description))
+        } else if (JSONdata.statusCode == 2100) {
+            var JSONmessage = JSON.parse(JSONdata.message)
+            var choice = confirm(JSONmessage)
+            if (choice)
+                window.location.replace("/Richkware-Manager-Server/index.html")
         }
     }).fail(function() {
         $("#signupNavBar").show()

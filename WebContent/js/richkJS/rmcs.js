@@ -27,7 +27,7 @@ function createRmcsTableHeader() {
     var thead = document.createElement("thead");
     var row = document.createElement("tr");
     row.innerHTML = ( //"<th>Index</th>" +
-        "<th>Account</th>" +
+        "<th>User</th>" +
         "<th>RMCID</th>");
 
     thead.appendChild(row);
