@@ -38,7 +38,7 @@ public class LogIn extends HttpServlet {
 
             // check if is not already logged
             if (session.getUser() == null) {
-                Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(request, ServletManager.HTTPVerb.GET);
+                Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(request);
 
                 String email = attribMap.get("email");// = request.getParameter("email");
                 String pass = attribMap.get("password");

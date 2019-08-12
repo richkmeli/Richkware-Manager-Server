@@ -40,8 +40,8 @@ public class user extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            ServletManager.doDefaultProcessRequest(request, ServletManager.HTTPVerb.GET);
-            ServletManager.CheckLogin(request);
+            ServletManager.doDefaultProcessRequest(request);
+            ServletManager.checkLogin(request);
 
             // server session
             Session session = ServletManager.getServerSession(request);

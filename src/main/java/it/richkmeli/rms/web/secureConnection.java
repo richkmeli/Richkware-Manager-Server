@@ -21,7 +21,8 @@ import java.util.Base64;
 import java.util.ResourceBundle;
 
 @WebServlet("/secureConnection")
-public class secureConnection extends HttpServlet {
+public class
+secureConnection extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private String encryptionKey;
 

@@ -42,7 +42,7 @@ public class rmc extends HttpServlet {
 
             if (session.getUser() != null) {
                 Logger.info("rmc: user is logged correctly");
-                Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req, ServletManager.HTTPVerb.GET);
+                Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req);
 
                 if (session.isAdmin()) {
                     //ottiene tutti i client presenti sul db

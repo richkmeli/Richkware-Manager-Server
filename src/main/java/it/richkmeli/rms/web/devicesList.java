@@ -39,8 +39,8 @@ public class devicesList extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         try {
-            ServletManager.doDefaultProcessRequest(request, ServletManager.HTTPVerb.GET);
-            ServletManager.CheckLogin(request);
+            ServletManager.doDefaultProcessRequest(request);
+            ServletManager.checkLogin(request);
 
             // server session
             Session session = ServletManager.getServerSession(request);

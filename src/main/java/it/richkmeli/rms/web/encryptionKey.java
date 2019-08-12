@@ -43,7 +43,7 @@ public class encryptionKey extends HttpServlet {
         try {
             session = ServletManager.getServerSession(httpSession);
 
-            Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(request, ServletManager.HTTPVerb.GET);
+            Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(request);
 
             if (session.getUser() != null) {
                 String id = attribMap.get("id");

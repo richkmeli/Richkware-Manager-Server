@@ -17,7 +17,7 @@ import java.util.List;
 
 public class DatabaseUnitTest {
 
-    private AuthDatabaseManager adm;
+  /*  private AuthDatabaseManager adm;
     private DeviceDatabaseManager ddm;
     private RMCDatabaseManager rdm;
 
@@ -39,9 +39,11 @@ public class DatabaseUnitTest {
             rdm.addRMC(new RMC("richk@i.it", "test_rmc_ID"));
             rdm.addRMC(new RMC("er@fv.it", "test_rmc_ID_2"));
             rdm.addRMC(new RMC("er@fv.it", "test_rmc_ID_3"));
+            assert true;
         } catch (DatabaseException e) {
             e.printStackTrace();
             Logger.error("Session TEST USERS", e);
+            assert false;
         }
     }
 
@@ -70,8 +72,8 @@ public class DatabaseUnitTest {
             e.printStackTrace();
         }
     }
-
-    @Test
+*/
+    /*@Test
     public void testRefreshDevice() {
     }
 
@@ -113,5 +115,5 @@ public class DatabaseUnitTest {
 
     @Test
     public void checkPassword() {
-    }
+    }*/
 }

@@ -40,7 +40,7 @@ public class SignUp extends HttpServlet {
             session = ServletManager.getServerSession(httpSession);
 
             if (session.getUser() == null) {
-                Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(request, ServletManager.HTTPVerb.GET);
+                Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(request);
 
                 String email = attribMap.get("email");
                 String pass = attribMap.get("password");

@@ -67,7 +67,7 @@ public class command extends HttpServlet {
 
             session = ServletManager.getServerSession(httpSession);
 
-            Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req, ServletManager.HTTPVerb.GET);
+            Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req);
 
             String deviceName = new String(attribMap.get("data0"));
 
