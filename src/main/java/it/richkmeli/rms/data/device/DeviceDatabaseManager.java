@@ -348,32 +348,4 @@ public class DeviceDatabaseManager extends DatabaseManager implements DeviceMode
         return commandsOutput;
     }
 
-    public boolean checkPassword(String email, String pass) throws DatabaseException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        boolean isPass = false;
-
-        try {
-            connection = connect();
-            preparedStatement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE email = ?");
-            preparedStatement.setString(1, email);
-            resultSet = preparedStatement.executeQuery();
-
-            String hash = Crypto.hash(pass);
-
-            if (resultSet.next()) {
-                if (resultSet.getString("pass").compareTo(hash) == 0) {
-                    isPass = true;
-                }
-
-            }
-
-        } catch (SQLException e) {
-            disconnect(connection, preparedStatement, resultSet);
-        }
-        disconnect(connection, preparedStatement, resultSet);
-        return isPass;
-    }
-
 }
