@@ -1,6 +1,6 @@
 package it.richkmeli.rms.web;
 
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.util.ServletManager;
 import it.richkmeli.rms.web.util.Session;
 

@@ -2,8 +2,7 @@ package it.richkmeli.rms.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.richkmeli.jframework.crypto.KeyExchangePayloadCompat;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.web.response.KOResponse;
@@ -132,17 +131,6 @@ public class devicesList extends HttpServlet {
         devicesListJSON += " ]";*/
 
         return devicesListJSON;
-    }
-
-    private String GenerateKeyExchangePayloadJSON(KeyExchangePayloadCompat keyExchangePayload) {
-        String keyExchangePayloadJSON;// = "[ ";
-        keyExchangePayloadJSON = /*"'" + index + "' : {"*/ "{"
-                + "'encryptedAESsecretKey' : '" + keyExchangePayload.getEncryptedAESsecretKey() + "', "
-                + "'signatureAESsecretKey' : '" + keyExchangePayload.getSignatureAESsecretKey() + "', "
-                + "'kpubServer' : '" + keyExchangePayload.getKpubServer() + "', "
-                + "'data' : '" + keyExchangePayload.getData() + "'}";
-        //keyExchangePayloadJSON += " ]";
-        return keyExchangePayloadJSON;
     }
 
 }

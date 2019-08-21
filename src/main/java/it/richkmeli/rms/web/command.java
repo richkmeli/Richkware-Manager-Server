@@ -1,7 +1,6 @@
 package it.richkmeli.rms.web;
 
-import it.richkmeli.jframework.crypto.KeyExchangePayloadCompat;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.response.KOResponse;
 import it.richkmeli.rms.web.response.OKResponse;
 import it.richkmeli.rms.web.response.StatusCode;
@@ -156,16 +155,4 @@ public class command extends HttpServlet {
         }
     }
 
-    //TODO: fare metodo per gestire la richiesta degli output da client -> modificare anche webapp
-
-    private String GenerateKeyExchangePayloadJSON(KeyExchangePayloadCompat keyExchangePayload) {
-        String keyExchangePayloadJSON;// = "[ ";
-        keyExchangePayloadJSON = /*"'" + index + "' : {"*/ "{"
-                + "'encryptedAESsecretKey' : '" + keyExchangePayload.getEncryptedAESsecretKey() + "', "
-                + "'signatureAESsecretKey' : '" + keyExchangePayload.getSignatureAESsecretKey() + "', "
-                + "'kpubServer' : '" + keyExchangePayload.getKpubServer() + "', "
-                + "'data' : '" + keyExchangePayload.getData() + "'}";
-        //keyExchangePayloadJSON += " ]";
-        return keyExchangePayloadJSON;
-    }
 }

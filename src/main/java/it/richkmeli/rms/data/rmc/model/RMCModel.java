@@ -1,6 +1,6 @@
 package it.richkmeli.rms.data.rmc.model;
 
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package it.richkmeli.rms.web;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.auth.model.User;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.response.KOResponse;
 import it.richkmeli.rms.web.response.OKResponse;
 import it.richkmeli.rms.web.response.StatusCode;

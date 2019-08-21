@@ -1,7 +1,7 @@
 package it.richkmeli.rms.web.util;
 
 import it.richkmeli.jframework.crypto.exception.CryptoException;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.web.response.KOResponse;
 import it.richkmeli.rms.web.response.StatusCode;

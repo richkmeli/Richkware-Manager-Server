@@ -137,7 +137,7 @@ public class device extends HttpServlet {
                     userAssociated = Crypto.decryptRC4(userAssociated, oldDevice.getEncryptionKey());
                 }
 
-                String encryptionKey = RandomStringGenerator.GenerateAlphanumericString(keyLength);
+                String encryptionKey = RandomStringGenerator.generateAlphanumericString(keyLength);
 
                 String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 

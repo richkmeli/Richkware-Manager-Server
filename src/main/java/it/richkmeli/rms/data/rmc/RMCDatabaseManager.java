@@ -1,7 +1,7 @@
 package it.richkmeli.rms.data.rmc;
 
-import it.richkmeli.jframework.database.DatabaseException;
-import it.richkmeli.jframework.database.DatabaseManager;
+import it.richkmeli.jframework.orm.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseManager;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.data.rmc.model.RMCModel;
 
@@ -29,7 +29,7 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
     @Override
     public boolean addRMC(RMC client) throws DatabaseException {
-        add(client);
+        create(client);
         return false;
     }
 

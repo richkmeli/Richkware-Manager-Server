@@ -3,7 +3,7 @@ package it.richkmeli.rms.web;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.crypto.Crypto;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;

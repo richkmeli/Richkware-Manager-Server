@@ -2,7 +2,7 @@ package it.richkmeli.rms.web.util;
 
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
 import it.richkmeli.jframework.crypto.Crypto;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.rmc.RMCDatabaseManager;
 

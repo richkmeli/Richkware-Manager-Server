@@ -2,7 +2,7 @@ package it.richkmeli.rms.web.test;
 
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
@@ -64,12 +64,12 @@ public class test extends HttpServlet {
         try {
 
             for (int i = 0; i < 10; i++) {
-                User u = new User(RandomStringGenerator.GenerateAlphanumericString(8) + "@" + RandomStringGenerator.GenerateAlphanumericString(8) + "." + RandomStringGenerator.GenerateAlphanumericString(2),
-                        RandomStringGenerator.GenerateAlphanumericString(10),
+                User u = new User(RandomStringGenerator.generateAlphanumericString(8) + "@" + RandomStringGenerator.generateAlphanumericString(8) + "." + RandomStringGenerator.generateAlphanumericString(2),
+                        RandomStringGenerator.generateAlphanumericString(10),
                         false);
                 session.getAuthDatabaseManager().addUser(u);
                 for (int i2 = 0; i2 < 5; i2++) {
-                    session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.GenerateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.GenerateAlphanumericString(32), u.getEmail(), "start##start##start##start", ""));
+                    session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.generateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.generateAlphanumericString(32), u.getEmail(), "start##start##start##start", ""));
                 }
             }
         } catch (DatabaseException e) {

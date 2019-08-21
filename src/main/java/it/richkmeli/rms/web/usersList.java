@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
 import it.richkmeli.jframework.auth.model.User;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.response.KOResponse;
 import it.richkmeli.rms.web.response.OKResponse;
 import it.richkmeli.rms.web.response.StatusCode;
@@ -95,7 +95,7 @@ public class usersList extends HttpServlet {
 
     private String GenerateUsersListJSON(Session session) throws DatabaseException {
         AuthDatabaseManager authDatabaseManager = session.getAuthDatabaseManager();
-        List<User> userList = authDatabaseManager.refreshUser();
+        List<User> userList = authDatabaseManager.getAllUsers();
 
         Type type = new TypeToken<List<User>>() {
         }.getType();

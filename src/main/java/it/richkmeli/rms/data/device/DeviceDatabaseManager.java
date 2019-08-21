@@ -1,8 +1,8 @@
 package it.richkmeli.rms.data.device;
 
 import it.richkmeli.jframework.crypto.Crypto;
-import it.richkmeli.jframework.database.DatabaseException;
-import it.richkmeli.jframework.database.DatabaseManager;
+import it.richkmeli.jframework.orm.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.device.model.DeviceModel;
 
