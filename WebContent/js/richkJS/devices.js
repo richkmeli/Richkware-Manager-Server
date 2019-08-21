@@ -32,7 +32,7 @@ function createDevicesTableHeader() {
         "<th>Server Port</th>" +
         "<th>Last Connection</th>" +
         "<th>Encryption Key</th>" +
-        "<th>User Associated</th>" +
+        "<th>Associated User</th>" +
         "<th>Commands</th>" +
         "<th>Commands Output</th>");
 
@@ -64,7 +64,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         var serverPort = devicesList[i].serverPort;
         var lastConnection = devicesList[i].lastConnection;
         var encryptionKey = devicesList[i].encryptionKey;
-        var userAssociated = devicesList[i].userAssociated;
+        var associatedUser = devicesList[i].associatedUser;
         var commands = devicesList[i].commands;
         var commandsOutput = devicesList[i].commandsOutput;
 
@@ -78,7 +78,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td>" + serverPort + "</td>" +
             "<td>" + lastConnection + "</td>" +
             "<td>" + encryptionKey + "</td>" +
-            "<td>" + userAssociated + "</td>" +
+            "<td>" + associatedUser + "</td>" +
             "<td>" + commands + "</td>" +
             "<td>" + commandsOutput + "</td>" +
             "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommands('" + name + "')\">Reverse Commands</button></td>" +

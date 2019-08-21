@@ -47,7 +47,7 @@ public class rmc extends HttpServlet {
                 if (session.isAdmin()) {
                     //ottiene tutti i client presenti sul db
                     Logger.info("rmc: Admin user");
-                    clients = session.getRmcDatabaseManager().getRMCs();
+                    clients = session.getRmcDatabaseManager().getAllRMCs();
                 } else {
                     //ottiene tutti i client associati al suo account
                     Logger.info("rmc: Regular user");
@@ -104,14 +104,14 @@ public class rmc extends HttpServlet {
             session = ServletManager.getServerSession(httpSession);
 
             // todo controlla che stia cancellando un rmc di cui ha i permessi
-            if (req.getParameterMap().containsKey("user") && req.getParameterMap().containsKey("rmcId")) {
-                String user = req.getParameter("user");
+            if (req.getParameterMap().containsKey("associatedUser") && req.getParameterMap().containsKey("rmcId")) {
+                String associatedUser = req.getParameter("associatedUser");
                 String id = req.getParameter("rmcId");
                 boolean valid = true;
                 if (!session.isAdmin()) {
-                    if (session.getUser().equals(user)) {
-                        RMC temp = new RMC(user, id);
-                        if (!session.getRmcDatabaseManager().getRMCs(user).contains(temp)) {
+                    if (session.getUser().equals(associatedUser)) {
+                        RMC temp = new RMC(associatedUser, id);
+                        if (!session.getRmcDatabaseManager().getRMCs(associatedUser).contains(temp)) {
                             valid = false;
                         }
                     } else {

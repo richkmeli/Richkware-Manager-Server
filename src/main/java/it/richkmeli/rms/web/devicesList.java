@@ -100,10 +100,10 @@ public class devicesList extends HttpServlet {
 
         if (session.isAdmin()) {
             // if the user is an Admin, it gets the list of all devices
-            devicesList = databaseManager.refreshDevice();
+            devicesList = databaseManager.getAllDevices();
 
         } else {
-            devicesList = databaseManager.refreshDevice(session.getUser());
+            devicesList = databaseManager.getUserDevices(session.getUser());
         }
 
         Type type = new TypeToken<List<Device>>() {

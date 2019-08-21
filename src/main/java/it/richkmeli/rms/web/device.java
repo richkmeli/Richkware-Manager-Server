@@ -205,7 +205,7 @@ public class device extends HttpServlet {
 
                     Device device = session.getDeviceDatabaseManager().getDevice(name);
 
-                    if (device.getUserAssociated().compareTo(session.getUser()) == 0 ||
+                    if (device.getAssociatedUser().compareTo(session.getUser()) == 0 ||
                             session.isAdmin()) {
                         session.getDeviceDatabaseManager().removeDevice(name);
                         out = "deleted";

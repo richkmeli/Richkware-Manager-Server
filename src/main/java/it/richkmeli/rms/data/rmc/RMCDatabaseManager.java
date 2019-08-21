@@ -1,14 +1,11 @@
 package it.richkmeli.rms.data.rmc;
 
+
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.orm.DatabaseManager;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.data.rmc.model.RMCModel;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +15,9 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
         schemaName = "AuthSchema";
         tableName = schemaName + "." + "rmc";
         table = "(" +
-                "user VARCHAR(50)," +
+                "associatedUser VARCHAR(50) REFERENCES AuthSchema.auth(email) ON DELETE CASCADE," +
                 "rmcId VARCHAR(68) NOT NULL," +
-                "PRIMARY KEY (user, rmcId)," +
-                "FOREIGN KEY (user) REFERENCES auth(email) ON DELETE CASCADE" +
+                "PRIMARY KEY (associatedUser, rmcId)" +
                 ")";
 
         init();
@@ -29,117 +25,32 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
     @Override
     public boolean addRMC(RMC client) throws DatabaseException {
-        create(client);
-        return false;
+        return create(client);
     }
 
     @Override
     public boolean editRMC(RMC client) throws DatabaseException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = connect();
-            preparedStatement = connection.prepareStatement("UPDATE " + tableName + " SET user = ? WHERE rmcId = ? AND user = ?");
-            // arguments that will be edited
-            preparedStatement.setString(1, client.getUser());
-            preparedStatement.setString(2, client.getRmcId());
-            preparedStatement.setString(3, "");
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException | DatabaseException e) {
-            disconnect(connection, preparedStatement, null);
-            throw new DatabaseException(e);
-        }
-        disconnect(connection, preparedStatement, null);
-        return false;
+        return update(client);
     }
 
     @Override
     public boolean removeRMC(String id) throws DatabaseException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = connect();
-            preparedStatement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE rmcId = ?");
-            preparedStatement.setString(1, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException | DatabaseException e) {
-            disconnect(connection, preparedStatement, null);
-            throw new DatabaseException(e);
-            //return false;
-        }
-        disconnect(connection, preparedStatement, null);
-        return false;
+        return delete(new RMC(null, id));
     }
 
     @Override
     public boolean removeRMC(RMC client) throws DatabaseException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = connect();
-            preparedStatement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE rmcId = ? AND user = ?");
-            preparedStatement.setString(1, client.rmcId);
-            preparedStatement.setString(2, client.user);
-            preparedStatement.executeUpdate();
-        } catch (SQLException | DatabaseException e) {
-            disconnect(connection, preparedStatement, null);
-            throw new DatabaseException(e);
-            //return false;
-        }
-        disconnect(connection, preparedStatement, null);
-        return false;
+        return delete(client);
     }
 
     @Override
     public boolean checkRmcUserPair(RMC client) throws DatabaseException {
-        Connection connnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        int countResult = 0;
-
-        try {
-            connnection = connect();
-            preparedStatement = connnection.prepareStatement("SELECT count(*) count FROM " + tableName + " WHERE rmcId = ? AND user = ?");
-            preparedStatement.setString(1, client.rmcId);
-            preparedStatement.setString(2, client.user);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next())
-                countResult = resultSet.getInt("count");
-        } catch (SQLException | DatabaseException e) {
-            disconnect(connnection, preparedStatement, null);
-            throw new DatabaseException(e);
-        }
-        disconnect(connnection, preparedStatement, null);
-        return countResult != 0;
+        return read(client) != null;
     }
 
     @Override
     public boolean checkRmc(String rmcID) throws DatabaseException {
-        Connection connnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        int countResult = 0;
-
-        try {
-            connnection = connect();
-            preparedStatement = connnection.prepareStatement("SELECT COUNT(*) count FROM " + tableName + " WHERE rmcId = ?");
-            preparedStatement.setString(1, rmcID);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next())
-                countResult = resultSet.getInt("count");
-        } catch (SQLException | DatabaseException e) {
-            disconnect(connnection, preparedStatement, null);
-            throw new DatabaseException(e);
-        }
-        disconnect(connnection, preparedStatement, null);
-        return countResult != 0;
+        return read(new RMC(null, rmcID)) != null;
     }
 
 
@@ -149,58 +60,34 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
     @Override
     public List<RMC> getRMCs(String user) throws DatabaseException {
-        Connection connnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        List<RMC> rmcs = new ArrayList<>();
-
-        try {
-            connnection = connect();
-            String query = user == "" ? "SELECT * FROM " + tableName : "SELECT * FROM " + tableName + " WHERE user = ?";
-            preparedStatement = connnection.prepareStatement(query);
-            if (user != "") {
-                preparedStatement.setString(1, user);
+        List<RMC> rmcs = readAll(RMC.class);
+        if (rmcs != null) {
+            // filter user rmcs
+            List<RMC> userRmcs = new ArrayList<>();
+            for (RMC rmc : rmcs) {
+                if (rmc.getAssociatedUser().equalsIgnoreCase(user)) {
+                    userRmcs.add(rmc);
+                }
             }
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                RMC tmp = new RMC(
-                        resultSet.getString("user"),
-                        resultSet.getString("rmcId"));
-                // add to the list the devices of the relative user.
-                rmcs.add(tmp);
-
-            }
-        } catch (SQLException | DatabaseException e) {
-            disconnect(connnection, preparedStatement, null);
-            throw new DatabaseException(e);
+            return userRmcs;
+        } else {
+            return null;
         }
-        disconnect(connnection, preparedStatement, null);
-        return rmcs;
+    }
+
+    @Override
+    public List<RMC> getAllRMCs() throws DatabaseException {
+        return readAll(RMC.class);
     }
 
     @Override
     public List<String> getUnassociatedRmcs(String rmcID) throws DatabaseException {
-        Connection connnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        ArrayList<String> accounts = new ArrayList<>();
-
-        try {
-            connnection = connect();
-            preparedStatement = connnection.prepareStatement("SELECT * FROM " + tableName + "WHERE rmcId = ? AND user = ''");
-            preparedStatement.setString(1, rmcID);
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                accounts.add(resultSet.getString("user"));
-            }
-        } catch (SQLException | DatabaseException e) {
-            disconnect(connnection, preparedStatement, null);
-            throw new DatabaseException(e);
+        List<RMC> rmcs = getRMCs("");
+        List<String> user = new ArrayList<>();
+        for (RMC rmc : rmcs) {
+            user.add(rmc.getAssociatedUser());
         }
-        disconnect(connnection, preparedStatement, null);
-        return accounts;
+        return user;
     }
 
 }

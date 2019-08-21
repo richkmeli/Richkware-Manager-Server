@@ -33,7 +33,7 @@ public class devicesListSync extends HttpServlet {
 
         try {
 
-            httpSession.setAttribute("device", session.getDeviceDatabaseManager().refreshDevice());
+            httpSession.setAttribute("device", session.getDeviceDatabaseManager().getAllDevices());
             request.getRequestDispatcher("JSP/device_list.jsp").forward(request, response);
 
         } catch (DatabaseException e) {

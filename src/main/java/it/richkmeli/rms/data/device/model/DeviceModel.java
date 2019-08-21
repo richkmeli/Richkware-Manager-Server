@@ -6,17 +6,17 @@ import java.util.List;
 
 public interface DeviceModel {
 
-    public List<Device> refreshDevice() throws DatabaseException;
+    List<Device> getAllDevices() throws DatabaseException;
 
-    public List<Device> refreshDevice(String user) throws DatabaseException;
+    List<Device> getUserDevices(String user) throws DatabaseException;
 
-    public boolean addDevice(Device device) throws DatabaseException;
+    boolean addDevice(Device device) throws DatabaseException;
 
-    public boolean editDevice(Device device) throws DatabaseException;
+    boolean editDevice(Device device) throws DatabaseException;
 
-    public boolean removeDevice(String string) throws DatabaseException;
+    boolean removeDevice(String string) throws DatabaseException;
 
-    public Device getDevice(String name) throws DatabaseException;
+    Device getDevice(String name) throws DatabaseException;
 
-    public String getEncryptionKey(String name) throws DatabaseException;
+    String getEncryptionKey(String name) throws DatabaseException;
 }

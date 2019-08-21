@@ -39,7 +39,6 @@ public class test extends HttpServlet {
         }
         String out = "";
 
-
         try {
             session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
             session.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
@@ -77,7 +76,6 @@ public class test extends HttpServlet {
         }
 
         try {
-
             RMC rmc1 = new RMC("richk@i.it", "test_rmc_ID");
             RMC rmc2 = new RMC("er@fv.it", "test_rmc_ID_2");
             RMC rmc3 = new RMC("er@fv.it", "test_rmc_ID_3");
