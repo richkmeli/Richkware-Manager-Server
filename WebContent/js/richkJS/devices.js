@@ -112,6 +112,7 @@ function commandsM(device){
     $('#ModalCommandTitle').text("Device: " + device);
     $('#ModalCommandTitle').val(device);
     $('#text-area').prop('readonly', false);
+    $('#text-area').val("")
     $('#submit-commands').show();
     $('#ModalCommand').modal('show');
 }
@@ -124,6 +125,20 @@ function outputM(device){
     $('#text-area').prop('readonly', true);
     $('#submit-commands').hide();
     getOutput(device);
+}
+
+function handleReverseCommandOutput(encCommands) {
+    //TODO PROVVISORIO: decidere come vogliamo fare (tipo di dato da ritornare e tutte cose...)
+    if (encCommands != "") {
+        var previous = ""
+        $("#text-area").val(atob(encCommands[0]))
+        for (var i = 1; i < encCommands.length; ++i) {
+            previous = $("#text-area").val()
+            $('#text-area').val(previous + "\n" + atob(encCommands[i]))
+        }
+    } else {
+        $('#text-area').val("No output found for this device!")
+    }
     $('#ModalCommand').modal('show');
 }
 

@@ -6,16 +6,20 @@ function getOutput(deviceName) {
             var output = JSONdata.message
             var decryptedOutput = atob(output)
             var commands = decryptedOutput.split("##")
-            console.log(commands)
+            // console.log(commands)
+            console.log("commands retrieved! " + commands)
+            handleReverseCommandOutput(commands);
 
-            var previous = ""
-            for (var i = 0; i < commands.length; ++i) {
-                previous = $("#text-area").val()
-                $('#text-area').val(previous + "\n" + atob(commands[i]))
-            }
+
+            // var previous = ""
+            // for (var i = 0; i < commands.length; ++i) {
+            //     previous = $("#text-area").val()
+            //     $('#text-area').val(previous + "\n" + atob(commands[i]))
+            // }
         } else {
-            alert("Error, retrieving reverse commands output: " + response)
+            handleReverseCommandOutput("");
         }
+        // alert("Error, retrieving reverse commands output: " + response)
     })
 
 }
