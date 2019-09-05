@@ -133,8 +133,8 @@ function loadUsersJSONtoTable(usersListJSON) {
             "<td>" + email + "</td>" +
             "<td>" + password + "</td>" +
             "<td>" + isAdmin + "</td>" +
-            "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + isAdmin + "')\">Edit</button></td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteUser('" + email + "','" + i + "')\">Remove</button></td>");
+            "<td><button title='Edit' type=\"button\" class=\"btn btn-primary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + isAdmin + "')\"><span class=\"fa fa-pencil\"></button></td>" +
+            "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteUser('" + email + "','" + i + "')\"><span class=\"fa fa-trash\"></button></td>");
 
         tbody.appendChild(row);
     }

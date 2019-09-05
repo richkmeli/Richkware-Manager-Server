@@ -2,100 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <meta content="Riccardo Melioli" name="author">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Riccardo Melioli">
     <!-- <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"> HTTP 1.1 -->
     <!-- <meta http-equiv="Pragma" content="no-cache"> HTTP 1.0 -->
     <!-- <meta http-equiv="Expires" content="0">  proxies -->
 
-    <title>List of RMCs</title>
+    <!--<meta http-equiv="refresh" content="0; devices.html">-->
 
-    <link href="bootstrap/css/bootstrap.css" rel="stylesheet"/>
-    <link href="fonts/font-awesome/css/font-awesome.css" rel="stylesheet"/>
-    <script src="js/jquery/jquery.js" type="text/javascript"></script>
-    <script src="bootstrap/js/bootstrap.js" type="text/javascript"></script>
+    <title>Richkware Manager Server</title>
 
-    <script src="js/richkJS/rmcs.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/simple-sidebar.css"/>
+    <link rel="stylesheet" href="fonts/font-awesome/css/font-awesome.css"/>
+    <script type="text/javascript" src="js/jquery/jquery.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+
     <script src="js/richkJS/account.js"></script>
+    <script src="js/richkJS/rmcs.js" type="text/javascript"></script>
 
 </head>
+<body>
 
-<body class="bg-dark" onload="bodyOnLoad()">
+<div class="d-flex" id="wrapper">
 
-
-<nav class="navbar navbar-toggleable-md navbar-dark bg-faded">
-    <button aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation"
-            class="navbar-toggler navbar-toggler-right" data-target="#navbarToggler" data-toggle="collapse"
-            type="button">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="index.html">
-        RMS<span id="userNearBrand"></span>
-    </a>
-
-    <div class="collapse navbar-collapse" id="navbarToggler">
-        <ul class="navbar-nav mr-auto mt-2 mt-md-0">
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">Home</a>
-            </li>
-            <li class="nav-item" id="devicesNavBar" style="display:none;">
-                <a class="nav-link" href="devices.html">Devices List</a>
-            </li>
-            <li class="nav-item" id="usersNavBar" style="display:none;">
-                <a class="nav-link" href="users.html">Users List</a>
-            </li>
-            <li class="nav-item active" id="rmcsNavBar" style="display:none;">
-                <a class="nav-link" href="#">RMCs List <span class="sr-only">(current)</span></a>
-            </li>
-            <!--DISABLED<li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>-->
-        </ul>
-        <ul class="nav <!--justify-content-end-->">
-            <li class="nav-item" id="signupNavBar">
-                <a class="nav-link" href="signup.html">
-                    <span class="fa fa-user-plus"></span> Sign Up
-                </a>
-            </li>
-            <li class="nav-item" id="loginNavBar">
-                <a class="nav-link" href="login.html">
-                    <span class="fa fa-sign-in"></span> Login
-                </a>
-            </li>
-            <li class="nav-item" id="logoutNavBar" style="display:none;">
-                <a class="nav-link" href="#" id="logoutBtn">
-                    <span class="fa fa-sign-out"></span> Logout
-                </a>
-            </li>
-            <!--<a class="nav-link active" href="#">Active</a>
-             <a class="nav-link disabled" href="#">Disabled</a>-->
-            </li>
-        </ul>
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+        <div class="sidebar-heading">RMS</div>
+        <div class="list-group list-group-flush">
+            <a id="menuHome" href="index.html" class="list-group-item list-group-item-action bg-light">Home</a>
+            <a id="menuDevices" href="devices.html" class="list-group-item list-group-item-action bg-light">Devices List</a>
+            <a id="menuUsers" href="users.html" class="list-group-item list-group-item-action bg-light">Users List</a>
+            <a id="menuRMCs" href="rmcs.html" id="rmcsNavBar" class="list-group-item list-group-item-action bg-light">RMCs List</a>
+        </div>
     </div>
-</nav>
+    <!-- /#sidebar-wrapper -->
 
-<div class="container-fluid">
-    <div class="jumbotron text-center bg-success">
-        <h1 class="text-white">List of RMCs</h1>
-    </div>
-</div>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
 
-<div class="container bg-light">
-    <div class="card mx-auto mt-5">
-        <div class="panel panel-default">
-            <div class="card-header"></div>
-            <div class="panel-body">
-                <button class="btn btn-default btn-sm pull-right" onclick="loadRmcsTable()" type="button">
-                    <span class="fa fa-refresh"></span> Refresh
-                </button>
-                <div class="table-responsive">
-                    <table class="table table-hover" id="rmcsTable">
-                    </table>
-                </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <button class="btn btn-primary" id="menu-toggle"><span class="navbar-toggler-icon"></span></button>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" role="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="nav" style="position: absolute; left:50%; transform: translatex(-50%);">
+                <h2 style="font-family: Comic Sans MS;">Richkware Manager Server</h2>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li class="nav-item dropdown show">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Welcome <span id="userNearBrand"></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" id="signupNavBar" href="signup.html">SignUp</a>
+                            <a class="dropdown-item" id="loginNavBar" href="login.html">Login</a>
+                            <a class="dropdown-item" id="logoutBtn" href="#">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <h3>RMCs List</h3>
+            <div class="table-responsive">
+                <table class="table table-hover" id="rmcsTable">
+                </table>
             </div>
         </div>
     </div>
+    <!-- /#page-content-wrapper -->
+
 </div>
+<!-- /#wrapper -->
+
+<!-- Bootstrap core JavaScript -->
+
+<!-- Menu Toggle Script -->
+<script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
 
 </body>
+
+
 </html>
