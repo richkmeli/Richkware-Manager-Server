@@ -77,9 +77,9 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td>" + userAssociated + "</td>" +
             "<td>" + commands + "</td>" +
             "<td>" + commandsOutput + "</td>" +
-            "<td><button type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"commandsM('" + name + "')\"><span class=\"fa fa-terminal\"></span></button></td>" +
-            "<td><button type=\"button\" id=\"commandsOutput#" + name + "\" class=\"btn btn-primary\" onclick=\"outputM('" + name + "')\"><span class=\"fa fa-eye\"></span></button></td>" +
-            "<td><button type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-danger\" onclick=\"deleteDevice('" + name + "', '" + i + "')\"><span class=\"fa fa-trash\"></span></button></td>");
+            "<td><button title='Insert Commands' type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"commandsM('" + name + "')\"><span class=\"fa fa-terminal\"></span></button></td>" +
+            "<td><button title='Output' type=\"button\" id=\"commandsOutput#" + name + "\" class=\"btn btn-primary\" onclick=\"outputM('" + name + "')\"><span class=\"fa fa-eye\"></span></button></td>" +
+            "<td><button title='Remove' type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-danger\" onclick=\"deleteDevice('" + name + "', '" + i + "')\"><span class=\"fa fa-trash\"></span></button></td>");
 
 
 

@@ -63,7 +63,7 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
             //"<td>" + (index + 1) + "</td>" +
             "<td>" + user + "</td>" +
             "<td>" + rmcId + "</td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteRmc('" + user + "', '" + i + "', '" + rmcId + "')\">Remove</button></td>");
+            "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteRmc('" + user + "', '" + i + "', '" + rmcId + "')\"><span class=\"fa fa-trash\"></button></td>");
 
         //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
 
