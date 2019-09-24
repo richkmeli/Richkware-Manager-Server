@@ -29,7 +29,7 @@ function createDevicesTableHeader() {
     row.innerHTML = ( //"<th>Index</th>" +
         "<th>Name</th>" +
         "<th>Last Connection</th>" +
-        "<th>User Associated</th>" +
+        "<th>Associated User</th>" +
         "<th>Commands</th>" +
         "<th>Commands Output</th>" +
         "<th colspan='3'>Actions</th>");
@@ -62,7 +62,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         var serverPort = devicesList[i].serverPort;
         var lastConnection = devicesList[i].lastConnection;
         var encryptionKey = devicesList[i].encryptionKey;
-        var userAssociated = devicesList[i].userAssociated;
+        var associatedUser = devicesList[i].associatedUser;
         var commands = devicesList[i].commands;
         var commandsOutput = devicesList[i].commandsOutput;
 
@@ -74,7 +74,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td><a tabindex='0' onclick='popInfo()' type='button' data-html=\"true\" class='btn btn-outline-info' data-toggle='popover' title='" + name + " Info' data-content='<div><p>IP:Port - " + IP + ":" + serverPort + "</p><p>Encryption Key - " + encryptionKey + "</p></div>'>" + name + "</a></td>" +
             //"<td><button class=\"btn\" data-toggle=\"collapse\" data-target=\"#coll-" + name + "\" aria-expanded=\"true\" aria-controls=\"coll-" + name +"\">" + name + "</button>" +
             "<td>" + lastConnection + "</td>" +
-            "<td>" + userAssociated + "</td>" +
+            "<td>" + associatedUser + "</td>" +
             "<td>" + commands + "</td>" +
             "<td>" + commandsOutput + "</td>" +
             "<td><button title='Insert Commands' type=\"button\" id=\"manage#" + name + "\" class=\"btn btn-secondary\" onclick=\"commandsM('" + name + "')\"><span class=\"fa fa-terminal\"></span></button></td>" +

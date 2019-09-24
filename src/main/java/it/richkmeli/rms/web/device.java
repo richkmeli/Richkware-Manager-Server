@@ -62,7 +62,7 @@ public class device extends HttpServlet {
 //
 //                    Device device = session.getDeviceDatabaseManager().getDevice(name);
 //
-//                    if (device.getUserAssociated().compareTo(session.getUser()) == 0 ||
+//                    if (device.getassociatedUser().compareTo(session.getUser()) == 0 ||
 //                            session.isAdmin()) {
 //                        out = GenerateDevicesListJSON(device);
 //                    } else {
@@ -127,14 +127,14 @@ public class device extends HttpServlet {
                 // if this entry exists, then it's used to decrypt the encryption key in the DB
                 String serverPort = req.getParameter("data1");
                 //String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
-                String userAssociated = req.getParameter("data2");
+                String associatedUser = req.getParameter("data2");
 
                 if (oldDevice == null) {
                     serverPort = Crypto.decryptRC4(serverPort, password);
-                    userAssociated = Crypto.decryptRC4(userAssociated, password);
+                    associatedUser = Crypto.decryptRC4(associatedUser, password);
                 } else {
                     serverPort = Crypto.decryptRC4(serverPort, oldDevice.getEncryptionKey());
-                    userAssociated = Crypto.decryptRC4(userAssociated, oldDevice.getEncryptionKey());
+                    associatedUser = Crypto.decryptRC4(associatedUser, oldDevice.getEncryptionKey());
                 }
 
                 String encryptionKey = RandomStringGenerator.generateAlphanumericString(keyLength);
@@ -147,11 +147,11 @@ public class device extends HttpServlet {
                         serverPort,
                         timeStamp,
                         encryptionKey,
-                        userAssociated,
+                        associatedUser,
                         "",
                         "");
 
-                Logger.info("SERVLET device, doGet: Device: " + name + " " + req.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + userAssociated + " ");
+                Logger.info("SERVLET device, doGet: Device: " + name + " " + req.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + associatedUser + " ");
 
                 if (oldDevice == null) {
                     deviceDatabaseManager.addDevice(newDevice);
