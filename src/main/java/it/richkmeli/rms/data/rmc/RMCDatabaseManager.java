@@ -35,6 +35,14 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
     @Override
     public boolean removeRMC(String id) throws DatabaseException {
+//        List<RMC> rmcs = getRMCs(id);
+//        boolean response = true;
+//        for (RMC rmc: rmcs) {
+//            if(!delete(rmc)){
+//                response = false;
+//            }
+//        }
+//        return response;
         return delete(new RMC(null, id));
     }
 
