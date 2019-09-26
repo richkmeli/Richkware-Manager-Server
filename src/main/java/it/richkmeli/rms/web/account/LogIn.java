@@ -1,5 +1,6 @@
 package it.richkmeli.rms.web.account;
 
+import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.response.KOResponse;
 import it.richkmeli.rms.web.response.OKResponse;
@@ -49,13 +50,14 @@ public class LogIn extends HttpServlet {
                 if (session.getAuthDatabaseManager().isUserPresent(email)) {
                     boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);
                     if (session.getAuthDatabaseManager().checkPassword(email, pass)) {
+
                         // set userID into the session
                         session.setUser(email);
                         session.setAdmin(isAdmin);
 
-
                         if (session.getChannel().equalsIgnoreCase(ServletManager.Channel.RMC)) {
                             RMC rmc = new RMC(session.getUser(), session.getRmcID());
+                            Logger.info("RMC: " + rmc.getAssociatedUser() + " - " + rmc.getRmcId());
                             if (!session.getRmcDatabaseManager().checkRmcUserPair(rmc)) {
                                 if (session.getRmcDatabaseManager().checkRmcUserPair(new RMC("", session.getRmcID()))) {
                                     session.getRmcDatabaseManager().editRMC(rmc);
@@ -84,12 +86,14 @@ public class LogIn extends HttpServlet {
                 out.println((new KOResponse(StatusCode.ALREADY_LOGGED)).json());
             }
         } catch (ServletException e) {
+            session.setUser(null);
             if (e.getMessage().contains("java.lang.Exception: decrypt, crypto not initialized, current stare: 0")) {
                 out.println((new KOResponse(StatusCode.SECURE_CONNECTION, e.getMessage())).json());
             } else {
                 out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
             }
         } catch (Exception e) {
+            session.setUser(null);
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
 

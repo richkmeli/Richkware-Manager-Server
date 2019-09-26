@@ -31,6 +31,7 @@ public class rmc extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("get");
         HttpSession httpSession = req.getSession();
         Session session = null;
         PrintWriter out = resp.getWriter();
@@ -99,19 +100,23 @@ public class rmc extends HttpServlet {
 //            cryptoServer.init(secureDataServer, serverKey, rmc, "");
 //            cryptoServer.deleteClientData();
 //        }
-
+        System.out.println("delete");
         try {
             session = ServletManager.getServerSession(httpSession);
 
             // todo controlla che stia cancellando un rmc di cui ha i permessi
             if (req.getParameterMap().containsKey("associatedUser") && req.getParameterMap().containsKey("rmcId")) {
                 String associatedUser = req.getParameter("associatedUser");
-                String id = req.getParameter("rmcId");
+                String rmcId = req.getParameter("rmcId");
                 boolean valid = true;
+                System.out.println("2");
                 if (!session.isAdmin()) {
+                    System.out.println("3");
                     if (session.getUser().equals(associatedUser)) {
-                        RMC temp = new RMC(associatedUser, id);
+                        System.out.println("4");
+                        RMC temp = new RMC(associatedUser, rmcId);
                         if (!session.getRmcDatabaseManager().getRMCs(associatedUser).contains(temp)) {
+                            System.out.println("4");
                             valid = false;
                         }
                     } else {
@@ -119,19 +124,21 @@ public class rmc extends HttpServlet {
                     }
                 }
                 if (valid) {
+                    System.out.println("5");
                     File secureDataServer = new File("TESTsecureDataServer.txt");
                     String serverKey = "testkeyServer";
                     Crypto.Server cryptoServer = new Crypto.Server();
-                    cryptoServer.init(secureDataServer, serverKey, id, "");
+                    cryptoServer.init(secureDataServer, serverKey, rmcId, "");
                     cryptoServer.deleteClientData();
-                    session.getRmcDatabaseManager().removeRMC(id);
+
+                    System.out.println(session.getRmcDatabaseManager().removeRMC(rmcId));
                 }
 
                 out.println((new OKResponse(StatusCode.SUCCESS)).json());
 //                if (session.getUser().equals(user)) {
 //                    if (!session.isAdmin()) {
 //                        //controlla che l'rmc sia associato all'utente
-//                        RMC temp = new RMC(user, id);
+//                        RMC temp = new RMC(user, rmcId);
 //                        if (!session.getRmcDatabaseManager().getRMCs(user).contains(temp)) {
 //                            valid = false;
 //                        }
@@ -141,9 +148,9 @@ public class rmc extends HttpServlet {
 //                        File secureDataServer = new File("TESTsecureDataServer.txt");
 //                        String serverKey = "testkeyServer";
 //                        Crypto.Server cryptoServer = new Crypto.Server();
-//                        cryptoServer.init(secureDataServer, serverKey, id, "");
+//                        cryptoServer.init(secureDataServer, serverKey, rmcId, "");
 //                        cryptoServer.deleteClientData();
-//                        session.getRmcDatabaseManager().removeRMC(id);
+//                        session.getRmcDatabaseManager().removeRMC(rmcId);
 //                    }
 //                }
             } else {

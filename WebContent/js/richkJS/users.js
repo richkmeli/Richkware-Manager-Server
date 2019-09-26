@@ -105,7 +105,7 @@ function createUsersTableHeader() {
     row.innerHTML = ( //"<th>Index</th>" +
         "<th>Email</th>" +
         "<th>Password</th>" +
-        "<th>isAdmin</th>");
+        "<th>Admin</th>");
 
     thead.appendChild(row);
     usersTable.appendChild(thead);
@@ -123,7 +123,7 @@ function loadUsersJSONtoTable(usersListJSON) {
     for (var i = 0; i < usersList.length; ++i) {
         var email = usersList[i].email
         var password = usersList[i].password
-        var isAdmin = usersList[i].isAdmin
+        var admin = usersList[i].admin
 
         var row = document.createElement("tr");
         row.id = "tableRow" + i;
@@ -132,8 +132,8 @@ function loadUsersJSONtoTable(usersListJSON) {
             //"<td>" + (index + 1) + "</td>" +
             "<td>" + email + "</td>" +
             "<td>" + password + "</td>" +
-            "<td>" + isAdmin + "</td>" +
-            "<td><button title='Edit' type=\"button\" class=\"btn btn-primary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + isAdmin + "')\"><span class=\"fa fa-pencil\"></button></td>" +
+            "<td>" + admin + "</td>" +
+            "<td><button title='Edit' type=\"button\" class=\"btn btn-primary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + admin + "')\"><span class=\"fa fa-pencil\"></button></td>" +
             "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteUser('" + email + "','" + i + "')\"><span class=\"fa fa-trash\"></button></td>");
 
         tbody.appendChild(row);

@@ -30,24 +30,39 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
     @Override
     public boolean editRMC(RMC client) throws DatabaseException {
-        return update(client);
+        if (removeRmcUserPair(new RMC("", client.getRmcId())))
+            return addRMC(client);
+        return false;
+        //TODO: Fix update -> Anche le chiavi primarie devono essere modificabili
+        // return update(client);
     }
 
     @Override
-    public boolean removeRMC(String id) throws DatabaseException {
-//        List<RMC> rmcs = getRMCs(id);
-//        boolean response = true;
-//        for (RMC rmc: rmcs) {
-//            if(!delete(rmc)){
-//                response = false;
-//            }
-//        }
-//        return response;
-        return delete(new RMC(null, id));
+    public boolean removeRMCs(String associatedUser) throws DatabaseException {
+        List<RMC> rmcs = getRMCs(associatedUser);
+        boolean response = true;
+        for (RMC rmc : rmcs) {
+            if (!delete(rmc)) {
+                response = false;
+            }
+        }
+        return response;
     }
 
     @Override
-    public boolean removeRMC(RMC client) throws DatabaseException {
+    public boolean removeRMC(String rmcId) throws DatabaseException {
+        List<RMC> rmcs = getAssociatedUsers(rmcId);
+        boolean response = true;
+        for (RMC rmc : rmcs) {
+            if (!removeRmcUserPair(rmc)) {
+                response = false;
+            }
+        }
+        return response;
+    }
+
+    @Override
+    public boolean removeRmcUserPair(RMC client) throws DatabaseException {
         return delete(client);
     }
 
@@ -58,12 +73,30 @@ public class RMCDatabaseManager extends DatabaseManager implements RMCModel {
 
     @Override
     public boolean checkRmc(String rmcID) throws DatabaseException {
-        return read(new RMC(null, rmcID)) != null;
+//        return read(new RMC("", rmcID)) != null;
+        return getAssociatedUsers(rmcID).size() > 0;
     }
 
 
     public List<RMC> getRMCs() throws DatabaseException {
         return getRMCs("");
+    }
+
+    @Override
+    public List<RMC> getAssociatedUsers(String rmcId) throws DatabaseException {
+        List<RMC> rmcs = readAll(RMC.class);
+        if (rmcs != null) {
+            // filter user rmcs
+            List<RMC> userRmcs = new ArrayList<>();
+            for (RMC rmc : rmcs) {
+                if (rmc.getRmcId().equalsIgnoreCase(rmcId)) {
+                    userRmcs.add(rmc);
+                }
+            }
+            return userRmcs;
+        } else {
+            return null;
+        }
     }
 
     @Override
