@@ -1,5 +1,6 @@
 package it.richkmeli.rms.web;
 
+import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.response.KOResponse;
 import it.richkmeli.rms.web.response.OKResponse;
@@ -18,13 +19,16 @@ import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet({"/command"})
 public class command extends HttpServlet {
+    private String password;
+
+    public command() {
+        super();
+        password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -68,7 +72,9 @@ public class command extends HttpServlet {
 
             Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req);
 
-            String deviceName = new String(attribMap.get("data0"));
+            String deviceName = attribMap.get("data0");
+
+            deviceName = Crypto.decryptRC4(deviceName,password);
 
             String output = null;
 
@@ -139,6 +145,9 @@ public class command extends HttpServlet {
             JSONObject JSONData = new JSONObject(response);
             String deviceName = JSONData.getString("device");
             String commandsOutput = JSONData.getString("data");
+
+            //commandsOutput = Crypto.decryptRC4(commandsOutput, password);
+            commandsOutput = new String(Base64.getUrlDecoder().decode(commandsOutput));
 
             session = ServletManager.getServerSession(httpSession);
 
