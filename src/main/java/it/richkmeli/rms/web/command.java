@@ -147,7 +147,8 @@ public class command extends HttpServlet {
             String commandsOutput = JSONData.getString("data");
 
             //commandsOutput = Crypto.decryptRC4(commandsOutput, password);
-            commandsOutput = new String(Base64.getUrlDecoder().decode(commandsOutput));
+            //commandsOutput= new String(Base64.getUrlDecoder().decode(commandsOutput));
+            // Reverse command output has to be sent to the front end in base64 format
 
             session = ServletManager.getServerSession(httpSession);
 
