@@ -47,7 +47,6 @@ public class command extends HttpServlet {
 //            String deviceName = JSONData.getString("data0");
 //            String requestor = JSONData.getString("data1");
 //
-//            System.out.println(deviceName + " " + requestor);
 //
 //            if (deviceName != null && requestor != null) {
 //                String output = null;
@@ -74,13 +73,12 @@ public class command extends HttpServlet {
 
             String deviceName = attribMap.get("data0");
 
-            deviceName = Crypto.decryptRC4(deviceName,password);
-
             String output = null;
 
-            if (ServletManager.Channel.RICHKWARE.equalsIgnoreCase(req.getParameter("channel")))
+            if (ServletManager.Channel.RICHKWARE.equalsIgnoreCase(req.getParameter("channel"))) {
+                deviceName = Crypto.decryptRC4(deviceName, password);
                 output = session.getDeviceDatabaseManager().getCommands(deviceName);
-            else {
+            } else {
                 output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
                 output = ServletManager.doDefaultProcessResponse(req, output);
             }

@@ -45,8 +45,6 @@ public class LogIn extends HttpServlet {
                 String pass = attribMap.get("password");
                 ;// = request.getParameter("password");
 
-                System.out.println("email: " + email + " password: " + pass);
-
                 if (session.getAuthDatabaseManager().isUserPresent(email)) {
                     boolean isAdmin = session.getAuthDatabaseManager().isAdmin(email);
                     if (session.getAuthDatabaseManager().checkPassword(email, pass)) {

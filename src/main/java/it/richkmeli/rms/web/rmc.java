@@ -31,7 +31,6 @@ public class rmc extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("get");
         HttpSession httpSession = req.getSession();
         Session session = null;
         PrintWriter out = resp.getWriter();
@@ -42,16 +41,16 @@ public class rmc extends HttpServlet {
             session = ServletManager.getServerSession(httpSession);
 
             if (session.getUser() != null) {
-                Logger.info("rmc: user is logged correctly");
+                Logger.info("user is logged correctly");
                 Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req);
 
                 if (session.isAdmin()) {
                     //ottiene tutti i client presenti sul db
-                    Logger.info("rmc: Admin user");
+                    Logger.info("Admin user");
                     clients = session.getRmcDatabaseManager().getAllRMCs();
                 } else {
                     //ottiene tutti i client associati al suo account
-                    Logger.info("rmc: Regular user");
+                    Logger.info("Regular user");
                     clients = session.getRmcDatabaseManager().getRMCs(session.getUser());
                 }
                 String clientsFormatted = generateRmcListJSON(clients);
@@ -100,7 +99,6 @@ public class rmc extends HttpServlet {
 //            cryptoServer.init(secureDataServer, serverKey, rmc, "");
 //            cryptoServer.deleteClientData();
 //        }
-        System.out.println("delete");
         try {
             session = ServletManager.getServerSession(httpSession);
 
@@ -109,14 +107,10 @@ public class rmc extends HttpServlet {
                 String associatedUser = req.getParameter("associatedUser");
                 String rmcId = req.getParameter("rmcId");
                 boolean valid = true;
-                System.out.println("2");
                 if (!session.isAdmin()) {
-                    System.out.println("3");
                     if (session.getUser().equals(associatedUser)) {
-                        System.out.println("4");
                         RMC temp = new RMC(associatedUser, rmcId);
                         if (!session.getRmcDatabaseManager().getRMCs(associatedUser).contains(temp)) {
-                            System.out.println("4");
                             valid = false;
                         }
                     } else {
@@ -124,14 +118,13 @@ public class rmc extends HttpServlet {
                     }
                 }
                 if (valid) {
-                    System.out.println("5");
                     File secureDataServer = new File("TESTsecureDataServer.txt");
                     String serverKey = "testkeyServer";
                     Crypto.Server cryptoServer = new Crypto.Server();
                     cryptoServer.init(secureDataServer, serverKey, rmcId, "");
                     cryptoServer.deleteClientData();
 
-                    System.out.println(session.getRmcDatabaseManager().removeRMC(rmcId));
+                    session.getRmcDatabaseManager().removeRMC(rmcId);
                 }
 
                 out.println((new OKResponse(StatusCode.SUCCESS)).json());
