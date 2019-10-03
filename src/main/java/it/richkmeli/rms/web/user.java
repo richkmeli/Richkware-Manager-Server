@@ -34,7 +34,6 @@ public class user extends HttpServlet {
     }
 
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         PrintWriter out = response.getWriter();
@@ -42,7 +41,7 @@ public class user extends HttpServlet {
         Session session = null;
         try {
             session = ServletManager.getServerSession(httpSession);
-        }catch (ServletException e){
+        } catch (ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
 //            httpSession.setAttribute("error", e);
 //            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
@@ -107,7 +106,7 @@ public class user extends HttpServlet {
         Session session = null;
         try {
             session = ServletManager.getServerSession(httpSession);
-        }catch (ServletException e){
+        } catch (ServletException e) {
             httpSession.setAttribute("error", e);
             req.getRequestDispatcher(ServletManager.ERROR_JSP).forward(req, resp);
 

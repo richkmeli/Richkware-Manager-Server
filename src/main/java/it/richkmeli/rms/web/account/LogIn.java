@@ -25,7 +25,6 @@ public class LogIn extends HttpServlet {
     }
 
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 //        System.out.println("Received request! data contained: " + request.getParameterNames());

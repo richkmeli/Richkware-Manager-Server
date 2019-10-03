@@ -7,10 +7,10 @@ public enum StatusCode {
      * 1000 -> successo
      * 2000 -> errore servizio network
      * 3000 -> errore offline
-     *
+     * <p>
      * seconda cifra = tipo di servizio
      * terza e quarta cifra = numero errore
-     * */
+     */
 
     SUCCESS(1000, ""),
     GENERIC_ERROR(2000, ""),

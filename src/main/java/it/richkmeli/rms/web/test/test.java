@@ -31,7 +31,7 @@ public class test extends HttpServlet {
         Session session = null;
         try {
             session = ServletManager.getServerSession(httpSession);
-        }catch (ServletException e){
+        } catch (ServletException e) {
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
 
@@ -39,34 +39,34 @@ public class test extends HttpServlet {
         String out = "";
 
 
-           try {
-               session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
-               session.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
-               session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-                Logger.error("Session TEST USERS", e);
-            }
+        try {
+            session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
+            session.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
+            session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+            Logger.error("Session TEST USERS", e);
+        }
 
-            try {
-                session.getDeviceDatabaseManager().addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-                session.getDeviceDatabaseManager().addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
-                session.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it"));
-            } catch (DatabaseException e) {
-                Logger.error("Session TEST DEVICES", e);
-            }
+        try {
+            session.getDeviceDatabaseManager().addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
+            session.getDeviceDatabaseManager().addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it"));
+            session.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it"));
+        } catch (DatabaseException e) {
+            Logger.error("Session TEST DEVICES", e);
+        }
 
         try {
 
-            for(int i = 0; i<10; i++){
-                User u = new User(RandomStringGenerator.GenerateAlphanumericString(8)+"@"+RandomStringGenerator.GenerateAlphanumericString(8)+"."+RandomStringGenerator.GenerateAlphanumericString(2),RandomStringGenerator.GenerateAlphanumericString(10), false);
+            for (int i = 0; i < 10; i++) {
+                User u = new User(RandomStringGenerator.GenerateAlphanumericString(8) + "@" + RandomStringGenerator.GenerateAlphanumericString(8) + "." + RandomStringGenerator.GenerateAlphanumericString(2), RandomStringGenerator.GenerateAlphanumericString(10), false);
                 session.getAuthDatabaseManager().addUser(u);
-                for(int i2 = 0; i2<5; i2++){
+                for (int i2 = 0; i2 < 5; i2++) {
                     session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.GenerateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.GenerateAlphanumericString(32), u.getEmail()));
                 }
             }
         } catch (DatabaseException e) {
-            Logger.error("Session ",e);
+            Logger.error("Session ", e);
         }
 
         out = "OK";
