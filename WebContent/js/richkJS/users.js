@@ -1,5 +1,5 @@
 function bodyOnLoad() {
-    accountInformation();
+    // accountInformation();
 
     loadUsersTable();
     window.setInterval(function () {
@@ -7,78 +7,65 @@ function bodyOnLoad() {
     }, 5000);
 }
 
-function accountInformation() {
-
-    $(document).ready(function () {
-        $.get("user", /*data,*/ function (data, status) {
-
-            user = data[0];
-            // load name near to the brand
-            var string = " - " + user.email;
-            if (user.isAdmin == true) {
-                string = string + " (ADMIN)";
-            }
-            document.getElementById("userNearBrand").innerHTML = string;
-
-            // manage signup, login, logout
-            document.getElementById("signupNavBar").hidden = true;
-            document.getElementById("loginNavBar").hidden = true;
-            document.getElementById("logoutNavBar").hidden = false;
-
-            // if the user is an ADMIN, then it can see users.html
-            if (user.isAdmin == true) {
-                document.getElementById("usersNavBar").hidden = false;
-            }
-
-        }, "json"/*, dataType*/)
-            .done(function () {
-                //alert("second success");
-            })
-            .fail(function () {
-                //alert( "error" );
-                // manage signup, login, logout
-                document.getElementById("signupNavBar").hidden = false;
-                document.getElementById("loginNavBar").hidden = false;
-                document.getElementById("logoutNavBar").hidden = true;
-            })
-            .always(function () {
-                //alert("finished");
-            });
-    });
-
-}
+// function accountInformation() {
+//
+//     $(document).ready(function () {
+//         $.get("user", {channel: "webapp"}, /*data,*/ function (data, status) {
+//
+//             user = data[0];
+//             // load name near to the brand
+//             var string = " - " + user.email;
+//             if (user.isAdmin == true) {
+//                 string = string + " (ADMIN)";
+//             }
+//             document.getElementById("userNearBrand").innerHTML = string;
+//
+//             // manage signup, login, logout
+//             document.getElementById("signupNavBar").hidden = true;
+//             document.getElementById("loginNavBar").hidden = true;
+//             document.getElementById("logoutNavBar").hidden = false;
+//
+//             // if the user is an ADMIN, then it can see users.html
+//             if (user.isAdmin == true) {
+//                 document.getElementById("usersNavBar").hidden = false;
+//             }
+//
+//         }, "json"/*, dataType*/)
+//             .done(function () {
+//                 //alert("second success");
+//             })
+//             .fail(function () {
+//                 //alert( "error" );
+//                 // manage signup, login, logout
+//                 document.getElementById("signupNavBar").hidden = false;
+//                 document.getElementById("loginNavBar").hidden = false;
+//                 document.getElementById("logoutNavBar").hidden = true;
+//             })
+//             .always(function () {
+//                 //alert("finished");
+//             });
+//     });
+//
+// }
 
 
 function loadUsersTable() {
 
     $(document).ready(function () {
-        $.get("usersList", /*data,*/ function (data, status) {
-            var userJSON = data;
-            //    alert (userJSON);
-            //device = JSON.parse(DeviceJSON);
-            //document.getElementById("Email").innerHTML = Person.email;
-
-            //status : "success", "notmodified", "error", "timeout", or "parsererror"
-            if (status === "error" || status === "timeout" || status === "parsererror") {
-                alert("You are not logged in. You are being redirected to the Login Page");
-                window.location.href = "login.html";
+        $.get("usersList", {channel: "webapp"}, function (data) {
+            var JSONdata = JSON.parse(data)
+            if (JSONdata.statusCode == 1000) {
+                var users = JSONdata.message
+                loadUsersJSONtoTable(users)
+            } else if (JSONdata.statusCode == 2100) {
+                var choice = confirm(JSONdata.message)
+                if (choice)
+                    window.location.replace("/Richkware-Manager-Server/index.html")
             } else {
-                //if you set "json" as dataType, it's already parsed, so it's a JSON object
-                loadUsersJSONtoTable(userJSON);
+                alert(JSONdata.message)
             }
 
-        }, "json"/*, dataType*/)
-            .done(function () {
-                //alert("second success");
-            })
-            .fail(function () {
-                //alert( "error" );
-                alert("You are not logged in. You are being redirected to the Login Page");
-                window.location.href = "login.html";
-            })
-            .always(function () {
-                //alert("finished");
-            });
+        })
     });
 
     /* sc.onload = function () {
@@ -118,7 +105,7 @@ function createUsersTableHeader() {
     row.innerHTML = ( //"<th>Index</th>" +
         "<th>Email</th>" +
         "<th>Password</th>" +
-        "<th>isAdmin</th>");
+        "<th>Admin</th>");
 
     thead.appendChild(row);
     usersTable.appendChild(thead);
@@ -127,43 +114,43 @@ function createUsersTableHeader() {
 function loadUsersJSONtoTable(usersListJSON) {
     createUsersTableHeader();
 
-    var usersList = usersListJSON//jQuery.parseJSON(usersListJSON);
+    var usersList = JSON.parse(usersListJSON)//jQuery.parseJSON(usersListJSON);
 
     var tbody = document.createElement("tbody");
     //var index = 0;
     //while (usersList[index] != null) {
     //for(var device in usersList){
-    $.each(usersList, function (index, value) {
-        //var user = usersList[index];
-        var user = value;
-
-        var email = user.email;
-        var password = user.password;
-        var isAdmin = user.isAdmin;
+    for (var i = 0; i < usersList.length; ++i) {
+        var email = usersList[i].email
+        var password = usersList[i].password
+        var admin = usersList[i].admin
 
         var row = document.createElement("tr");
-        row.id = "tableRow" + index;
+        row.id = "tableRow" + i;
 
         row.innerHTML = (
             //"<td>" + (index + 1) + "</td>" +
             "<td>" + email + "</td>" +
             "<td>" + password + "</td>" +
-            "<td>" + isAdmin + "</td>" +
-            "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"EditDevicesTableField('" + email + "','" + password + "','" + isAdmin + "')\">Edit</button></td>" +
-            "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"deleteUser('" + email + "','" + index + "')\">Remove</button></td>");
+            "<td>" + admin + "</td>" +
+            "<td><button title='Edit' type=\"button\" class=\"btn btn-primary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + admin + "')\"><span class=\"fa fa-pencil\"></button></td>" +
+            "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteUser('" + email + "','" + i + "')\"><span class=\"fa fa-trash\"></button></td>");
 
         tbody.appendChild(row);
-        //      index++
-    });
+    }
     usersTable.appendChild(tbody);
 }
 
 function deleteUser(email, indexTableRow) {
     $.ajax({
-        url: '/Richkware-Manager-Server/user?email=' + email,
+        url: '/Richkware-Manager-Server/user?email=' + email + "&channel=webapp",
         type: 'DELETE',
         success: function (result) {
-            $("#tableRow" + indexTableRow).remove();
+            console.log(result)
+            var dataJSON = JSON.parse(result)
+            if (dataJSON.statusCode == 1000) {
+                $("#tableRow" + indexTableRow).remove();
+            }
         }
     });
 }

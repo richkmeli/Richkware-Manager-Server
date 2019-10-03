@@ -1,21 +1,17 @@
-package it.richkmeli.RMS.web;
+package it.richkmeli.rms.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
-import it.richkmeli.RMS.data.device.model.Device;
-import it.richkmeli.RMS.web.response.KOResponse;
-import it.richkmeli.RMS.web.response.OKResponse;
-import it.richkmeli.RMS.web.response.StatusCode;
-import it.richkmeli.RMS.web.util.ServletException;
-import it.richkmeli.RMS.web.util.ServletManager;
-import it.richkmeli.RMS.web.util.Session;
-import it.richkmeli.jframework.crypto.CryptoCompat;
-import it.richkmeli.jframework.crypto.KeyExchangePayloadCompat;
-import it.richkmeli.jframework.crypto.exception.CryptoException;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.orm.DatabaseException;
+import it.richkmeli.rms.data.device.DeviceDatabaseManager;
+import it.richkmeli.rms.data.device.model.Device;
+import it.richkmeli.rms.web.response.KOResponse;
+import it.richkmeli.rms.web.response.OKResponse;
+import it.richkmeli.rms.web.response.StatusCode;
+import it.richkmeli.rms.web.util.ServletException;
+import it.richkmeli.rms.web.util.ServletManager;
+import it.richkmeli.rms.web.util.Session;
 
-import javax.crypto.SecretKey;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +20,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.security.KeyPair;
 import java.util.List;
 
 /**
@@ -42,57 +37,20 @@ public class devicesList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
-        HttpSession httpSession = request.getSession();
-        Session session = null;
         try {
-            session = ServletManager.getServerSession(httpSession);
+            ServletManager.doDefaultProcessRequest(request);
+            ServletManager.checkLogin(request);
 
-            String user = session.getUser();
-            // Authentication
-            if (user != null) {
-                // devicesList ? encryption = true/false & phase = 1,2,3,... & kpub = ...
-                //                 |                         |                   |            |
-                if (request.getParameterMap().containsKey("encryption")) {
-                    String encryption = request.getParameter("encryption");
-                    if (encryption.compareTo("true") == 0) {
-                        // encryption enabled
-                        String kpubC = null;
-                        if (request.getParameterMap().containsKey("Kpub")) {
-                            kpubC = request.getParameter("Kpub");
-                        }
-                        // generation of public e private key of server
-                        KeyPair keyPair = CryptoCompat.getGeneratedKeyPairRSA();
+            // server session
+            Session session = ServletManager.getServerSession(request);
+            String message = ServletManager.doDefaultProcessResponse(request, GenerateDevicesListJSON(session));
 
-                        // [enc_(KpubC)(AESKey) , sign_(KprivS)(AESKey) , KpubS]
-                        List<Object> res = CryptoCompat.keyExchangeAESRSA(keyPair, kpubC);
-                        KeyExchangePayloadCompat keyExchangePayload = (KeyExchangePayloadCompat) res.get(0);
-                        SecretKey AESsecretKey = (SecretKey) res.get(1);
+            out.println((new OKResponse(StatusCode.SUCCESS, message)).json());
 
-                        // encrypt data (devices List) with AES secret key
-                        String enc = CryptoCompat.encryptAES(GenerateDevicesListJSON(session), String.valueOf(AESsecretKey));
-                        ;
-                        // add data to the object
-                        keyExchangePayload.setData(enc);
+            out.flush();
+            out.close();
 
-                        String encPayload = GenerateKeyExchangePayloadJSON(keyExchangePayload);
-
-                        out.println((new OKResponse(StatusCode.SUCCESS, encPayload)).json());
-                    }
-                } else {
-                    // encryption disabled
-                    String message = GenerateDevicesListJSON(session);
-                    out.println((new OKResponse(StatusCode.SUCCESS, message)).json());
-                }
-
-                out.flush();
-                out.close();
-            } else {
-                // non loggato
-                out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
-            }
         } catch (ServletException e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
-        } catch (CryptoException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         } catch (DatabaseException e) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
@@ -126,7 +84,9 @@ public class devicesList extends HttpServlet {
                 // TODO qui ci vuole la cancellazione di un singolo device o sempre di tutti?
             } else {
                 // non loggato
-                out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
+                KOResponse r = new KOResponse(StatusCode.NOT_LOGGED);
+                r.setMessage("You are not logged in. You will be redirected to the main page.");
+                out.println(r.json());
             }
         } catch (ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
@@ -140,10 +100,10 @@ public class devicesList extends HttpServlet {
 
         if (session.isAdmin()) {
             // if the user is an Admin, it gets the list of all devices
-            devicesList = databaseManager.refreshDevice();
+            devicesList = databaseManager.getAllDevices();
 
         } else {
-            devicesList = databaseManager.refreshDevice(session.getUser());
+            devicesList = databaseManager.getUserDevices(session.getUser());
         }
 
         Type type = new TypeToken<List<Device>>() {
@@ -171,17 +131,6 @@ public class devicesList extends HttpServlet {
         devicesListJSON += " ]";*/
 
         return devicesListJSON;
-    }
-
-    private String GenerateKeyExchangePayloadJSON(KeyExchangePayloadCompat keyExchangePayload) {
-        String keyExchangePayloadJSON;// = "[ ";
-        keyExchangePayloadJSON = /*"'" + index + "' : {"*/ "{"
-                + "'encryptedAESsecretKey' : '" + keyExchangePayload.getEncryptedAESsecretKey() + "', "
-                + "'signatureAESsecretKey' : '" + keyExchangePayload.getSignatureAESsecretKey() + "', "
-                + "'kpubServer' : '" + keyExchangePayload.getKpubServer() + "', "
-                + "'data' : '" + keyExchangePayload.getData() + "'}";
-        //keyExchangePayloadJSON += " ]";
-        return keyExchangePayloadJSON;
     }
 
 }

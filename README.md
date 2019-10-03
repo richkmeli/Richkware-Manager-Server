@@ -7,7 +7,7 @@
 
 Service for the management of hosts in which is present an instance of malware developed using **Richkware** framework.
 
- <img src="http://richk.altervista.org/rms.png">
+![](https://raw.githubusercontent.com/richkmeli/richkmeli.github.io/master/Richkware/GUI/RMS/RMS.png)
 
 ## Implementation
 
@@ -28,7 +28,7 @@ RMS has been developed following the REST principles; the following table shows 
 
 [Richkware-Manager-Client](https://github.com/richkmeli/Richkware-Manager-Client): Client of **Richkware-Manager-Server**, that it obtains the list of all hosts from the server and it's able to send any kind of commands to them.
 
-![](http://richk.altervista.org/RichkwareDiagram.svg)
+![](https://raw.githubusercontent.com/richkmeli/richkmeli.github.io/master/Richkware/Diagram/RichkwareDiagram1.2.png)
 
 ## Requirements
 These are the base requirements to build and use Richkware:

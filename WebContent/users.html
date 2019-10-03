@@ -8,131 +8,90 @@
     <!-- <meta http-equiv="Pragma" content="no-cache"> HTTP 1.0 -->
     <!-- <meta http-equiv="Expires" content="0">  proxies -->
 
-    <title>List of Users</title>
+    <!--<meta http-equiv="refresh" content="0; devices.html">-->
+
+    <title>Richkware Manager Server</title>
 
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/simple-sidebar.css"/>
     <link rel="stylesheet" href="fonts/font-awesome/css/font-awesome.css"/>
     <script type="text/javascript" src="js/jquery/jquery.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 
-    <script type="text/javascript" src="js/richkJS/users.js"></script>
     <script src="js/richkJS/account.js"></script>
+    <script type="text/javascript" src="js/richkJS/users.js"></script>
 
 </head>
+<body onload="bodyOnLoad()">
 
-<body class="bg-dark" onload="bodyOnLoad()">
+<div class="d-flex" id="wrapper">
 
-
-<nav class="navbar navbar-toggleable-md navbar-dark bg-faded">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-            data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="index.html">
-        RMS<span id="userNearBrand"></span>
-    </a>
-
-    <div class="collapse navbar-collapse" id="navbarToggler">
-        <ul class="navbar-nav mr-auto mt-2 mt-md-0">
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">Home</a>
-            </li>
-            <li class="nav-item" style="display:none;">
-                <a class="nav-link" href="devices.html">Devices List</a>
-            </li>
-            <li class="nav-item active" id="usersNavBar" style="display:none;">
-                <a class="nav-link" href="#">Users List <span class="sr-only">(current)</span></a>
-            </li>
-            <!--DISABLED<li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>-->
-        </ul>
-        <ul class="nav <!--justify-content-end-->">
-            <li class="nav-item" id="signupNavBar">
-                <a class="nav-link" href="signup.html">
-                    <span class="fa fa-user-plus"></span> Sign Up
-                </a>
-            </li>
-            <li class="nav-item" id="loginNavBar">
-                <a class="nav-link" href="login.html">
-                    <span class="fa fa-sign-in"></span> Login
-                </a>
-            </li>
-            <li class="nav-item" id="logoutNavBar" style="display:none;">
-                <a class="nav-link" href="#" id="logoutBtn">
-                    <span class="fa fa-sign-out"></span> Logout
-                </a>
-            </li>
-            <!--<a class="nav-link active" href="#">Active</a>
-             <a class="nav-link disabled" href="#">Disabled</a>-->
-            </li>
-        </ul>
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+        <div class="sidebar-heading">RMS</div>
+        <div class="list-group list-group-flush">
+            <a id="menuHome" href="index.html" class="list-group-item list-group-item-action bg-light">Home</a>
+            <a id="menuDevices" href="devices.html" class="list-group-item list-group-item-action bg-light">Devices List</a>
+            <a id="menuUsers" href="users.html" class="list-group-item list-group-item-action bg-light">Users List</a>
+            <a id="menuRMCs" href="rmcs.html" id="rmcsNavBar" class="list-group-item list-group-item-action bg-light">RMCs List</a>
+        </div>
     </div>
-</nav>
+    <!-- /#sidebar-wrapper -->
 
-<div class="container-fluid">
-    <div class="jumbotron text-center bg-success">
-        <h1 class="text-white">List of Users</h1>
-    </div>
-</div>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
 
-<div class="container bg-light">
-    <div class="card mx-auto mt-5">
-        <div class="panel panel-default">
-            <div class="card-header"></div>
-            <div class="panel-body">
-                <button type="button" class="btn btn-default btn-sm pull-right" onclick="loadUsersTable()">
-                    <span class="fa fa-refresh"></span> Refresh
-                </button>
-                <!-- <form id = "AddForm"
-                  action="addDevice"
-                  method="post">
-                  <table style="background-color: green">
-                      <tr>
-                        <td>name: <input id = "name" name = "name" type = "text"value = ""/></td>
-                        <td>IP: <input id = "IP" name = "IP" type = "text"value = ""/></td>
-                        <td>serverPort: <input id = "serverPort" name = "serverPort" type = "text"value = ""/></td>
-                        <td>lastConnection: <input id = "lastConnection" name = "lastConnection" type = "text"value = ""/></td>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <button class="btn btn-primary" id="menu-toggle"><span class="navbar-toggler-icon"></span></button>
 
-                        <td><input id = "submit"
-                                type = "submit"
-                                value = "Add device">
-                      </tr>
-                  </table>
-                  </form>
-                 <br>
-                -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" role="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <!--   <form action="EditUser" method="post" id="EditForm"
-                         style="display: none;">
-                       <table class="table">
-                           <tr>
-                               <td><input id="name_E" name="name" type="text" value=""/></td>
-                               <td><input id="name_OE" name="OLDname" type="text" value=""
-                                          style="display: none"/></td>
-                               <td><input id="IP_E" name="IP" type="text" value=""/></td>
-                               <td><input id="IP_OE" name="OLDIP" type="text" value=""
-                                          style="display: none"/></td>
-                               <td><input id="serverPort_E" name="serverPort" type="text"
-                                          value=""/></td>
-                               <td><input id="serverPort_OE" name="OLDserverPort"
-                                          type="text" value="" style="display: none"/></td>
+            <div class="nav" style="position: absolute; left:50%; transform: translatex(-50%);">
+                <h2 style="font-family: Comic Sans MS;">Richkware Manager Server</h2>
+            </div>
 
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li class="nav-item dropdown show">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Welcome <span id="userNearBrand"></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" id="signupNavBar" href="signup.html">SignUp</a>
+                            <a class="dropdown-item" id="loginNavBar" href="login.html">Login</a>
+                            <a class="dropdown-item" id="logoutBtn" href="#">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-                               <td><input id="submit" type="submit" value="Edit device">
-                           </tr>
-                       </table>
-                   </form>-->
-
-                <div class="table-responsive">
-                    <table class="table table-hover" id="usersTable">
-                    </table>
-                </div>
+        <div class="container-fluid">
+            <h2>Users List</h2>
+            <div class="table-responsive">
+                <table class="table table-hover" id="usersTable">
+                </table>
             </div>
         </div>
     </div>
+    <!-- /#page-content-wrapper -->
+
 </div>
+<!-- /#wrapper -->
+
+<!-- Bootstrap core JavaScript -->
+
+<!-- Menu Toggle Script -->
+<script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
 
 </body>
+
+
 </html>

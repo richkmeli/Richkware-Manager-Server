@@ -1,21 +1,30 @@
-package it.richkmeli.RMS.web.util;
+package it.richkmeli.rms.web.util;
 
-import it.richkmeli.RMS.data.device.DeviceDatabaseManager;
 import it.richkmeli.jframework.auth.AuthDatabaseManager;
-import it.richkmeli.jframework.database.DatabaseException;
+import it.richkmeli.jframework.crypto.Crypto;
+import it.richkmeli.jframework.orm.DatabaseException;
+import it.richkmeli.rms.data.device.DeviceDatabaseManager;
+import it.richkmeli.rms.data.rmc.RMCDatabaseManager;
 
 public class Session {
     private DeviceDatabaseManager deviceDatabaseManager;
     private AuthDatabaseManager authDatabaseManager;
-    private String userID;
+    private RMCDatabaseManager rmcDatabaseManager;
+    private String userID;      //user from AuthSchema
+    private String rmcID;       //client id from RichkwareSchema
     private Boolean isAdmin;
-
+    private Crypto.Server cryptoServer;
+    private String channel;
 
     public Session() throws DatabaseException {
         deviceDatabaseManager = new DeviceDatabaseManager();
         authDatabaseManager = new AuthDatabaseManager();
+        rmcDatabaseManager = new RMCDatabaseManager();
+        channel = null;
         userID = null;
+        rmcID = null;
         isAdmin = false;
+        cryptoServer = new Crypto.Server();
     }
 
     /*public DatabaseManager getDatabaseManager() {
@@ -42,6 +51,23 @@ public class Session {
         }
     }
 
+    public RMCDatabaseManager getRmcDatabaseManager() throws DatabaseException {
+        if (rmcDatabaseManager != null) {
+            return rmcDatabaseManager;
+        } else {
+            rmcDatabaseManager = new RMCDatabaseManager();
+            return rmcDatabaseManager;
+        }
+    }
+
+    public String getRmcID() {
+        return rmcID;
+    }
+
+    public void setRmcID(String rmcID) {
+        this.rmcID = rmcID;
+    }
+
     public String getUser() {
         return userID;
     }
@@ -62,4 +88,18 @@ public class Session {
         isAdmin = admin;
     }
 
+    public Crypto.Server getCryptoServer() {
+        return cryptoServer;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+
 }
+
