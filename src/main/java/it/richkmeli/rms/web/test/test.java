@@ -4,11 +4,11 @@ import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.jframework.web.util.ServletException;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
-import it.richkmeli.rms.web.util.ServletException;
-import it.richkmeli.rms.web.util.ServletManager;
-import it.richkmeli.rms.web.util.Session;
+import it.richkmeli.rms.web.util.RMSServletManager;
+import it.richkmeli.rms.web.util.RMSSession;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,33 +29,33 @@ public class test extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         HttpSession httpSession = request.getSession();
-        Session session = null;
+        RMSSession rmsSession = null;
         try {
-            session = ServletManager.getServerSession(httpSession);
+            rmsSession = RMSServletManager.getRMSServerSession(httpSession);
         } catch (ServletException e) {
             httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
 
         }
         String out = "";
 
         try {
-            session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
-            session.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
+            rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
+            rmsSession.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
             //TODO da spostare nella creazione della tabella
-            session.getAuthDatabaseManager().addUser(new User("", "00000000", false));
-            session.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
+            rmsSession.getAuthDatabaseManager().addUser(new User("", "00000000", false));
+            rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
         } catch (DatabaseException e) {
             e.printStackTrace();
             Logger.error("Session TEST USERS", e);
         }
 
         try {
-            session.getDeviceDatabaseManager().addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "start##start##start", ""));
-            session.getDeviceDatabaseManager().addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", ""));
-            session.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it", "", ""));
+            rmsSession.getDeviceDatabaseManager().addDevice(new Device("rick2", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "start##start##start", ""));
+            rmsSession.getDeviceDatabaseManager().addDevice(new Device("rick3", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", ""));
+            rmsSession.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it", "", ""));
             //used for reverse commands
-            session.getDeviceDatabaseManager().addDevice(new Device("DESKTOP-1EVF5Q8/win_10_desktop1", "172.24.9.142", "none", "20-10-18", "ckeroivervioeon", "richk@i.it", "YzNSaGNuUT0jI2MzUmhjblE9IyNjM1JoY25RPQ==", ""));
+            rmsSession.getDeviceDatabaseManager().addDevice(new Device("DESKTOP-1EVF5Q8/win_10_desktop1", "172.24.9.142", "none", "20-10-18", "ckeroivervioeon", "richk@i.it", "YzNSaGNuUT0jI2MzUmhjblE9IyNjM1JoY25RPQ==", ""));
         } catch (DatabaseException e) {
             Logger.error("Session TEST DEVICES", e);
         }
@@ -66,12 +66,12 @@ public class test extends HttpServlet {
                 User u = new User(RandomStringGenerator.generateAlphanumericString(8) + "@" + RandomStringGenerator.generateAlphanumericString(8) + "." + RandomStringGenerator.generateAlphanumericString(2),
                         RandomStringGenerator.generateAlphanumericString(10),
                         false);
-                session.getAuthDatabaseManager().addUser(u);
+                rmsSession.getAuthDatabaseManager().addUser(u);
                 for (int i2 = 0; i2 < 5; i2++) {
-                    session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.generateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.generateAlphanumericString(32), u.getEmail(), "start##start##start##start", ""));
+                    rmsSession.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.generateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.generateAlphanumericString(32), u.getEmail(), "start##start##start##start", ""));
                 }
             }
-            session.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.generateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.generateAlphanumericString(32), "asd@asd.com", "", "WTJsaGJ3PT0="));
+            rmsSession.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.generateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.generateAlphanumericString(32), "asd@asd.com", "", "WTJsaGJ3PT0="));
         } catch (DatabaseException e) {
             Logger.error("Session ", e);
         }
@@ -82,10 +82,10 @@ public class test extends HttpServlet {
             RMC rmc3 = new RMC("er@fv.it", "test_rmc_ID_3");
             RMC rmc4 = new RMC("", "test_rmc_ID_3");
 
-            session.getRmcDatabaseManager().addRMC(rmc1);
-            session.getRmcDatabaseManager().addRMC(rmc2);
-            session.getRmcDatabaseManager().addRMC(rmc3);
-            session.getRmcDatabaseManager().addRMC(rmc4);
+            rmsSession.getRmcDatabaseManager().addRMC(rmc1);
+            rmsSession.getRmcDatabaseManager().addRMC(rmc2);
+            rmsSession.getRmcDatabaseManager().addRMC(rmc3);
+            rmsSession.getRmcDatabaseManager().addRMC(rmc4);
         } catch (DatabaseException e) {
             Logger.error("Session ", e);
         }

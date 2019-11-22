@@ -3,14 +3,14 @@ package it.richkmeli.rms.web;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.orm.DatabaseException;
+import it.richkmeli.jframework.web.response.KOResponse;
+import it.richkmeli.jframework.web.response.OKResponse;
+import it.richkmeli.jframework.web.response.StatusCode;
+import it.richkmeli.jframework.web.util.ServletException;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
-import it.richkmeli.rms.web.response.KOResponse;
-import it.richkmeli.rms.web.response.OKResponse;
-import it.richkmeli.rms.web.response.StatusCode;
-import it.richkmeli.rms.web.util.ServletException;
-import it.richkmeli.rms.web.util.ServletManager;
-import it.richkmeli.rms.web.util.Session;
+import it.richkmeli.rms.web.util.RMSSession;
+import it.richkmeli.rms.web.util.RMSServletManager;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,12 +38,12 @@ public class devicesList extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         try {
-            ServletManager.doDefaultProcessRequest(request);
-            ServletManager.checkLogin(request);
+            RMSServletManager.doDefaultProcessRequest(request);
+            RMSServletManager.checkLogin(request);
 
             // server session
-            Session session = ServletManager.getServerSession(request);
-            String message = ServletManager.doDefaultProcessResponse(request, GenerateDevicesListJSON(session));
+            RMSSession rmsSession = RMSServletManager.getRMSServerSession(request);
+            String message = RMSServletManager.doDefaultProcessResponse(request, GenerateDevicesListJSON(rmsSession));
 
             out.println((new OKResponse(StatusCode.SUCCESS, message)).json());
 
@@ -73,11 +73,11 @@ public class devicesList extends HttpServlet {
 //        super.doDelete(req, resp);
         PrintWriter out = resp.getWriter();
         HttpSession httpSession = req.getSession();
-        Session session = null;
+        RMSSession rmsSession = null;
         try {
-            session = ServletManager.getServerSession(httpSession);
+            rmsSession = RMSServletManager.getServerSession(httpSession);
 
-            String user = session.getUser();
+            String user = rmsSession.getUser();
             // Authentication
             if (user != null) {
                 // TODO togliere tutti i dispositivi di un un utente
@@ -94,16 +94,16 @@ public class devicesList extends HttpServlet {
 
     }
 
-    private String GenerateDevicesListJSON(Session session) throws DatabaseException {
-        DeviceDatabaseManager databaseManager = session.getDeviceDatabaseManager();
+    private String GenerateDevicesListJSON(RMSSession rmsSession) throws DatabaseException {
+        DeviceDatabaseManager databaseManager = rmsSession.getDeviceDatabaseManager();
         List<Device> devicesList = null;
 
-        if (session.isAdmin()) {
+        if (rmsSession.isAdmin()) {
             // if the user is an Admin, it gets the list of all devices
             devicesList = databaseManager.getAllDevices();
 
         } else {
-            devicesList = databaseManager.getUserDevices(session.getUser());
+            devicesList = databaseManager.getUserDevices(rmsSession.getUser());
         }
 
         Type type = new TypeToken<List<Device>>() {

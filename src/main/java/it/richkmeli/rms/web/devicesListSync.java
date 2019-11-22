@@ -1,8 +1,8 @@
 package it.richkmeli.rms.web;
 
 import it.richkmeli.jframework.orm.DatabaseException;
-import it.richkmeli.rms.web.util.ServletManager;
-import it.richkmeli.rms.web.util.Session;
+import it.richkmeli.rms.web.util.RMSServletManager;
+import it.richkmeli.rms.web.util.RMSSession;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,22 +24,22 @@ public class devicesListSync extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession httpSession = request.getSession();
-        Session session = null;
+        RMSSession rmsSession = null;
         try {
-            session = ServletManager.getServerSession(httpSession);
-        } catch (it.richkmeli.rms.web.util.ServletException e) {
+            rmsSession = RMSServletManager.getRMSServerSession(httpSession);
+        } catch (it.richkmeli.jframework.web.util.ServletException e) {
             httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
         }
 
         try {
 
-            httpSession.setAttribute("device", session.getDeviceDatabaseManager().getAllDevices());
+            httpSession.setAttribute("device", rmsSession.getDeviceDatabaseManager().getAllDevices());
             request.getRequestDispatcher("JSP/device_list.jsp").forward(request, response);
 
         } catch (DatabaseException e) {
             httpSession.setAttribute("error", e);
-            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
+            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
         }
 
     }

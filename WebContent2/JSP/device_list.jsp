@@ -59,8 +59,8 @@
 </form>
 
 <%
-    List<Device> deviceList = (List<Device>) session.getAttribute("device");
-    session.removeAttribute("device");
+    List<Device> deviceList = (List<Device>) rmsSession.getAttribute("device");
+    rmsSession.removeAttribute("device");
 %>
 
 <table>

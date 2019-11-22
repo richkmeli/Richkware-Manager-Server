@@ -2,11 +2,12 @@ package it.richkmeli.rms.web;
 
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.orm.DatabaseException;
-import it.richkmeli.rms.web.response.KOResponse;
-import it.richkmeli.rms.web.response.OKResponse;
-import it.richkmeli.rms.web.response.StatusCode;
-import it.richkmeli.rms.web.util.ServletManager;
-import it.richkmeli.rms.web.util.Session;
+import it.richkmeli.jframework.web.response.KOResponse;
+import it.richkmeli.jframework.web.response.OKResponse;
+import it.richkmeli.jframework.web.response.StatusCode;
+import it.richkmeli.jframework.web.util.ServletException;
+import it.richkmeli.rms.web.util.RMSServletManager;
+import it.richkmeli.rms.web.util.RMSSession;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +35,7 @@ public class command extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         PrintWriter out = resp.getWriter();
         HttpSession httpSession = req.getSession();
-        Session session = null;
+        RMSSession rmsSession = null;
 
         try {
 
@@ -67,20 +68,20 @@ public class command extends HttpServlet {
 //
 //            br.close();
 
-            session = ServletManager.getServerSession(httpSession);
+            rmsSession = RMSServletManager.getRMSServerSession(httpSession);
 
-            Map<String, String> attribMap = ServletManager.doDefaultProcessRequest(req);
+            Map<String, String> attribMap = RMSServletManager.doDefaultProcessRequest(req);
 
             String deviceName = attribMap.get("data0");
 
             String output = null;
 
-            if (ServletManager.Channel.RICHKWARE.equalsIgnoreCase(req.getParameter("channel"))) {
+            if (RMSServletManager.Channel.RICHKWARE.equalsIgnoreCase(req.getParameter("channel"))) {
                 deviceName = Crypto.decryptRC4(deviceName, password);
-                output = session.getDeviceDatabaseManager().getCommands(deviceName);
+                output = rmsSession.getDeviceDatabaseManager().getCommands(deviceName);
             } else {
-                output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
-                output = ServletManager.doDefaultProcessResponse(req, output);
+                output = rmsSession.getDeviceDatabaseManager().getCommandsOutput(deviceName);
+                output = RMSServletManager.doDefaultProcessResponse(req, output);
             }
             if (!output.isEmpty()) {
                 out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
@@ -100,7 +101,7 @@ public class command extends HttpServlet {
 
         PrintWriter out = resp.getWriter();
         HttpSession httpSession = req.getSession();
-        Session session = null;
+        RMSSession rmsSession = null;
 
         try {
             BufferedReader br = req.getReader();
@@ -109,11 +110,11 @@ public class command extends HttpServlet {
             JSONArray devicesName = JSONData.getJSONArray("devices");
             String commands = JSONData.getString("commands");
 
-            session = ServletManager.getServerSession(httpSession);
+            rmsSession = RMSServletManager.getServerSession(httpSession);
 
             List<String> failedResponse = new ArrayList<>();
             for (Object device : devicesName) {
-                if (!session.getDeviceDatabaseManager().editCommands((String) device, commands)) {
+                if (!rmsSession.getDeviceDatabaseManager().editCommands((String) device, commands)) {
                     failedResponse.add((String) device);
                 }
             }
@@ -125,7 +126,7 @@ public class command extends HttpServlet {
             }
 
             br.close();
-        } catch (it.richkmeli.rms.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
+        } catch (ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
@@ -134,7 +135,7 @@ public class command extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         PrintWriter out = resp.getWriter();
         HttpSession httpSession = req.getSession();
-        Session session = null;
+        RMSSession rmsSession = null;
 
         try {
             BufferedReader br = req.getReader();
@@ -148,17 +149,17 @@ public class command extends HttpServlet {
             //commandsOutput= new String(Base64.getUrlDecoder().decode(commandsOutput));
             // Reverse command output has to be sent to the front end in base64 format
 
-            session = ServletManager.getServerSession(httpSession);
+            rmsSession = RMSServletManager.getServerSession(httpSession);
 
-            boolean result = session.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
+            boolean result = rmsSession.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
             if (result) {
-                session.getDeviceDatabaseManager().editCommands(deviceName, "");
+                rmsSession.getDeviceDatabaseManager().editCommands(deviceName, "");
                 out.println((new OKResponse(StatusCode.SUCCESS)).json());
             } else {
                 out.println((new KOResponse(StatusCode.FIELD_EMPTY, "Field not found in DB")).json());
             }
             br.close();
-        } catch (it.richkmeli.rms.web.util.ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
+        } catch (ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }

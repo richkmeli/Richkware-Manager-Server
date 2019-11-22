@@ -5,14 +5,14 @@ import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.jframework.web.response.KOResponse;
+import it.richkmeli.jframework.web.response.OKResponse;
+import it.richkmeli.jframework.web.response.StatusCode;
+import it.richkmeli.jframework.web.util.ServletException;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
-import it.richkmeli.rms.web.response.KOResponse;
-import it.richkmeli.rms.web.response.OKResponse;
-import it.richkmeli.rms.web.response.StatusCode;
-import it.richkmeli.rms.web.util.ServletException;
-import it.richkmeli.rms.web.util.ServletManager;
-import it.richkmeli.rms.web.util.Session;
+import it.richkmeli.rms.web.util.RMSSession;
+import it.richkmeli.rms.web.util.RMSServletManager;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -109,9 +109,9 @@ public class device extends HttpServlet {
         PrintWriter out = resp.getWriter();
         //super.doPut(req, resp);
         HttpSession httpSession = req.getSession();
-        Session session = null;
+        RMSSession rmsSession = null;
         try {
-            session = ServletManager.getServerSession(httpSession);
+            rmsSession = RMSServletManager.getRMSServerSession(httpSession);
 
             if (req.getParameterMap().containsKey("data0") &&
                     req.getParameterMap().containsKey("data1") &&
@@ -121,7 +121,7 @@ public class device extends HttpServlet {
                 //String name = data.substring(1, data.indexOf(","));
 
                 // check in the DB if there is an entry with that name
-                DeviceDatabaseManager deviceDatabaseManager = session.getDeviceDatabaseManager();
+                DeviceDatabaseManager deviceDatabaseManager = rmsSession.getDeviceDatabaseManager();
                 Device oldDevice = deviceDatabaseManager.getDevice(name);
 
                 // if this entry exists, then it's used to decrypt the encryption key in the DB
@@ -185,40 +185,40 @@ public class device extends HttpServlet {
         //if the code below is de-commented, this servlet disables DELETE
         //super.doDelete(req, resp);
         HttpSession httpSession = req.getSession();
-        Session session = null;
+        RMSSession rmsSession = null;
         try {
-            session = ServletManager.getServerSession(httpSession);
+            rmsSession = RMSServletManager.getRMSServerSession(httpSession);
         } catch (ServletException e) {
             httpSession.setAttribute("error", e);
-            req.getRequestDispatcher(ServletManager.ERROR_JSP).forward(req, resp);
+            req.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(req, resp);
 
         }
 
         try {
             String out = null;
 
-            String user = session.getUser();
+            String user = rmsSession.getUser();
             // Authentication
             if (user != null) {
                 if (req.getParameterMap().containsKey("name")) {
                     String name = req.getParameter("name");
 
-                    Device device = session.getDeviceDatabaseManager().getDevice(name);
+                    Device device = rmsSession.getDeviceDatabaseManager().getDevice(name);
 
-                    if (device.getAssociatedUser().compareTo(session.getUser()) == 0 ||
-                            session.isAdmin()) {
-                        session.getDeviceDatabaseManager().removeDevice(name);
+                    if (device.getAssociatedUser().compareTo(rmsSession.getUser()) == 0 ||
+                            rmsSession.isAdmin()) {
+                        rmsSession.getDeviceDatabaseManager().removeDevice(name);
                         out = "deleted";
                     } else {
                         // TODO rimanda da qualche parte perche c'è errore
                         httpSession.setAttribute("error", "non hai i privilegi");
-                        req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
+                        req.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(req, resp);
                     }
 
                 } else {
                     // TODO rimanda da qualche parte perche c'è errore
                     httpSession.setAttribute("error", "dispositivo non specificato");
-                    req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
+                    req.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(req, resp);
                 }
                 // servlet response
                 PrintWriter printWriter = resp.getWriter();
@@ -229,12 +229,12 @@ public class device extends HttpServlet {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "non loggato");
-                req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
+                req.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(req, resp);
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
             httpSession.setAttribute("error", e);
-            req.getRequestDispatcher(ServletManager.ERROR_JSP).forward(req, resp);
+            req.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(req, resp);
         }
 
     }

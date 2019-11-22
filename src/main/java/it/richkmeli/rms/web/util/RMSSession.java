@@ -1,35 +1,32 @@
 package it.richkmeli.rms.web.util;
 
-import it.richkmeli.jframework.auth.AuthDatabaseManager;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.orm.DatabaseException;
+import it.richkmeli.jframework.web.util.Session;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.rmc.RMCDatabaseManager;
 
-public class Session {
+public class RMSSession extends Session {
     private DeviceDatabaseManager deviceDatabaseManager;
-    private AuthDatabaseManager authDatabaseManager;
     private RMCDatabaseManager rmcDatabaseManager;
-    private String userID;      //user from AuthSchema
     private String rmcID;       //client id from RichkwareSchema
-    private Boolean isAdmin;
-    private Crypto.Server cryptoServer;
     private String channel;
 
-    public Session() throws DatabaseException {
+    public RMSSession() throws DatabaseException {
+        super();
         deviceDatabaseManager = new DeviceDatabaseManager();
-        authDatabaseManager = new AuthDatabaseManager();
         rmcDatabaseManager = new RMCDatabaseManager();
         channel = null;
-        userID = null;
         rmcID = null;
-        isAdmin = false;
-        cryptoServer = new Crypto.Server();
     }
 
-    /*public DatabaseManager getDatabaseManager() {
-        return databaseManager;
-    }*/
+    public RMSSession(Session session) throws DatabaseException {
+        super(session);
+        deviceDatabaseManager = new DeviceDatabaseManager();
+        rmcDatabaseManager = new RMCDatabaseManager();
+        channel = null;
+        rmcID = null;
+    }
 
     public DeviceDatabaseManager getDeviceDatabaseManager() throws DatabaseException {
         //Logger.i("deviceDatabaseManager" + deviceDatabaseManager);
@@ -41,15 +38,6 @@ public class Session {
         }
     }
 
-    public AuthDatabaseManager getAuthDatabaseManager() throws DatabaseException {
-        //Logger.i("authDatabaseManager" + authDatabaseManager);
-        if (authDatabaseManager != null) {
-            return authDatabaseManager;
-        } else {
-            authDatabaseManager = new AuthDatabaseManager();
-            return authDatabaseManager;
-        }
-    }
 
     public RMCDatabaseManager getRmcDatabaseManager() throws DatabaseException {
         if (rmcDatabaseManager != null) {
@@ -66,30 +54,6 @@ public class Session {
 
     public void setRmcID(String rmcID) {
         this.rmcID = rmcID;
-    }
-
-    public String getUser() {
-        return userID;
-    }
-
-    public void setUser(String userID) {
-        this.userID = userID;
-    }
-
-    public void removeUser() {
-        this.userID = null;
-    }
-
-    public Boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
-    }
-
-    public Crypto.Server getCryptoServer() {
-        return cryptoServer;
     }
 
     public String getChannel() {
