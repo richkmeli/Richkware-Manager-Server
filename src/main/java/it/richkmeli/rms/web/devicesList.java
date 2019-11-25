@@ -9,8 +9,8 @@ import it.richkmeli.jframework.web.response.StatusCode;
 import it.richkmeli.jframework.web.util.ServletException;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
-import it.richkmeli.rms.web.util.RMSSession;
 import it.richkmeli.rms.web.util.RMSServletManager;
+import it.richkmeli.rms.web.util.RMSSession;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,12 +38,13 @@ public class devicesList extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         try {
-            RMSServletManager.doDefaultProcessRequest(request);
-            RMSServletManager.checkLogin(request);
+            RMSServletManager rmsServletManager = new RMSServletManager(request);
+            rmsServletManager.doDefaultProcessRequest();
+            rmsServletManager.checkLogin();
 
             // server session
-            RMSSession rmsSession = RMSServletManager.getRMSServerSession(request);
-            String message = RMSServletManager.doDefaultProcessResponse(request, GenerateDevicesListJSON(rmsSession));
+            RMSSession rmsSession = rmsServletManager.getRMSServerSession();
+            String message = rmsServletManager.doDefaultProcessResponse(GenerateDevicesListJSON(rmsSession));
 
             out.println((new OKResponse(StatusCode.SUCCESS, message)).json());
 
@@ -75,7 +76,8 @@ public class devicesList extends HttpServlet {
         HttpSession httpSession = req.getSession();
         RMSSession rmsSession = null;
         try {
-            rmsSession = RMSServletManager.getServerSession(httpSession);
+            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            rmsSession = rmsServletManager.getRMSServerSession();
 
             String user = rmsSession.getUser();
             // Authentication

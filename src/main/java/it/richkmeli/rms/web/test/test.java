@@ -4,6 +4,7 @@ import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.jframework.web.test.AccountTest;
 import it.richkmeli.jframework.web.util.ServletException;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
@@ -31,7 +32,8 @@ public class test extends HttpServlet {
         HttpSession httpSession = request.getSession();
         RMSSession rmsSession = null;
         try {
-            rmsSession = RMSServletManager.getRMSServerSession(httpSession);
+            RMSServletManager rmsServletManager = new RMSServletManager(request);
+            rmsSession = rmsServletManager.getRMSServerSession();
         } catch (ServletException e) {
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
@@ -59,6 +61,8 @@ public class test extends HttpServlet {
         } catch (DatabaseException e) {
             Logger.error("Session TEST DEVICES", e);
         }
+
+        AccountTest.addUsers(rmsSession);
 
         try {
 

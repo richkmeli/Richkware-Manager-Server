@@ -9,6 +9,7 @@ import it.richkmeli.jframework.web.util.ServletException;
 import it.richkmeli.jframework.web.util.ServletManager;
 import it.richkmeli.jframework.web.util.Session;
 import org.json.JSONObject;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,10 +20,20 @@ public class RMSServletManager extends ServletManager {
     public static final String DEVICES_HTML = "devices.html";
     public static final String LOGIN_HTML = "login.html";
     public static final String DATA_PARAMETER_KEY = "data";
-    public RMSSession rmsSession;
+    private RMSSession rmsSession;
 
-        @Override
-    public Map<String, String> doSpecificProcessRequest(Map<String, String> map) throws ServletException {
+    public RMSServletManager(HttpServletRequest request) {
+        super(request);
+        try {
+            rmsSession = getRMSServerSession();
+        } catch (ServletException e) {
+            //e.printStackTrace();
+            Logger.error(e);
+        }
+    }
+
+    @Override
+    public Map<String, String> doSpecificProcessRequest(Map<String, String> map) throws it.richkmeli.jframework.web.util.ServletException {
 
         // check channel: rmc or webapp, if rmc secureconnection first (set something in session)
         if (map.containsKey(Channel.CHANNEL)) {
@@ -108,16 +119,8 @@ public class RMSServletManager extends ServletManager {
         return (T) new RMSSession();
     }
 
-    public static RMSSession getRMSServerSession(HttpServletRequest request) throws ServletException {
-        // http session
-        HttpSession httpSession = request.getSession();
-        // server session
-        return getRMSServerSession(httpSession);
-    }
-
-    public static RMSSession getRMSServerSession(HttpSession httpSession) throws ServletException {
-        RMSServletManager rmsServletManager = new RMSServletManager();
-        return rmsServletManager.getExtendedServerSession("rms",httpSession);
+    public RMSSession getRMSServerSession() throws ServletException {
+        return getExtendedServerSession("rms",request.getSession());
     }
 
 

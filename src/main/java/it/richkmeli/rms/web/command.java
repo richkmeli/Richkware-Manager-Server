@@ -68,9 +68,10 @@ public class command extends HttpServlet {
 //
 //            br.close();
 
-            rmsSession = RMSServletManager.getRMSServerSession(httpSession);
+            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            rmsSession = rmsServletManager.getRMSServerSession();
 
-            Map<String, String> attribMap = RMSServletManager.doDefaultProcessRequest(req);
+            Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
 
             String deviceName = attribMap.get("data0");
 
@@ -81,7 +82,7 @@ public class command extends HttpServlet {
                 output = rmsSession.getDeviceDatabaseManager().getCommands(deviceName);
             } else {
                 output = rmsSession.getDeviceDatabaseManager().getCommandsOutput(deviceName);
-                output = RMSServletManager.doDefaultProcessResponse(req, output);
+                output = rmsServletManager.doDefaultProcessResponse(output);
             }
             if (!output.isEmpty()) {
                 out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
@@ -110,7 +111,8 @@ public class command extends HttpServlet {
             JSONArray devicesName = JSONData.getJSONArray("devices");
             String commands = JSONData.getString("commands");
 
-            rmsSession = RMSServletManager.getServerSession(httpSession);
+            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            rmsSession = rmsServletManager.getRMSServerSession();
 
             List<String> failedResponse = new ArrayList<>();
             for (Object device : devicesName) {
@@ -149,7 +151,8 @@ public class command extends HttpServlet {
             //commandsOutput= new String(Base64.getUrlDecoder().decode(commandsOutput));
             // Reverse command output has to be sent to the front end in base64 format
 
-            rmsSession = RMSServletManager.getServerSession(httpSession);
+            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            rmsSession = rmsServletManager.getRMSServerSession();
 
             boolean result = rmsSession.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
             if (result) {

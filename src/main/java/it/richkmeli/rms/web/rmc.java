@@ -8,12 +8,12 @@ import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.jframework.web.response.KOResponse;
 import it.richkmeli.jframework.web.response.OKResponse;
 import it.richkmeli.jframework.web.response.StatusCode;
-import it.richkmeli.jframework.web.util.ServletException;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
-import it.richkmeli.rms.web.util.RMSSession;
 import it.richkmeli.rms.web.util.RMSServletManager;
+import it.richkmeli.rms.web.util.RMSSession;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,39 +31,33 @@ public class rmc extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession httpSession = req.getSession();
-        RMSSession rmsSession = null;
         PrintWriter out = resp.getWriter();
-
         List<RMC> clients = null;
 
         try {
-            rmsSession = RMSServletManager.getRMSServerSession(httpSession);
+            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            rmsServletManager.checkLogin();
+            RMSSession rmsSession = rmsServletManager.getRMSServerSession();
 
-            if (rmsSession.getUser() != null) {
-                Logger.info("user is logged correctly");
-                Map<String, String> attribMap = RMSServletManager.doDefaultProcessRequest(req);
+            Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
 
-                if (rmsSession.isAdmin()) {
-                    //ottiene tutti i client presenti sul db
-                    Logger.info("Admin user");
-                    clients = rmsSession.getRmcDatabaseManager().getAllRMCs();
-                } else {
-                    //ottiene tutti i client associati al suo account
-                    Logger.info("Regular user");
-                    clients = rmsSession.getRmcDatabaseManager().getRMCs(rmsSession.getUser());
-                }
-                String clientsFormatted = generateRmcListJSON(clients);
-                Logger.info("rmc: clientsFormatted: " + clientsFormatted);
-                String output = RMSServletManager.doDefaultProcessResponse(req, clientsFormatted);
-                out.println(new OKResponse(StatusCode.SUCCESS, output).json());
+            if (rmsSession.isAdmin()) {
+                //ottiene tutti i client presenti sul db
+                Logger.info("Admin user");
+                clients = rmsSession.getRmcDatabaseManager().getAllRMCs();
             } else {
-                out.println((new KOResponse(StatusCode.NOT_LOGGED)).json());
+                //ottiene tutti i client associati al suo account
+                Logger.info("Regular user");
+                clients = rmsSession.getRmcDatabaseManager().getRMCs(rmsSession.getUser());
             }
+            String clientsFormatted = generateRmcListJSON(clients);
+            Logger.info("rmc: clientsFormatted: " + clientsFormatted);
+            String output = rmsServletManager.doDefaultProcessResponse(clientsFormatted);
+            out.println(new OKResponse(StatusCode.SUCCESS, output).json());
 
             out.flush();
             out.close();
-        } catch (ServletException e) {
+        } catch (it.richkmeli.jframework.web.util.ServletException e) {
             out.println(new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage()).json());
         } catch (DatabaseException e) {
             out.println(new KOResponse(StatusCode.DB_ERROR, e.getMessage()).json());
@@ -100,7 +94,8 @@ public class rmc extends HttpServlet {
 //            cryptoServer.deleteClientData();
 //        }
         try {
-            rmsSession = RMSServletManager.getRMSServerSession(httpSession);
+            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            rmsSession = rmsServletManager.getRMSServerSession();
 
             // todo controlla che stia cancellando un rmc di cui ha i permessi
             if (req.getParameterMap().containsKey("associatedUser") && req.getParameterMap().containsKey("rmcId")) {
@@ -155,7 +150,7 @@ public class rmc extends HttpServlet {
 //            session.getCryptoServer().deleteClientData();
 
 
-        } catch (ServletException e) {
+        } catch (it.richkmeli.jframework.web.util.ServletException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         } catch (DatabaseException e1) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e1.getMessage())).json());

@@ -1,6 +1,5 @@
 package it.richkmeli.rms.web.util;
 
-import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.web.util.Session;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
