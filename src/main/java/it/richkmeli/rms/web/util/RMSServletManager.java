@@ -115,8 +115,8 @@ public class RMSServletManager extends ServletManager {
     }
 
     @Override
-    public <T extends Session> T getNewSessionInstance() throws DatabaseException {
-        return (T) new RMSSession();
+    public <T extends Session> T getNewSessionInstance() throws ServletException, DatabaseException {
+        return (T) new RMSSession(getServerSession());
     }
 
     public RMSSession getRMSServerSession() throws ServletException {
