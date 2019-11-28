@@ -1,5 +1,8 @@
 package it.richkmeli.rms.web.account;
 
+import it.richkmeli.jframework.web.util.ServletManager;
+import it.richkmeli.rms.web.util.RMSServletManager;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +35,11 @@ public class user extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        user.doDelete(request, response);
+        try {
+            user.doDelete(request, response);
+        } catch (it.richkmeli.jframework.web.util.ServletException e) {
+            request.getSession().setAttribute("error", e);
+            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
+        }
     }
 }

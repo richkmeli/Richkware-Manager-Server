@@ -52,7 +52,7 @@ public class devicesList extends HttpServlet {
             out.close();
 
         } catch (ServletException e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+            out.println(e.getKOResponseJSON());
         } catch (DatabaseException e) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
         }
@@ -91,7 +91,7 @@ public class devicesList extends HttpServlet {
                 out.println(r.json());
             }
         } catch (ServletException e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+            out.println(e.getKOResponseJSON());
         }
 
     }

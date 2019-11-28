@@ -8,6 +8,7 @@ import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.jframework.web.response.KOResponse;
 import it.richkmeli.jframework.web.response.OKResponse;
 import it.richkmeli.jframework.web.response.StatusCode;
+import it.richkmeli.jframework.web.util.Session;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.util.RMSServletManager;
@@ -36,10 +37,13 @@ public class rmc extends HttpServlet {
 
         try {
             RMSServletManager rmsServletManager = new RMSServletManager(req);
+            Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
             rmsServletManager.checkLogin();
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
+            //Session session = rmsServletManager.getServerSession();
 
-            Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
+            // TODO REMOVE
+System.out.println(rmsSession.getRmcID() + " " + rmsSession.getUser() + " " + rmsSession.isAdmin());
 
             if (rmsSession.isAdmin()) {
                 //ottiene tutti i client presenti sul db
@@ -58,7 +62,7 @@ public class rmc extends HttpServlet {
             out.flush();
             out.close();
         } catch (it.richkmeli.jframework.web.util.ServletException e) {
-            out.println(new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage()).json());
+            out.println(e.getKOResponseJSON());
         } catch (DatabaseException e) {
             out.println(new KOResponse(StatusCode.DB_ERROR, e.getMessage()).json());
         }
@@ -151,7 +155,7 @@ public class rmc extends HttpServlet {
 
 
         } catch (it.richkmeli.jframework.web.util.ServletException e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+            out.println(e.getKOResponseJSON());
         } catch (DatabaseException e1) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e1.getMessage())).json());
         }

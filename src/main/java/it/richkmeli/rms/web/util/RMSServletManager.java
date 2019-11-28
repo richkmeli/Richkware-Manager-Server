@@ -20,7 +20,7 @@ public class RMSServletManager extends ServletManager {
     public static final String DEVICES_HTML = "devices.html";
     public static final String LOGIN_HTML = "login.html";
     public static final String DATA_PARAMETER_KEY = "data";
-    private RMSSession rmsSession;
+    private static RMSSession rmsSession;
 
     public RMSServletManager(HttpServletRequest request) {
         super(request);
@@ -33,16 +33,16 @@ public class RMSServletManager extends ServletManager {
     }
 
     @Override
-    public Map<String, String> doSpecificProcessRequest(Map<String, String> map) throws it.richkmeli.jframework.web.util.ServletException {
+    public void doSpecificProcessRequest() throws it.richkmeli.jframework.web.util.ServletException {
 
         // check channel: rmc or webapp, if rmc secureconnection first (set something in session)
-        if (map.containsKey(Channel.CHANNEL)) {
-            String channel = map.get(Channel.CHANNEL);
+        if (attribMap.containsKey(Channel.CHANNEL)) {
+            String channel = attribMap.get(Channel.CHANNEL);
             switch (channel) {
                 case Channel.RMC:
                     rmsSession.setChannel(Channel.RMC);
                     // Extract encrypted data from map
-                    String payload = map.get(DATA_PARAMETER_KEY);
+                    String payload = attribMap.get(DATA_PARAMETER_KEY);
                     if (!"".equalsIgnoreCase(payload)) {
                         String decryptedPayload = null;
                         try {
@@ -55,11 +55,11 @@ public class RMSServletManager extends ServletManager {
                             // add each attribute inside encrypted data to map
                             for (String key : decryptedPayloadJSON.keySet()) {
                                 String value = decryptedPayloadJSON.getString(key);
-                                map.put(key, value);
+                                attribMap.put(key, value);
                             }
                         }
                         // remove encrypted data from map
-                        map.remove(DATA_PARAMETER_KEY);
+                        attribMap.remove(DATA_PARAMETER_KEY);
                     }
                     break;
                 case Channel.WEBAPP:
@@ -78,7 +78,6 @@ public class RMSServletManager extends ServletManager {
             Logger.error("ServletManager, servlet: " + servletPath + ". + channel key is not present.");
             throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel key is not present"));
         }
-        return attribMap;
     }
 
     @Override
@@ -114,13 +113,28 @@ public class RMSServletManager extends ServletManager {
         return output;
     }
 
-    @Override
+   /* @Override
     public <T extends Session> T getNewSessionInstance() throws ServletException, DatabaseException {
         return (T) new RMSSession(getServerSession());
-    }
+    }*/
 
     public RMSSession getRMSServerSession() throws ServletException {
-        return getExtendedServerSession("rms",request.getSession());
+        //return getExtendedServerSession("rms",request.getSession());
+        // http session
+        HttpSession httpSession = request.getSession();
+        // server session
+        RMSSession rmsSession = (RMSSession) httpSession.getAttribute("rms_session");
+        if (rmsSession == null) {
+            try {
+                rmsSession = new RMSSession(session);
+                httpSession.setAttribute("rms_session", rmsSession);
+            } catch (DatabaseException e) {
+                throw new ServletException(e);
+                //httpSession.setAttribute("error", e);
+                //request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+            }
+        }
+        return rmsSession;
     }
 
 

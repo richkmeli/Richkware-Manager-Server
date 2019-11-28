@@ -1,5 +1,8 @@
 package it.richkmeli.rms.web.account;
 
+import it.richkmeli.jframework.web.util.ServletManager;
+import it.richkmeli.rms.web.util.RMSServletManager;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,11 +25,21 @@ public class usersList extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        usersList.doGet(request,response);
+        try {
+            usersList.doGet(request,response);
+        } catch (it.richkmeli.jframework.web.util.ServletException e) {
+            request.getSession().setAttribute("error", e);
+            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        usersList.doGet(request,response);
+        try {
+            usersList.doGet(request,response);
+        } catch (it.richkmeli.jframework.web.util.ServletException e) {
+            request.getSession().setAttribute("error", e);
+            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
+        }
     }
 }
