@@ -1,11 +1,11 @@
 package it.richkmeli.rms.web;
 
 import it.richkmeli.jframework.crypto.Crypto;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
+import it.richkmeli.jframework.network.tcp.server.http.util.ServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
-import it.richkmeli.jframework.web.response.KOResponse;
-import it.richkmeli.jframework.web.response.OKResponse;
-import it.richkmeli.jframework.web.response.StatusCode;
-import it.richkmeli.jframework.web.util.ServletException;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
 import org.json.JSONArray;

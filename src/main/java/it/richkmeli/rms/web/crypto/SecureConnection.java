@@ -1,6 +1,5 @@
 package it.richkmeli.rms.web.crypto;
 
-import it.richkmeli.jframework.web.util.ServletManager;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
@@ -10,12 +9,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/SecureConnection")
 public class SecureConnection extends HttpServlet {
-    it.richkmeli.jframework.web.crypto.SecureConnection secureConnection = new it.richkmeli.jframework.web.crypto.SecureConnection() {
+    it.richkmeli.jframework.network.tcp.server.http.crypto.SecureConnection secureConnection = new it.richkmeli.jframework.network.tcp.server.http.crypto.SecureConnection() {
         RMSSession rmsSession;
 
         @Override
@@ -46,7 +44,7 @@ public class SecureConnection extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             secureConnection.doAction(request, response);
-        } catch (it.richkmeli.jframework.web.util.ServletException e) {
+        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
             request.getSession().setAttribute("error", e);
             request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
         }
@@ -56,7 +54,7 @@ public class SecureConnection extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             secureConnection.doAction(request, response);
-        } catch (it.richkmeli.jframework.web.util.ServletException e) {
+        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
             request.getSession().setAttribute("error", e);
             request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
         }

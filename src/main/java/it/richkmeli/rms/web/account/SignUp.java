@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @WebServlet("/SignUp")
 public class SignUp extends HttpServlet {
-    it.richkmeli.jframework.web.account.SignUp signUp = new it.richkmeli.jframework.web.account.SignUp() {
+    it.richkmeli.jframework.network.tcp.server.http.account.SignUp signUp = new it.richkmeli.jframework.network.tcp.server.http.account.SignUp() {
         @Override
         protected void doSpecificAction() {
 

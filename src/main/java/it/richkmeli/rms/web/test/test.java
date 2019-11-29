@@ -2,10 +2,10 @@ package it.richkmeli.rms.web.test;
 
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
+import it.richkmeli.jframework.network.tcp.server.http.test.AccountTest;
+import it.richkmeli.jframework.network.tcp.server.http.util.ServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
-import it.richkmeli.jframework.web.test.AccountTest;
-import it.richkmeli.jframework.web.util.ServletException;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.util.RMSServletManager;

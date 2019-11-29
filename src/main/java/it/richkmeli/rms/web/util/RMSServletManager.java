@@ -1,19 +1,16 @@
 package it.richkmeli.rms.web.util;
 
 import it.richkmeli.jframework.crypto.exception.CryptoException;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
+import it.richkmeli.jframework.network.tcp.server.http.util.ServletException;
+import it.richkmeli.jframework.network.tcp.server.http.util.ServletManager;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
-import it.richkmeli.jframework.web.response.KOResponse;
-import it.richkmeli.jframework.web.response.StatusCode;
-import it.richkmeli.jframework.web.util.ServletException;
-import it.richkmeli.jframework.web.util.ServletManager;
-import it.richkmeli.jframework.web.util.Session;
 import org.json.JSONObject;
-import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 public class RMSServletManager extends ServletManager {
     public static final String ERROR_JSP = "JSP/error.jsp";
@@ -33,7 +30,7 @@ public class RMSServletManager extends ServletManager {
     }
 
     @Override
-    public void doSpecificProcessRequest() throws it.richkmeli.jframework.web.util.ServletException {
+    public void doSpecificProcessRequest() throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException {
 
         // check channel: rmc or webapp, if rmc secureconnection first (set something in session)
         if (attribMap.containsKey(Channel.CHANNEL)) {
@@ -81,7 +78,7 @@ public class RMSServletManager extends ServletManager {
     }
 
     @Override
-    public String doSpecificProcessResponse(String input) throws it.richkmeli.jframework.web.util.ServletException {
+    public String doSpecificProcessResponse(String input) throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException {
         // default: input as output
         String output = input;
 

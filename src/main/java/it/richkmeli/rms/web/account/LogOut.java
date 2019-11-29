@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @WebServlet("/LogOut")
 public class LogOut extends HttpServlet {
-    it.richkmeli.jframework.web.account.LogOut logOut = new it.richkmeli.jframework.web.account.LogOut() {
+    it.richkmeli.jframework.network.tcp.server.http.account.LogOut logOut = new it.richkmeli.jframework.network.tcp.server.http.account.LogOut() {
         @Override
         protected void doSpecificAction() {
 

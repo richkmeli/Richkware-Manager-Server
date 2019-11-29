@@ -15,10 +15,10 @@ import java.io.IOException;
 
 @WebServlet("/LogIn")
 public class LogIn extends HttpServlet {
-   it.richkmeli.jframework.web.account.LogIn logIn = new it.richkmeli.jframework.web.account.LogIn() {
+   it.richkmeli.jframework.network.tcp.server.http.account.LogIn logIn = new it.richkmeli.jframework.network.tcp.server.http.account.LogIn() {
 
         @Override
-        protected void doSpecificAction(HttpServletRequest httpServletRequest) throws it.richkmeli.jframework.web.util.ServletException, DatabaseException {
+        protected void doSpecificAction(HttpServletRequest httpServletRequest) throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException, DatabaseException {
             RMSServletManager rmsServletManager = new RMSServletManager(httpServletRequest);
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
 

@@ -3,12 +3,11 @@ package it.richkmeli.rms.web;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.crypto.Crypto;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
-import it.richkmeli.jframework.web.response.KOResponse;
-import it.richkmeli.jframework.web.response.OKResponse;
-import it.richkmeli.jframework.web.response.StatusCode;
-import it.richkmeli.jframework.web.util.Session;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.util.RMSServletManager;
@@ -61,7 +60,7 @@ System.out.println(rmsSession.getRmcID() + " " + rmsSession.getUser() + " " + rm
 
             out.flush();
             out.close();
-        } catch (it.richkmeli.jframework.web.util.ServletException e) {
+        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
             out.println(e.getKOResponseJSON());
         } catch (DatabaseException e) {
             out.println(new KOResponse(StatusCode.DB_ERROR, e.getMessage()).json());
@@ -154,7 +153,7 @@ System.out.println(rmsSession.getRmcID() + " " + rmsSession.getUser() + " " + rm
 //            session.getCryptoServer().deleteClientData();
 
 
-        } catch (it.richkmeli.jframework.web.util.ServletException e) {
+        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
             out.println(e.getKOResponseJSON());
         } catch (DatabaseException e1) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e1.getMessage())).json());
