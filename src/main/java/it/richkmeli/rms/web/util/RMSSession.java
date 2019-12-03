@@ -27,6 +27,14 @@ public class RMSSession extends Session {
         rmcID = null;
     }
 
+    public RMSSession(RMSSession rmsSession, Session session) throws DatabaseException {
+        super(session);
+        deviceDatabaseManager = rmsSession.deviceDatabaseManager;
+        rmcDatabaseManager = rmsSession.rmcDatabaseManager;
+        channel = rmsSession.channel;
+        rmcID = rmsSession.rmcID;
+    }
+
     public DeviceDatabaseManager getDeviceDatabaseManager() throws DatabaseException {
         //Logger.i("deviceDatabaseManager" + deviceDatabaseManager);
         if (deviceDatabaseManager != null) {

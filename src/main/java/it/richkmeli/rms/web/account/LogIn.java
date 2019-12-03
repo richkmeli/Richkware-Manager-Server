@@ -15,40 +15,47 @@ import java.io.IOException;
 
 @WebServlet("/LogIn")
 public class LogIn extends HttpServlet {
-   it.richkmeli.jframework.network.tcp.server.http.account.LogIn logIn = new it.richkmeli.jframework.network.tcp.server.http.account.LogIn() {
+    it.richkmeli.jframework.network.tcp.server.http.account.LogIn logIn = new it.richkmeli.jframework.network.tcp.server.http.account.LogIn() {
 
         @Override
         protected void doSpecificAction(HttpServletRequest httpServletRequest) throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException, DatabaseException {
             RMSServletManager rmsServletManager = new RMSServletManager(httpServletRequest);
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
-
-            if (rmsSession.getChannel().equalsIgnoreCase(RMSServletManager.Channel.RMC)) {
-                RMC rmc = new RMC(rmsSession.getUser(), rmsSession.getRmcID());
-                Logger.info("RMC: " + rmc.getAssociatedUser() + " - " + rmc.getRmcId());
-                if (!rmsSession.getRmcDatabaseManager().checkRmcUserPair(rmc)) {
-                    if (rmsSession.getRmcDatabaseManager().checkRmcUserPair(new RMC("", rmsSession.getRmcID()))) {
-                        rmsSession.getRmcDatabaseManager().editRMC(rmc);
-                    } else {
-                        rmsSession.getRmcDatabaseManager().addRMC(rmc);
+            if (rmsSession != null) {
+                if (rmsSession.getChannel() != null) {
+                    if (rmsSession.getChannel().equalsIgnoreCase(RMSServletManager.Channel.RMC)) {
+                        RMC rmc = new RMC(rmsSession.getUser(), rmsSession.getRmcID());
+                        Logger.info("RMC: " + rmc.getAssociatedUser() + " - " + rmc.getRmcId());
+                        if (!rmsSession.getRmcDatabaseManager().checkRmcUserPair(rmc)) {
+                            if (rmsSession.getRmcDatabaseManager().checkRmcUserPair(new RMC("", rmsSession.getRmcID()))) {
+                                rmsSession.getRmcDatabaseManager().editRMC(rmc);
+                            } else {
+                                rmsSession.getRmcDatabaseManager().addRMC(rmc);
+                            }
+                        }
                     }
+                }else {
+                    Logger.error("channel rmsSession is null");
                 }
+            } else {
+                Logger.error("rmsSession is null");
             }
         }
     };
 
     public LogIn() {
-            super();
-        }
+        super();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RMSServletManager rmsServletManager = new RMSServletManager(request);
-        logIn.doAction(request,response,rmsServletManager);
+        logIn.doAction(request, response, rmsServletManager);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         RMSServletManager rmsServletManager = new RMSServletManager(request);
-        logIn.doAction(request,response,rmsServletManager);
+        logIn.doAction(request, response, rmsServletManager);
     }
 }

@@ -6,6 +6,7 @@ import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
+import it.richkmeli.jframework.network.tcp.server.http.util.Session;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.device.model.Device;
@@ -39,10 +40,6 @@ public class rmc extends HttpServlet {
             Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
             rmsServletManager.checkLogin();
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
-            //Session session = rmsServletManager.getServerSession();
-
-            // TODO REMOVE
-System.out.println(rmsSession.getRmcID() + " " + rmsSession.getUser() + " " + rmsSession.isAdmin());
 
             if (rmsSession.isAdmin()) {
                 //ottiene tutti i client presenti sul db

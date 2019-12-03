@@ -120,15 +120,28 @@ public class RMSServletManager extends ServletManager {
         // http session
         HttpSession httpSession = request.getSession();
         // server session
-        RMSSession rmsSession = (RMSSession) httpSession.getAttribute("rms_session");
+        rmsSession = (RMSSession) httpSession.getAttribute("rms_session");
         if (rmsSession == null) {
             try {
-                rmsSession = new RMSSession(session);
+                rmsSession = new RMSSession(getServerSession());
                 httpSession.setAttribute("rms_session", rmsSession);
             } catch (DatabaseException e) {
                 throw new ServletException(e);
                 //httpSession.setAttribute("error", e);
                 //request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+            }
+        } else {
+            if (rmsSession.getUser() == null) {
+                try {
+                    Logger.info("HTTPSession: RMS Session not null | User null");
+                    rmsSession = new RMSSession(rmsSession, getServerSession());
+                    httpSession.setAttribute("rms_session", rmsSession);
+                    //Logger.info("HTTPSession: " + rmsSession.getUser() + " " + rmsSession.isAdmin() + " " + rmsSession.getAuthDatabaseManager());
+                } catch (DatabaseException e) {
+                    throw new ServletException(e);
+                    //httpSession.setAttribute("error", e);
+                    //request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
+                }
             }
         }
         return rmsSession;
