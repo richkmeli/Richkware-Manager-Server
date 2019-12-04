@@ -45,7 +45,6 @@ public class devicesList extends HttpServlet {
             // server session
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
             String message = rmsServletManager.doDefaultProcessResponse(GenerateDevicesListJSON(rmsSession));
-
             out.println((new OKResponse(StatusCode.SUCCESS, message)).json());
 
             out.flush();
@@ -69,30 +68,28 @@ public class devicesList extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        //TODO quando il metodo è attivo, commenta il super
-//        super.doDelete(req, resp);
-        PrintWriter out = resp.getWriter();
-        HttpSession httpSession = req.getSession();
-        RMSSession rmsSession = null;
-        try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req);
-            rmsSession = rmsServletManager.getRMSServerSession();
-
-            String user = rmsSession.getUser();
-            // Authentication
-            if (user != null) {
-                // TODO togliere tutti i dispositivi di un un utente
-                // TODO qui ci vuole la cancellazione di un singolo device o sempre di tutti?
-            } else {
-                // non loggato
-                KOResponse r = new KOResponse(StatusCode.NOT_LOGGED);
-                r.setMessage("You are not logged in. You will be redirected to the main page.");
-                out.println(r.json());
-            }
-        } catch (ServletException e) {
-            out.println(e.getKOResponseJSON());
-        }
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {
+        super.doDelete(req, resp);
+//        PrintWriter out = resp.getWriter();
+//        HttpSession httpSession = req.getSession();
+//        RMSSession rmsSession = null;
+//        try {
+//            RMSServletManager rmsServletManager = new RMSServletManager(req);
+//            rmsSession = rmsServletManager.getRMSServerSession();
+//
+//            String user = rmsSession.getUser();
+//            // Authentication
+//            if (user != null) {
+//                // togliere tutti i dispositivi di un un utente, qui ci vuole la cancellazione di un singolo device o sempre di tutti?
+//            } else {
+//                // non loggato
+//                KOResponse r = new KOResponse(StatusCode.NOT_LOGGED);
+//                r.setMessage("You are not logged in. You will be redirected to the main page.");
+//                out.println(r.json());
+//            }
+//        } catch (ServletException e) {
+//            out.println(e.getKOResponseJSON());
+//        }
 
     }
 

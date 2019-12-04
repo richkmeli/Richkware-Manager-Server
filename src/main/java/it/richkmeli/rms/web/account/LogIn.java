@@ -34,7 +34,7 @@ public class LogIn extends HttpServlet {
                             }
                         }
                     }
-                }else {
+                } else {
                     Logger.error("channel rmsSession is null");
                 }
             } else {

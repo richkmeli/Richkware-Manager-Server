@@ -17,16 +17,16 @@ public class LogOut extends HttpServlet {
     };
 
     public LogOut() {
-            super();
-        }
+        super();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logOut.doAction(request,response);
+        logOut.doAction(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logOut.doAction(request,response);
+        logOut.doAction(request, response);
     }
 }

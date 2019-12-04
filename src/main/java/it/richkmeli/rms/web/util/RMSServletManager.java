@@ -147,7 +147,6 @@ public class RMSServletManager extends ServletManager {
         return rmsSession;
     }
 
-
     public static class Channel {
         public static final String CHANNEL = "channel";
         public static final String WEBAPP = "webapp";

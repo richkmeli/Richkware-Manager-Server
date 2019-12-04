@@ -17,16 +17,16 @@ public class SignUp extends HttpServlet {
     };
 
     public SignUp() {
-            super();
-        }
+        super();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        signUp.doAction(request,response);
+        signUp.doAction(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        signUp.doAction(request,response);
+        signUp.doAction(request, response);
     }
 }
