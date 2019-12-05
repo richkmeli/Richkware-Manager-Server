@@ -17,8 +17,8 @@ public class SecureConnection extends HttpServlet {
         RMSSession rmsSession;
 
         @Override
-        protected void doBeforeCryptoAction(HttpServletRequest request, String clientID) throws Exception {
-            RMSServletManager rmsServletManager = new RMSServletManager(request);
+        protected void doBeforeCryptoAction(HttpServletRequest request, HttpServletResponse response, String clientID) throws Exception {
+            RMSServletManager rmsServletManager = new RMSServletManager(request, response);
             rmsSession = rmsServletManager.getRMSServerSession();
 
             rmsSession.setRmcID(clientID);

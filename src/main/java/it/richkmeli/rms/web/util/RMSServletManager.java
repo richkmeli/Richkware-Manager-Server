@@ -10,6 +10,7 @@ import it.richkmeli.jframework.util.Logger;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class RMSServletManager extends ServletManager {
@@ -19,8 +20,8 @@ public class RMSServletManager extends ServletManager {
     public static final String DATA_PARAMETER_KEY = "data";
     private static RMSSession rmsSession;
 
-    public RMSServletManager(HttpServletRequest request) {
-        super(request);
+    public RMSServletManager(HttpServletRequest request, HttpServletResponse response) {
+        super(request, response);
         try {
             rmsSession = getRMSServerSession();
         } catch (ServletException e) {

@@ -32,7 +32,7 @@ public class test extends HttpServlet {
         HttpSession httpSession = request.getSession();
         RMSSession rmsSession = null;
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(request);
+            RMSServletManager rmsServletManager = new RMSServletManager(request,response);
             rmsSession = rmsServletManager.getRMSServerSession();
         } catch (ServletException e) {
             httpSession.setAttribute("error", e);

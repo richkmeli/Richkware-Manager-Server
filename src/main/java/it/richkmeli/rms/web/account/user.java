@@ -25,20 +25,20 @@ public class user extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RMSServletManager rmsServletManager = new RMSServletManager(request);
+        RMSServletManager rmsServletManager = new RMSServletManager(request, response);
         user.doGet(request, response, rmsServletManager);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RMSServletManager rmsServletManager = new RMSServletManager(request);
+        RMSServletManager rmsServletManager = new RMSServletManager(request, response);
         user.doGet(request, response, rmsServletManager);
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(request);
+            RMSServletManager rmsServletManager = new RMSServletManager(request, response);
             user.doDelete(request, response, rmsServletManager);
         } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
             request.getSession().setAttribute("error", e);

@@ -12,14 +12,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.HttpRetryException;
 
 @WebServlet("/LogIn")
 public class LogIn extends HttpServlet {
     it.richkmeli.jframework.network.tcp.server.http.account.LogIn logIn = new it.richkmeli.jframework.network.tcp.server.http.account.LogIn() {
 
         @Override
-        protected void doSpecificAction(HttpServletRequest httpServletRequest) throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException, DatabaseException {
-            RMSServletManager rmsServletManager = new RMSServletManager(httpServletRequest);
+        protected void doSpecificAction(HttpServletRequest request, HttpServletResponse response) throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException, DatabaseException {
+            RMSServletManager rmsServletManager = new RMSServletManager(request,response);
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
             if (rmsSession != null) {
                 if (rmsSession.getChannel() != null) {
@@ -49,13 +50,13 @@ public class LogIn extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RMSServletManager rmsServletManager = new RMSServletManager(request);
+        RMSServletManager rmsServletManager = new RMSServletManager(request, response);
         logIn.doAction(request, response, rmsServletManager);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        RMSServletManager rmsServletManager = new RMSServletManager(request);
+        RMSServletManager rmsServletManager = new RMSServletManager(request, response);
         logIn.doAction(request, response, rmsServletManager);
     }
 }

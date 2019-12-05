@@ -36,7 +36,7 @@ public class rmc extends HttpServlet {
         List<RMC> clients = null;
 
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
             Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
             rmsServletManager.checkLogin();
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
@@ -94,7 +94,7 @@ public class rmc extends HttpServlet {
 //            cryptoServer.deleteClientData();
 //        }
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
             rmsSession = rmsServletManager.getRMSServerSession();
 
             // todo controlla che stia cancellando un rmc di cui ha i permessi

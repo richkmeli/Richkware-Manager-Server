@@ -111,7 +111,7 @@ public class device extends HttpServlet {
         HttpSession httpSession = req.getSession();
         RMSSession rmsSession = null;
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
             rmsSession = rmsServletManager.getRMSServerSession();
 
             if (req.getParameterMap().containsKey("data0") &&
@@ -188,7 +188,7 @@ public class device extends HttpServlet {
         HttpSession httpSession = req.getSession();
         RMSSession rmsSession = null;
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
             rmsSession = rmsServletManager.getRMSServerSession();
         } catch (ServletException e) {
             httpSession.setAttribute("error", e);

@@ -38,7 +38,7 @@ public class devicesList extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(request);
+            RMSServletManager rmsServletManager = new RMSServletManager(request,response);
             rmsServletManager.doDefaultProcessRequest();
             rmsServletManager.checkLogin();
 

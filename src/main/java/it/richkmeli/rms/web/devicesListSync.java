@@ -26,7 +26,7 @@ public class devicesListSync extends HttpServlet {
         HttpSession httpSession = request.getSession();
         RMSSession rmsSession = null;
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(request);
+            RMSServletManager rmsServletManager = new RMSServletManager(request,response);
             rmsSession = rmsServletManager.getRMSServerSession();
         } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
             httpSession.setAttribute("error", e);

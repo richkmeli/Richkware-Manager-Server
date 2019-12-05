@@ -68,7 +68,7 @@ public class command extends HttpServlet {
 //
 //            br.close();
 
-            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
             rmsSession = rmsServletManager.getRMSServerSession();
 
             Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
@@ -111,7 +111,7 @@ public class command extends HttpServlet {
             JSONArray devicesName = JSONData.getJSONArray("devices");
             String commands = JSONData.getString("commands");
 
-            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
             rmsSession = rmsServletManager.getRMSServerSession();
 
             List<String> failedResponse = new ArrayList<>();
@@ -151,7 +151,7 @@ public class command extends HttpServlet {
             //commandsOutput= new String(Base64.getUrlDecoder().decode(commandsOutput));
             // Reverse command output has to be sent to the front end in base64 format
 
-            RMSServletManager rmsServletManager = new RMSServletManager(req);
+            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
             rmsSession = rmsServletManager.getRMSServerSession();
 
             boolean result = rmsSession.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
