@@ -172,7 +172,10 @@ public class device extends HttpServlet {
 //                req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
                 out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
             }
-        } catch (Exception e) {
+        } catch (ServletException e) {
+            out.println(e.getKOResponseJSON());
+        } catch (Exception e){
+            //e.printStackTrace();
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
 

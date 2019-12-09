@@ -162,7 +162,12 @@ public class command extends HttpServlet {
                 out.println((new KOResponse(StatusCode.FIELD_EMPTY, "Field not found in DB")).json());
             }
             br.close();
-        } catch (ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
+        } catch (ServletException e) {
+            out.println(e.getKOResponseJSON());
+        } catch (DatabaseException e) {
+            out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
+        } catch (Exception e){
+            //e.printStackTrace();
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }

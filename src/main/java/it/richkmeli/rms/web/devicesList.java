@@ -54,6 +54,9 @@ public class devicesList extends HttpServlet {
             out.println(e.getKOResponseJSON());
         } catch (DatabaseException e) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
+        } catch (Exception e){
+            //e.printStackTrace();
+            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
 
