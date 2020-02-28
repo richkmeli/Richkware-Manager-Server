@@ -1,11 +1,12 @@
 package it.richkmeli.rms.web.util;
 
+import it.richkmeli.jframework.auth.web.util.AuthSession;
 import it.richkmeli.jframework.network.tcp.server.http.util.Session;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.rmc.RMCDatabaseManager;
 
-public class RMSSession extends Session {
+public class RMSSession extends AuthSession {
     private DeviceDatabaseManager deviceDatabaseManager;
     private RMCDatabaseManager rmcDatabaseManager;
     private String rmcID;       //client id from RichkwareSchema
@@ -19,16 +20,16 @@ public class RMSSession extends Session {
         rmcID = null;
     }
 
-    public RMSSession(Session session) throws DatabaseException {
-        super(session);
+    public RMSSession(AuthSession authSession) throws DatabaseException {
+        super(authSession);
         deviceDatabaseManager = new DeviceDatabaseManager();
         rmcDatabaseManager = new RMCDatabaseManager();
         channel = null;
         rmcID = null;
     }
 
-    public RMSSession(RMSSession rmsSession, Session session) throws DatabaseException {
-        super(session);
+    public RMSSession(RMSSession rmsSession, AuthSession authSession) {
+        super(authSession);
         deviceDatabaseManager = rmsSession.deviceDatabaseManager;
         rmcDatabaseManager = rmsSession.rmcDatabaseManager;
         channel = rmsSession.channel;

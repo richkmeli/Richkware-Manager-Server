@@ -1,10 +1,10 @@
 package it.richkmeli.rms.web.util;
 
+import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.exception.CryptoException;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
-import it.richkmeli.jframework.network.tcp.server.http.util.ServletException;
-import it.richkmeli.jframework.network.tcp.server.http.util.ServletManager;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 import org.json.JSONObject;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class RMSServletManager extends ServletManager {
+public class RMSServletManager extends AuthServletManager {
     public static final String ERROR_JSP = "JSP/error.jsp";
     public static final String DEVICES_HTML = "devices.html";
     public static final String LOGIN_HTML = "login.html";
@@ -24,14 +24,14 @@ public class RMSServletManager extends ServletManager {
         super(request, response);
         try {
             rmsSession = getRMSServerSession();
-        } catch (ServletException e) {
+        } catch (JServletException e) {
             //e.printStackTrace();
             Logger.error(e);
         }
     }
 
     @Override
-    public void doSpecificProcessRequest() throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException {
+    public void doSpecificProcessRequestAuth() throws JServletException {
 
         // check channel: rmc or webapp, if rmc secureconnection first (set something in session)
         if (attribMap.containsKey(Channel.CHANNEL)) {
@@ -46,7 +46,7 @@ public class RMSServletManager extends ServletManager {
                         try {
                             decryptedPayload = session.getCryptoServer().decrypt(payload);
                         } catch (CryptoException e) {
-                            throw new ServletException(e);
+                            throw new JServletException(e);
                         }
                         if (!"".equalsIgnoreCase(decryptedPayload)) {
                             JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
@@ -70,16 +70,16 @@ public class RMSServletManager extends ServletManager {
                     break;
                 default:
                     Logger.error("ServletManager, servlet: " + servletPath + ". + channel " + channel + " unknown");
-                    throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
+                    throw new JServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
             }
         } else {
             Logger.error("ServletManager, servlet: " + servletPath + ". + channel key is not present.");
-            throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel key is not present"));
+            throw new JServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel key is not present"));
         }
     }
 
     @Override
-    public String doSpecificProcessResponse(String input) throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException {
+    public String doSpecificProcessResponseAuth(String input) throws JServletException {
         // default: input as output
         String output = input;
 
@@ -91,7 +91,7 @@ public class RMSServletManager extends ServletManager {
                     try {
                         output = session.getCryptoServer().encrypt(input);
                     } catch (CryptoException e) {
-                        throw new ServletException(e);
+                        throw new JServletException(e);
                     }
                     break;
                 case Channel.WEBAPP:
@@ -102,11 +102,11 @@ public class RMSServletManager extends ServletManager {
                     break;
                 default:
                     Logger.error("ServletManager, servlet: " + servletPath + ". + channel " + channel + " unknown");
-                    throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
+                    throw new JServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
             }
         } else {
             Logger.error("ServletManager, servlet: " + servletPath + ". + channel(server session) is null");
-            throw new ServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel(server session) is null"));
+            throw new JServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel(server session) is null"));
         }
         return output;
     }
@@ -116,33 +116,34 @@ public class RMSServletManager extends ServletManager {
         return (T) new RMSSession(getServerSession());
     }*/
 
-    public RMSSession getRMSServerSession() throws ServletException {
+    public RMSSession getRMSServerSession() throws JServletException {
         //return getExtendedServerSession("rms",request.getSession());
         // http session
         HttpSession httpSession = request.getSession();
         // server session
         rmsSession = (RMSSession) httpSession.getAttribute("rms_session");
+        authSession = getAuthServerSession();
         if (rmsSession == null) {
             try {
-                rmsSession = new RMSSession(getServerSession());
+                rmsSession = new RMSSession(authSession);
                 httpSession.setAttribute("rms_session", rmsSession);
             } catch (DatabaseException e) {
-                throw new ServletException(e);
+                throw new JServletException(e);
                 //httpSession.setAttribute("error", e);
                 //request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
         } else {
-            if (rmsSession.getUser() == null) {
-                try {
+            if (authSession.getUser() == null) {
+               // try {
                     Logger.info("HTTPSession: RMS Session not null | User null");
-                    rmsSession = new RMSSession(rmsSession, getServerSession());
+                    rmsSession = new RMSSession(rmsSession, authSession);
                     httpSession.setAttribute("rms_session", rmsSession);
                     //Logger.info("HTTPSession: " + rmsSession.getUser() + " " + rmsSession.isAdmin() + " " + rmsSession.getAuthDatabaseManager());
-                } catch (DatabaseException e) {
-                    throw new ServletException(e);
+               /* } catch (DatabaseException e) {
+                    throw new JServletException(e);
                     //httpSession.setAttribute("error", e);
                     //request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
-                }
+                }*/
             }
         }
         return rmsSession;

@@ -1,5 +1,7 @@
 package it.richkmeli.rms.web.account;
 
+import it.richkmeli.jframework.auth.web.account.SignUpJob;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,7 +11,7 @@ import java.io.IOException;
 
 @WebServlet("/SignUp")
 public class SignUp extends HttpServlet {
-    it.richkmeli.jframework.network.tcp.server.http.account.SignUp signUp = new it.richkmeli.jframework.network.tcp.server.http.account.SignUp() {
+    SignUpJob signUp = new SignUpJob() {
         @Override
         protected void doSpecificAction() {
 

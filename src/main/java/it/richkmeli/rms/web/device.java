@@ -7,7 +7,7 @@ import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
-import it.richkmeli.jframework.network.tcp.server.http.util.ServletException;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
@@ -172,7 +172,7 @@ public class device extends HttpServlet {
 //                req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
                 out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
             }
-        } catch (ServletException e) {
+        } catch (JServletException e) {
             out.println(e.getKOResponseJSON());
         } catch (Exception e){
             //e.printStackTrace();
@@ -193,7 +193,7 @@ public class device extends HttpServlet {
         try {
             RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
             rmsSession = rmsServletManager.getRMSServerSession();
-        } catch (ServletException e) {
+        } catch (JServletException e) {
             httpSession.setAttribute("error", e);
             req.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(req, resp);
 

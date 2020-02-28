@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
-import it.richkmeli.jframework.network.tcp.server.http.util.ServletException;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
@@ -16,7 +16,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
@@ -50,7 +49,7 @@ public class devicesList extends HttpServlet {
             out.flush();
             out.close();
 
-        } catch (ServletException e) {
+        } catch (JServletException e) {
             out.println(e.getKOResponseJSON());
         } catch (DatabaseException e) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());

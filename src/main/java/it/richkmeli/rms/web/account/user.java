@@ -1,5 +1,7 @@
 package it.richkmeli.rms.web.account;
 
+import it.richkmeli.jframework.auth.web.account.UserJob;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.util.RMSServletManager;
 
@@ -12,9 +14,9 @@ import java.io.IOException;
 
 @WebServlet("/user")
 public class user extends HttpServlet {
-    it.richkmeli.jframework.network.tcp.server.http.account.user user = new it.richkmeli.jframework.network.tcp.server.http.account.user() {
+    UserJob userJob = new UserJob() {
         @Override
-        protected void doSpecificAction(HttpServletRequest httpServletRequest) throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException, DatabaseException {
+        protected void doSpecificAction(HttpServletRequest httpServletRequest) throws JServletException {
 
         }
     };
@@ -26,23 +28,23 @@ public class user extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RMSServletManager rmsServletManager = new RMSServletManager(request, response);
-        user.doGet(request, response, rmsServletManager);
+        userJob.doGet(request, response, rmsServletManager);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RMSServletManager rmsServletManager = new RMSServletManager(request, response);
-        user.doGet(request, response, rmsServletManager);
+        userJob.doGet(request, response, rmsServletManager);
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
+       // try {
             RMSServletManager rmsServletManager = new RMSServletManager(request, response);
-            user.doDelete(request, response, rmsServletManager);
-        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
+            userJob.doDelete(request, response, rmsServletManager);
+       /* } catch (JServletException e) {
             request.getSession().setAttribute("error", e);
             request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
-        }
+        }*/
     }
 }

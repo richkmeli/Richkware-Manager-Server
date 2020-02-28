@@ -1,5 +1,7 @@
 package it.richkmeli.rms.web.account;
 
+import it.richkmeli.jframework.auth.web.account.LogOutJob;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,7 +11,7 @@ import java.io.IOException;
 
 @WebServlet("/LogOut")
 public class LogOut extends HttpServlet {
-    it.richkmeli.jframework.network.tcp.server.http.account.LogOut logOut = new it.richkmeli.jframework.network.tcp.server.http.account.LogOut() {
+    LogOutJob logOut = new LogOutJob() {
         @Override
         protected void doSpecificAction() {
 

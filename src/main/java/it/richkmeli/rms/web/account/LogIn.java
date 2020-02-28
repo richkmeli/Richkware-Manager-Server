@@ -1,5 +1,7 @@
 package it.richkmeli.rms.web.account;
 
+import it.richkmeli.jframework.auth.web.account.LogInJob;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.rmc.model.RMC;
@@ -12,14 +14,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.HttpRetryException;
 
 @WebServlet("/LogIn")
 public class LogIn extends HttpServlet {
-    it.richkmeli.jframework.network.tcp.server.http.account.LogIn logIn = new it.richkmeli.jframework.network.tcp.server.http.account.LogIn() {
+    LogInJob logIn = new LogInJob() {
 
         @Override
-        protected void doSpecificAction(HttpServletRequest request, HttpServletResponse response) throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException, DatabaseException {
+        protected void doSpecificAction(HttpServletRequest request, HttpServletResponse response) throws JServletException, DatabaseException {
             RMSServletManager rmsServletManager = new RMSServletManager(request,response);
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
             if (rmsSession != null) {

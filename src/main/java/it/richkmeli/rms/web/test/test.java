@@ -2,8 +2,8 @@ package it.richkmeli.rms.web.test;
 
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
-import it.richkmeli.jframework.network.tcp.server.http.test.AccountTest;
-import it.richkmeli.jframework.network.tcp.server.http.util.ServletException;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
+import it.richkmeli.jframework.network.tcp.server.http.util.Session;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.device.model.Device;
@@ -34,7 +34,7 @@ public class test extends HttpServlet {
         try {
             RMSServletManager rmsServletManager = new RMSServletManager(request,response);
             rmsSession = rmsServletManager.getRMSServerSession();
-        } catch (ServletException e) {
+        } catch (JServletException e) {
             httpSession.setAttribute("error", e);
             request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
 
@@ -62,7 +62,15 @@ public class test extends HttpServlet {
             Logger.error("Session TEST DEVICES", e);
         }
 
-        AccountTest.addUsers(rmsSession);
+        try {
+            rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
+            rmsSession.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
+            rmsSession.getAuthDatabaseManager().addUser(new User("", "00000000", false));
+            rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+            Logger.error("Session TEST USERS", e);
+        }
 
         try {
 
@@ -113,5 +121,5 @@ public class test extends HttpServlet {
         printWriter.close();
     }
 
-}
 
+}

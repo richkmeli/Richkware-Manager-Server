@@ -1,5 +1,7 @@
 package it.richkmeli.rms.web.crypto;
 
+import it.richkmeli.jframework.network.tcp.server.http.crypto.SecureConnectionJob;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
@@ -13,7 +15,7 @@ import java.io.IOException;
 
 @WebServlet("/SecureConnection")
 public class SecureConnection extends HttpServlet {
-    it.richkmeli.jframework.network.tcp.server.http.crypto.SecureConnection secureConnection = new it.richkmeli.jframework.network.tcp.server.http.crypto.SecureConnection() {
+    SecureConnectionJob secureConnection = new SecureConnectionJob() {
         RMSSession rmsSession;
 
         @Override
@@ -44,7 +46,7 @@ public class SecureConnection extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             secureConnection.doAction(request, response);
-        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
+        } catch (JServletException e) {
             request.getSession().setAttribute("error", e);
             request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
         }
@@ -54,7 +56,7 @@ public class SecureConnection extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             secureConnection.doAction(request, response);
-        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
+        } catch (JServletException e) {
             request.getSession().setAttribute("error", e);
             request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
         }

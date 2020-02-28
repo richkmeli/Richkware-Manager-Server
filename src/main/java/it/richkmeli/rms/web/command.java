@@ -4,7 +4,7 @@ import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
-import it.richkmeli.jframework.network.tcp.server.http.util.ServletException;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
@@ -128,7 +128,7 @@ public class command extends HttpServlet {
             }
 
             br.close();
-        } catch (ServletException | JSONException | DatabaseException e/* | CryptoException e*/) {
+        } catch (JServletException | JSONException | DatabaseException e) {
             out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
@@ -162,7 +162,7 @@ public class command extends HttpServlet {
                 out.println((new KOResponse(StatusCode.FIELD_EMPTY, "Field not found in DB")).json());
             }
             br.close();
-        } catch (ServletException e) {
+        } catch (JServletException e) {
             out.println(e.getKOResponseJSON());
         } catch (DatabaseException e) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());

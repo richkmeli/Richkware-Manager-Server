@@ -1,5 +1,7 @@
 package it.richkmeli.rms.web.account;
 
+import it.richkmeli.jframework.auth.web.account.UsersListJob;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.util.RMSServletManager;
 
@@ -12,9 +14,9 @@ import java.io.IOException;
 
 @WebServlet("/usersList")
 public class usersList extends HttpServlet {
-    it.richkmeli.jframework.network.tcp.server.http.account.usersList usersList = new it.richkmeli.jframework.network.tcp.server.http.account.usersList() {
+    UsersListJob usersListJob = new UsersListJob() {
         @Override
-        protected void doSpecificAction(HttpServletRequest httpServletRequest) throws it.richkmeli.jframework.network.tcp.server.http.util.ServletException, DatabaseException {
+        protected void doSpecificAction(HttpServletRequest httpServletRequest) throws JServletException {
 
         }
     };
@@ -24,24 +26,24 @@ public class usersList extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            RMSServletManager rmsServletManager = new RMSServletManager(request, response);
-            usersList.doGet(request, response, rmsServletManager);
-        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        //try {
+        RMSServletManager rmsServletManager = new RMSServletManager(request, response);
+        usersListJob.doGet(request, response, rmsServletManager);
+       /* } catch (JServletException e) {
             request.getSession().setAttribute("error", e);
-            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
-        }
+            request.getRequestDispatcher(RMSServletJob.ERROR_JSP).forward(request, response);
+        }*/
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
+        //try {
             RMSServletManager rmsServletManager = new RMSServletManager(request, response);
-            usersList.doGet(request, response, rmsServletManager);
-        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
+            usersListJob.doGet(request, response, rmsServletManager);
+        /*} catch (JServletException e) {
             request.getSession().setAttribute("error", e);
-            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
-        }
+            request.getRequestDispatcher(RMSServletJob.ERROR_JSP).forward(request, response);
+        }*/
     }
 }

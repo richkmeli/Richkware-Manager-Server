@@ -6,7 +6,7 @@ import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
-import it.richkmeli.jframework.network.tcp.server.http.util.Session;
+import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.device.model.Device;
@@ -57,7 +57,7 @@ public class rmc extends HttpServlet {
 
             out.flush();
             out.close();
-        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
+        } catch (JServletException e) {
             out.println(e.getKOResponseJSON());
         } catch (DatabaseException e) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
@@ -153,7 +153,7 @@ public class rmc extends HttpServlet {
 //            session.getCryptoServer().deleteClientData();
 
 
-        } catch (it.richkmeli.jframework.network.tcp.server.http.util.ServletException e) {
+        } catch (JServletException e) {
             out.println(e.getKOResponseJSON());
         } catch (DatabaseException e1) {
             out.println((new KOResponse(StatusCode.DB_ERROR, e1.getMessage())).json());
