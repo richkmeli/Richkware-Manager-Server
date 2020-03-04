@@ -202,7 +202,7 @@ public class device extends HttpServlet {
         try {
             String out = null;
 
-            String user = rmsSession.getUser();
+            String user = rmsSession.getUserID();
             // Authentication
             if (user != null) {
                 if (req.getParameterMap().containsKey("name")) {
@@ -210,7 +210,7 @@ public class device extends HttpServlet {
 
                     Device device = rmsSession.getDeviceDatabaseManager().getDevice(name);
 
-                    if (device.getAssociatedUser().compareTo(rmsSession.getUser()) == 0 ||
+                    if (device.getAssociatedUser().compareTo(rmsSession.getUserID()) == 0 ||
                             rmsSession.isAdmin()) {
                         rmsSession.getDeviceDatabaseManager().removeDevice(name);
                         out = "deleted";

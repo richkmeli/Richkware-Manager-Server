@@ -26,7 +26,7 @@ public class LogIn extends HttpServlet {
             if (rmsSession != null) {
                 if (rmsSession.getChannel() != null) {
                     if (rmsSession.getChannel().equalsIgnoreCase(RMSServletManager.Channel.RMC)) {
-                        RMC rmc = new RMC(rmsSession.getUser(), rmsSession.getRmcID());
+                        RMC rmc = new RMC(rmsSession.getUserID(), rmsSession.getRmcID());
                         Logger.info("RMC: " + rmc.getAssociatedUser() + " - " + rmc.getRmcId());
                         if (!rmsSession.getRmcDatabaseManager().checkRmcUserPair(rmc)) {
                             if (rmsSession.getRmcDatabaseManager().checkRmcUserPair(new RMC("", rmsSession.getRmcID()))) {

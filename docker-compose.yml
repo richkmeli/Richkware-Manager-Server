@@ -10,8 +10,8 @@ services:
       #- ./out/artifacts/ROOT/ROOT.war:/usr/local/tomcat/webapps/ROOT.war:z
       #- ./out/artifacts/Richkware_Manager_Server/Richkware-Manager-Server.war:/usr/local/tomcat/webapps/Richkware-Manager-Server.war:z
       # TODO RELEASE: update version
-      #- ./target/Richkware-Manager-Server-1.1.0 :/usr/local/tomcat/webapps/Richkware-Manager-Server:z
-      - ./target/Richkware-Manager-Server-1.1.0.war :/usr/local/tomcat/webapps/Richkware-Manager-Server.war:z
+      #- ./target/Richkware-Manager-Server-1.1.1 :/usr/local/tomcat/webapps/Richkware-Manager-Server:z
+      - ./target/Richkware-Manager-Server-1.1.1.war :/usr/local/tomcat/webapps/Richkware-Manager-Server.war:z
 
     #restart: always
     #restart: on-failure

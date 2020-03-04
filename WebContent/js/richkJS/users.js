@@ -52,7 +52,7 @@ function bodyOnLoad() {
 function loadUsersTable() {
 
     $(document).ready(function () {
-        $.get("usersList", {channel: "webapp"}, function (data) {
+        $.get("users", {channel: "webapp"}, function (data) {
             var JSONdata = JSON.parse(data)
             if (JSONdata.statusCode == 1000) {
                 var users = JSONdata.message

@@ -3,8 +3,13 @@ package it.richkmeli.rms.web.util;
 import it.richkmeli.jframework.auth.web.util.AuthSession;
 import it.richkmeli.jframework.network.tcp.server.http.util.Session;
 import it.richkmeli.jframework.orm.DatabaseException;
+import it.richkmeli.jframework.util.Logger;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.rmc.RMCDatabaseManager;
+
+/**
+ * do not add static modifier to these fields, because this respective ServletManager has a static object of this class
+ */
 
 public class RMSSession extends AuthSession {
     private DeviceDatabaseManager deviceDatabaseManager;
@@ -38,22 +43,20 @@ public class RMSSession extends AuthSession {
 
     public DeviceDatabaseManager getDeviceDatabaseManager() throws DatabaseException {
         //Logger.i("deviceDatabaseManager" + deviceDatabaseManager);
-        if (deviceDatabaseManager != null) {
-            return deviceDatabaseManager;
-        } else {
+        if (deviceDatabaseManager == null) {
+            Logger.info("init AuthDatabase");
             deviceDatabaseManager = new DeviceDatabaseManager();
-            return deviceDatabaseManager;
         }
+        return deviceDatabaseManager;
     }
 
 
     public RMCDatabaseManager getRmcDatabaseManager() throws DatabaseException {
-        if (rmcDatabaseManager != null) {
-            return rmcDatabaseManager;
-        } else {
+        if (rmcDatabaseManager == null) {
+            Logger.info("init AuthDatabase");
             rmcDatabaseManager = new RMCDatabaseManager();
-            return rmcDatabaseManager;
         }
+        return rmcDatabaseManager;
     }
 
     public String getRmcID() {

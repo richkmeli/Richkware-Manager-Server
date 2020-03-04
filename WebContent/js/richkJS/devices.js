@@ -1,6 +1,6 @@
 function loadDevicesTable() {
     console.log("loadDevicesTable")
-    $.get("devicesList", {channel: "webapp"}, function (data) {
+    $.get("devices", {channel: "webapp"}, function (data) {
         var JSONdata = JSON.parse(data)
 
         //device = JSON.parse(DeviceJSON);

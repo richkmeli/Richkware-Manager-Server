@@ -40,18 +40,18 @@ public class rmc extends HttpServlet {
             Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
             rmsServletManager.checkLogin();
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
-
             if (rmsSession.isAdmin()) {
                 //ottiene tutti i client presenti sul db
-                Logger.info("Admin user");
+                //Logger.info("Admin user");
                 clients = rmsSession.getRmcDatabaseManager().getAllRMCs();
             } else {
                 //ottiene tutti i client associati al suo account
-                Logger.info("Regular user");
-                clients = rmsSession.getRmcDatabaseManager().getRMCs(rmsSession.getUser());
+                //Logger.info("Regular user");
+                clients = rmsSession.getRmcDatabaseManager().getRMCs(rmsSession.getUserID());
             }
+
             String clientsFormatted = generateRmcListJSON(clients);
-            Logger.info("rmc: clientsFormatted: " + clientsFormatted);
+            //Logger.info("rmc: clientsFormatted: " + clientsFormatted);
             String output = rmsServletManager.doDefaultProcessResponse(clientsFormatted);
             out.println(new OKResponse(StatusCode.SUCCESS, output).json());
 
@@ -69,7 +69,7 @@ public class rmc extends HttpServlet {
 
 
     private String generateRmcListJSON(List<RMC> clients) {
-        Type type = new TypeToken<List<Device>>() {
+        Type type = new TypeToken<List<RMC>>() {
         }.getType();
         Gson gson = new Gson();
 
@@ -106,7 +106,7 @@ public class rmc extends HttpServlet {
                 String rmcId = req.getParameter("rmcId");
                 boolean valid = true;
                 if (!rmsSession.isAdmin()) {
-                    if (rmsSession.getUser().equals(associatedUser)) {
+                    if (rmsSession.getUserID().equals(associatedUser)) {
                         RMC temp = new RMC(associatedUser, rmcId);
                         if (!rmsSession.getRmcDatabaseManager().getRMCs(associatedUser).contains(temp)) {
                             valid = false;

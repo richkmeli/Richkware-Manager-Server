@@ -7,7 +7,7 @@
     <groupId>it.richkmeli.rms</groupId>
     <artifactId>Richkware-Manager-Server</artifactId>
     <!--TODO RELEASE: update version-->
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>war</packaging>
 
     <repositories>
@@ -40,10 +40,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>it.richkmeli.jframework</groupId>
-<!--            <groupId>com.github.richkmeli</groupId>-->
+            <!--<groupId>it.richkmeli.jframework</groupId>-->
+            <groupId>com.github.richkmeli</groupId>
             <artifactId>JFramework</artifactId>
-            <version>1.1.4</version>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

@@ -18,6 +18,7 @@ public class RMSServletManager extends AuthServletManager {
     public static final String DEVICES_HTML = "devices.html";
     public static final String LOGIN_HTML = "login.html";
     public static final String DATA_PARAMETER_KEY = "data";
+    public static final String HTTP_RMS_SESSION_NAME = "rms_session";
     private static RMSSession rmsSession;
 
     public RMSServletManager(HttpServletRequest request, HttpServletResponse response) {
@@ -108,6 +109,7 @@ public class RMSServletManager extends AuthServletManager {
             Logger.error("ServletManager, servlet: " + servletPath + ". + channel(server session) is null");
             throw new JServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel(server session) is null"));
         }
+        setRMSServerSession(rmsSession, request);
         return output;
     }
 
@@ -116,34 +118,32 @@ public class RMSServletManager extends AuthServletManager {
         return (T) new RMSSession(getServerSession());
     }*/
 
+    public static void setRMSServerSession(RMSSession rmsSession, HttpServletRequest request) {
+        // http session
+        HttpSession httpSession = request.getSession();
+        httpSession.setAttribute(HTTP_RMS_SESSION_NAME, rmsSession);
+    }
+
     public RMSSession getRMSServerSession() throws JServletException {
-        //return getExtendedServerSession("rms",request.getSession());
         // http session
         HttpSession httpSession = request.getSession();
         // server session
-        rmsSession = (RMSSession) httpSession.getAttribute("rms_session");
+        RMSSession rmsSession1 = (RMSSession) httpSession.getAttribute(HTTP_RMS_SESSION_NAME);
         authSession = getAuthServerSession();
-        if (rmsSession == null) {
+        if (rmsSession1 == null) {
             try {
                 rmsSession = new RMSSession(authSession);
-                httpSession.setAttribute("rms_session", rmsSession);
+                setRMSServerSession(rmsSession, request);
             } catch (DatabaseException e) {
                 throw new JServletException(e);
-                //httpSession.setAttribute("error", e);
-                //request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
             }
         } else {
-            if (authSession.getUser() == null) {
-               // try {
-                    Logger.info("HTTPSession: RMS Session not null | User null");
-                    rmsSession = new RMSSession(rmsSession, authSession);
-                    httpSession.setAttribute("rms_session", rmsSession);
-                    //Logger.info("HTTPSession: " + rmsSession.getUser() + " " + rmsSession.isAdmin() + " " + rmsSession.getAuthDatabaseManager());
-               /* } catch (DatabaseException e) {
-                    throw new JServletException(e);
-                    //httpSession.setAttribute("error", e);
-                    //request.getRequestDispatcher("JSP/error.jsp").forward(request, response);
-                }*/
+            if (rmsSession1.getUserID() == null) {
+                Logger.info("RMSSession OK, AuthSession initializing (Login)");
+                rmsSession = new RMSSession(rmsSession, authSession);
+                setRMSServerSession(rmsSession, request);
+            } else {
+                rmsSession = rmsSession1;
             }
         }
         return rmsSession;
