@@ -2,8 +2,7 @@ package it.richkmeli.rms.web.util;
 
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.exception.CryptoException;
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.Logger;
@@ -71,11 +70,11 @@ public class RMSServletManager extends AuthServletManager {
                     break;
                 default:
                     Logger.error("ServletManager, servlet: " + servletPath + ". + channel " + channel + " unknown");
-                    throw new JServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
+                    throw new JServletException(new KoResponse(RMSStatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
             }
         } else {
             Logger.error("ServletManager, servlet: " + servletPath + ". + channel key is not present.");
-            throw new JServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel key is not present"));
+            throw new JServletException(new KoResponse(RMSStatusCode.CHANNEL_UNKNOWN, "channel key is not present"));
         }
     }
 
@@ -103,11 +102,11 @@ public class RMSServletManager extends AuthServletManager {
                     break;
                 default:
                     Logger.error("ServletManager, servlet: " + servletPath + ". + channel " + channel + " unknown");
-                    throw new JServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
+                    throw new JServletException(new KoResponse(RMSStatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
             }
         } else {
             Logger.error("ServletManager, servlet: " + servletPath + ". + channel(server session) is null");
-            throw new JServletException(new KOResponse(StatusCode.CHANNEL_UNKNOWN, "channel(server session) is null"));
+            throw new JServletException(new KoResponse(RMSStatusCode.CHANNEL_UNKNOWN, "channel(server session) is null"));
         }
         setRMSServerSession(rmsSession, request);
         return output;

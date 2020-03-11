@@ -2,9 +2,8 @@ package it.richkmeli.rms.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
@@ -12,6 +11,7 @@ import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
+import it.richkmeli.rms.web.util.RMSStatusCode;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -56,18 +56,18 @@ public class devices extends HttpServlet {
             String deviceListJSON = generateDevicesListJSON(devices);
 
             String message = rmsServletManager.doDefaultProcessResponse(deviceListJSON);
-            out.println((new OKResponse(StatusCode.SUCCESS, message)).json());
+            out.println((new OkResponse(RMSStatusCode.SUCCESS, message)).json());
 
             out.flush();
             out.close();
 
         } catch (JServletException e) {
-            out.println(e.getKOResponseJSON());
+            out.println(e.getKoResponseJSON());
         } catch (DatabaseException e) {
-            out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
+            out.println((new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage())).json());
         } catch (Exception e){
             //e.printStackTrace();
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
 

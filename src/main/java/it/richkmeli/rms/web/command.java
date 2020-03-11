@@ -1,13 +1,14 @@
 package it.richkmeli.rms.web;
 
 import it.richkmeli.jframework.crypto.Crypto;
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
+import it.richkmeli.rms.web.util.RMSStatusCode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,9 +61,9 @@ public class command extends HttpServlet {
 //                }
 //
 //                if (!output.isEmpty()) {
-//                    out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
+//                    out.println((new OkResponse(RMSStatusCode.SUCCESS, output)).json());
 //                } else {
-//                    out.println((new KOResponse(StatusCode.FIELD_EMPTY)).json());
+//                    out.println((new KoResponse(RMSStatusCode.FIELD_EMPTY)).json());
 //                }
 //            }
 //
@@ -85,14 +86,14 @@ public class command extends HttpServlet {
                 output = rmsServletManager.doDefaultProcessResponse(output);
             }
             if (!output.isEmpty()) {
-                out.println((new OKResponse(StatusCode.SUCCESS, output)).json());
+                out.println((new OkResponse(RMSStatusCode.SUCCESS, output)).json());
             } else {
-                out.println((new KOResponse(StatusCode.FIELD_EMPTY)).json());
+                out.println((new KoResponse(RMSStatusCode.DB_FIELD_EMPTY)).json());
             }
         } catch (DatabaseException e) {
-            out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
+            out.println((new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage())).json());
         } catch (Exception e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
 
@@ -122,14 +123,14 @@ public class command extends HttpServlet {
             }
 
             if (failedResponse.isEmpty())
-                out.println((new OKResponse(StatusCode.SUCCESS)).json());
+                out.println((new OkResponse(RMSStatusCode.SUCCESS,"commands added.")).json());
             else {
-                out.println((new KOResponse(StatusCode.FIELD_EMPTY, Arrays.toString(failedResponse.toArray()))).json());
+                out.println((new KoResponse(RMSStatusCode.DB_FIELD_EMPTY, Arrays.toString(failedResponse.toArray()))).json());
             }
 
             br.close();
         } catch (JServletException | JSONException | DatabaseException e) {
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
 
@@ -157,18 +158,18 @@ public class command extends HttpServlet {
             boolean result = rmsSession.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
             if (result) {
                 rmsSession.getDeviceDatabaseManager().editCommands(deviceName, "");
-                out.println((new OKResponse(StatusCode.SUCCESS)).json());
+                out.println((new OkResponse(RMSStatusCode.SUCCESS,"editCommands succeeded")).json());
             } else {
-                out.println((new KOResponse(StatusCode.FIELD_EMPTY, "Field not found in DB")).json());
+                out.println((new KoResponse(RMSStatusCode.DB_FIELD_EMPTY, "Field not found in DB")).json());
             }
             br.close();
         } catch (JServletException e) {
-            out.println(e.getKOResponseJSON());
+            out.println(e.getKoResponseJSON());
         } catch (DatabaseException e) {
-            out.println((new KOResponse(StatusCode.DB_ERROR, e.getMessage())).json());
+            out.println((new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage())).json());
         } catch (Exception e){
             //e.printStackTrace();
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
     }
 

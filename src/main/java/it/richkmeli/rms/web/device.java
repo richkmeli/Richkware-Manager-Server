@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.KOResponse;
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.OKResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
+import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.util.Logger;
@@ -13,6 +13,7 @@ import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
+import it.richkmeli.rms.web.util.RMSStatusCode;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -111,7 +112,7 @@ public class device extends HttpServlet {
         HttpSession httpSession = req.getSession();
         RMSSession rmsSession = null;
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
+            RMSServletManager rmsServletManager = new RMSServletManager(req, resp);
             rmsSession = rmsServletManager.getRMSServerSession();
 
             if (req.getParameterMap().containsKey("data0") &&
@@ -154,15 +155,18 @@ public class device extends HttpServlet {
 
                 Logger.info("SERVLET device, doGet: Device: " + name + " " + req.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + associatedUser + " ");
 
+                String message = "";
                 if (oldDevice == null) {
                     deviceDatabaseManager.addDevice(newDevice);
+                    message = "Device " + newDevice.getName() + " added.";
                 } else {
                     // do not change Encryption Key
                     newDevice.setEncryptionKey(oldDevice.getEncryptionKey());
                     deviceDatabaseManager.editDevice(newDevice);
+                    message = "Device " + newDevice.getName() + " updated.";
                 }
 
-                out.println((new OKResponse(StatusCode.SUCCESS)).json());
+                out.println((new OkResponse(RMSStatusCode.SUCCESS, message)).json());
                 //req.getRequestDispatcher("index.html").forward(req, resp);
             } else {
                 // argomenti non presenti
@@ -170,13 +174,13 @@ public class device extends HttpServlet {
 //                Logger.error("SERVLET device, doGet: argomenti non presenti");
 //                httpSession.setAttribute("error", "argomenti non presenti");
 //                req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
-                out.println((new KOResponse(StatusCode.GENERIC_ERROR, "Parameters missing")).json());
+                out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, "Parameters missing")).json());
             }
         } catch (JServletException e) {
-            out.println(e.getKOResponseJSON());
-        } catch (Exception e){
+            out.println(e.getKoResponseJSON());
+        } catch (Exception e) {
             //e.printStackTrace();
-            out.println((new KOResponse(StatusCode.GENERIC_ERROR, e.getMessage())).json());
+            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
 
         out.flush();
@@ -191,7 +195,7 @@ public class device extends HttpServlet {
         HttpSession httpSession = req.getSession();
         RMSSession rmsSession = null;
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
+            RMSServletManager rmsServletManager = new RMSServletManager(req, resp);
             rmsSession = rmsServletManager.getRMSServerSession();
         } catch (JServletException e) {
             httpSession.setAttribute("error", e);
@@ -213,7 +217,7 @@ public class device extends HttpServlet {
                     if (device.getAssociatedUser().compareTo(rmsSession.getUserID()) == 0 ||
                             rmsSession.isAdmin()) {
                         rmsSession.getDeviceDatabaseManager().removeDevice(name);
-                        out = "deleted";
+                        out = (new OkResponse(RMSStatusCode.SUCCESS, "Device " + name + " deleted.")).json();
                     } else {
                         // TODO rimanda da qualche parte perche c'è errore
                         httpSession.setAttribute("error", "non hai i privilegi");
