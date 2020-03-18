@@ -2,7 +2,6 @@ package it.richkmeli.rms.web.account;
 
 import it.richkmeli.jframework.auth.web.account.UserJob;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.util.RMSServletManager;
 
 import javax.servlet.ServletException;
