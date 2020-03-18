@@ -13,24 +13,23 @@ dist: trusty
 before_install:
   # Docker Compose Install
   - sudo apt-get update
-  #  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
   - docker-compose --version
-#  - sudo rm /usr/local/bin/docker-compose
-#  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-#  - chmod +x docker-compose
-#  - sudo mv docker-compose /usr/local/bin
-#  - docker-compose --version
+  - cp .travis.settings.xml $HOME/.m2/settings.xml
+
+install:
+  - mvn clean install
+  - mvn package
 
 before_script:
   # Disable services enabled by default
   - sudo service mysql stop
   - sudo service postgresql stop
-  - mvn clean install
-  - mvn package
+
+script:
   - docker-compose up -d
 
-#script:
-#  - curl http://0.0.0.0:8080/Richkware-Manager-Server/
+after_success:
+#  - curl http://0.0.0.0:8080/Richkware-Manager-Server/test
 
 after_script:
   - docker-compose stop
