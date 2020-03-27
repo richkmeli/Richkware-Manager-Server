@@ -28,6 +28,14 @@ import java.util.Map;
 @WebServlet({"/rmc"})
 public class rmc extends HttpServlet {
 
+    /**
+     * GET
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
@@ -65,17 +73,13 @@ public class rmc extends HttpServlet {
         }
     }
 
-
-    private String generateRmcListJSON(List<RMC> clients) {
-        Type type = new TypeToken<List<RMC>>() {
-        }.getType();
-        Gson gson = new Gson();
-
-        // oggetto -> gson
-        String rmcListJSON = gson.toJson(clients, type);
-
-        return rmcListJSON;
-    }
+    /**
+     * DELETE
+     *
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -84,16 +88,6 @@ public class rmc extends HttpServlet {
         HttpSession httpSession = req.getSession();
         RMSSession rmsSession = null;
 
-        // param crittati se rmc
-
-//        if (req.getParameterMap().containsKey("rmcid")) {
-//            String rmc = req.getParameter("rmcid");
-//            File secureDataServer = new File("TESTsecureDataServer.txt");
-//            String serverKey = "testkeyServer";
-//            Crypto.Server cryptoServer = new Crypto.Server();
-//            cryptoServer.init(secureDataServer, serverKey, rmc, "");
-//            cryptoServer.deleteClientData();
-//        }
         try {
             RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
             rmsSession = rmsServletManager.getRMSServerSession();
@@ -124,24 +118,6 @@ public class rmc extends HttpServlet {
                 }
 
                 out.println((new OkResponse(RMSStatusCode.SUCCESS,"RMC "+rmcId+" removed.")).json());
-//                if (session.getUser().equals(user)) {
-//                    if (!session.isAdmin()) {
-//                        //controlla che l'rmc sia associato all'utente
-//                        RMC temp = new RMC(user, rmcId);
-//                        if (!session.getRmcDatabaseManager().getRMCs(user).contains(temp)) {
-//                            valid = false;
-//                        }
-//                    }
-//                    //cancella rmc se valid è true
-//                    if (valid) {
-//                        File secureDataServer = new File("TESTsecureDataServer.txt");
-//                        String serverKey = "testkeyServer";
-//                        Crypto.Server cryptoServer = new Crypto.Server();
-//                        cryptoServer.init(secureDataServer, serverKey, rmcId, "");
-//                        cryptoServer.deleteClientData();
-//                        session.getRmcDatabaseManager().removeRMC(rmcId);
-//                    }
-//                }
             } else {
                 //TODO errore: user does not match
                 out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, "Error in parameters passed.")).json());
@@ -157,5 +133,16 @@ public class rmc extends HttpServlet {
             out.println((new KoResponse(RMSStatusCode.DB_ERROR, e1.getMessage())).json());
         }
 
+    }
+
+    private String generateRmcListJSON(List<RMC> clients) {
+        Type type = new TypeToken<List<RMC>>() {
+        }.getType();
+        Gson gson = new Gson();
+
+        // oggetto -> gson
+        String rmcListJSON = gson.toJson(clients, type);
+
+        return rmcListJSON;
     }
 }

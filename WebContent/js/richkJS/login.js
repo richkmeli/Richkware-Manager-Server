@@ -1,6 +1,6 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
-    $("#Login").click(function() {
+    $("#Login").click(function () {
         username = $("#exampleInputEmail1").val()
         password = $("#exampleInputPassword1").val()
 
@@ -14,7 +14,8 @@ $(document).ready(function() {
                 console.log(JSONdata + ", " + JSONdata.statusCode)
                 if (JSONdata.statusCode == 1000 || JSONdata.statusCode == 2101) {
                     window.location.replace("/Richkware-Manager-Server/devices.html")
-                } else if (JSONdata.statusCode == 2103 || JSONdata.statusCode == 2104 || JSONdata.statusCode == 2000) {
+                } else if (JSONdata.statusCode == 2103 || JSONdata.statusCode == 2104 || JSONdata.statusCode == 2000 || JSONdata.statusCode == 2107) {
+                    // show an alert only for these errors
                     alert(JSONdata.message)
                 }
             })

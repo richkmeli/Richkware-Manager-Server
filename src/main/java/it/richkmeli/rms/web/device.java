@@ -3,11 +3,11 @@ package it.richkmeli.rms.web;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.crypto.Crypto;
-import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.jframework.util.RandomStringGenerator;
+import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.web.util.RMSServletManager;
@@ -23,10 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Servlet implementation class DevicesListServlet
@@ -43,99 +40,58 @@ public class device extends HttpServlet {
         password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
     }
 
+    /**
+     * PUT
+     * put device to RMS, if for the device is te first call, all the payload is encrypted
+     * with the preshared key, otherwise the first key (data0) is encrypted with preshared
+     * and others with server-side generated key for specific device (returned at the first
+     * call)
+     *
+     * @param request
+     * @param response
+     * @throws javax.servlet.ServletException
+     * @throws IOException
+     */
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-//        PrintWriter out = response.getWriter();
-//        HttpSession httpSession = request.getSession();
-//        Session session = null;
-//        try {
-//            session = ServletManager.getServerSession(httpSession);
-//
-//            String out = null;
-//
-//            String user = session.getUser();
-//            // Authentication
-//            if (user != null) {
-//                if (request.getParameterMap().containsKey("data0")) {
-//                    String name = request.getParameter("data0");
-//
-//                    Device device = session.getDeviceDatabaseManager().getDevice(name);
-//
-//                    if (device.getassociatedUser().compareTo(session.getUser()) == 0 ||
-//                            session.isAdmin()) {
-//                        out = GenerateDevicesListJSON(device);
-//                    } else {
-//                        // TODO rimanda da qualche parte perche c'è errore
-//                        httpSession.setAttribute("error", "non hai i privilegi");
-//                        request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
-//
-//                    }
-//
-//
-//                } else {
-//                    // TODO rimanda da qualche parte perche c'è errore
-//                    httpSession.setAttribute("error", "dispositivo non specificato");
-//                    request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
-//                }
-//
-//                // servlet response
-//                PrintWriter printWriter = response.getWriter();
-//                printWriter.println(out);
-//                printWriter.flush();
-//                printWriter.close();
-//            } else {
-//                // non loggato
-//                // TODO rimanda da qualche parte perche c'è errore
-//                httpSession.setAttribute("error", "non loggato");
-//                request.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(request, response);
-//            }
-//        }catch (ServletException e){
-//            httpSession.setAttribute("error", e);
-//            request.getRequestDispatcher(ServletManager.ERROR_JSP).forward(request, response);
-//
-//        } catch (DatabaseException e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        doGet(request, response);
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {
-        PrintWriter out = resp.getWriter();
-        //super.doPut(req, resp);
-        HttpSession httpSession = req.getSession();
-        RMSSession rmsSession = null;
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        PrintWriter out = response.getWriter();
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req, resp);
-            rmsSession = rmsServletManager.getRMSServerSession();
+            RMSServletManager rmsServletManager = new RMSServletManager(request, response);
+            Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest(false);
 
-            if (req.getParameterMap().containsKey("data0") &&
-                    req.getParameterMap().containsKey("data1") &&
-                    req.getParameterMap().containsKey("data2")) {
-                //String data
-                String name = Crypto.decryptRC4(req.getParameter("data0"), password);
-                //String name = data.substring(1, data.indexOf(","));
+            // server session
+            RMSSession rmsSession = rmsServletManager.getRMSServerSession();
+
+            // data0: contains deviceID (always encrypted with preshared key)
+            // data1: contains serverPort
+            // data2: contains associatedUser
+            if (attribMap.containsKey("data0") &&
+                    attribMap.containsKey("data1") &&
+                    attribMap.containsKey("data2")) {
+
+                String data0 = attribMap.get("data0");
+                String data1 = attribMap.get("data1");
+                String data2 = attribMap.get("data2");
+
+                //Logger.info("data0: " + data0 + " data1: " + data1 + " data2: " + data2);
+
+                String name = Crypto.decryptRC4(data0, password);
 
                 // check in the DB if there is an entry with that name
                 DeviceDatabaseManager deviceDatabaseManager = rmsSession.getDeviceDatabaseManager();
                 Device oldDevice = deviceDatabaseManager.getDevice(name);
 
                 // if this entry exists, then it's used to decrypt the encryption key in the DB
-                String serverPort = req.getParameter("data1");
-                //String serverPort = data.substring((data.indexOf(",") + 1), (data.length() - 1));
-                String associatedUser = req.getParameter("data2");
-
+                String serverPort;
+                String associatedUser;
+                // at the first call is encrypted with preshared key, at the following with server-side generated key
                 if (oldDevice == null) {
-                    serverPort = Crypto.decryptRC4(serverPort, password);
-                    associatedUser = Crypto.decryptRC4(associatedUser, password);
+                    serverPort = Crypto.decryptRC4(data1, password);
+                    associatedUser = Crypto.decryptRC4(data2, password);
                 } else {
-                    serverPort = Crypto.decryptRC4(serverPort, oldDevice.getEncryptionKey());
-                    associatedUser = Crypto.decryptRC4(associatedUser, oldDevice.getEncryptionKey());
+                    serverPort = Crypto.decryptRC4(data1, oldDevice.getEncryptionKey());
+                    associatedUser = Crypto.decryptRC4(data2, oldDevice.getEncryptionKey());
                 }
 
                 String encryptionKey = RandomStringGenerator.generateAlphanumericString(keyLength);
@@ -144,7 +100,7 @@ public class device extends HttpServlet {
 
                 Device newDevice = new Device(
                         name,
-                        req.getRemoteAddr(),
+                        request.getRemoteAddr(),
                         serverPort,
                         timeStamp,
                         encryptionKey,
@@ -152,7 +108,7 @@ public class device extends HttpServlet {
                         "",
                         "");
 
-                Logger.info("SERVLET device, doGet: Device: " + name + " " + req.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + associatedUser + " ");
+                Logger.info("SERVLET device, doGet: Device: " + name + " " + request.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + associatedUser + " ");
 
                 String message = "";
                 if (oldDevice == null) {
@@ -165,20 +121,16 @@ public class device extends HttpServlet {
                     message = "Device " + newDevice.getName() + " updated.";
                 }
 
+                message = rmsServletManager.doDefaultProcessResponse(message);
                 out.println((new OkResponse(RMSStatusCode.SUCCESS, message)).json());
-                //req.getRequestDispatcher("index.html").forward(req, resp);
             } else {
                 // argomenti non presenti
-                // TODO rimanda da qualche parte perche c'è errore
-//                Logger.error("SERVLET device, doGet: argomenti non presenti");
-//                httpSession.setAttribute("error", "argomenti non presenti");
-//                req.getRequestDispatcher(ServletManager.LOGIN_HTML).forward(req, resp);
                 out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, "Parameters missing")).json());
             }
         } catch (JServletException e) {
             out.println(e.getKoResponseJSON());
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
         }
 
@@ -186,6 +138,17 @@ public class device extends HttpServlet {
         out.close();
 
     }
+
+    /**
+     * DELETE
+     * delete device from device list. Every user can delete only its own device, admin user
+     * can delete all devices
+     *
+     * @param req
+     * @param resp
+     * @throws javax.servlet.ServletException
+     * @throws IOException
+     */
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {

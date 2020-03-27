@@ -2,7 +2,7 @@ package it.richkmeli.rms.web.util;
 
 import it.richkmeli.jframework.auth.web.util.AuthSession;
 import it.richkmeli.jframework.orm.DatabaseException;
-import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.device.DeviceDatabaseManager;
 import it.richkmeli.rms.data.rmc.RMCDatabaseManager;
 

@@ -1,10 +1,11 @@
 package it.richkmeli.rms.web.test;
 
 import it.richkmeli.jframework.auth.model.User;
-import it.richkmeli.jframework.crypto.util.RandomStringGenerator;
+import it.richkmeli.jframework.auth.model.exception.ModelException;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
-import it.richkmeli.jframework.util.Logger;
+import it.richkmeli.jframework.util.RandomStringGenerator;
+import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.device.model.Device;
 import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.util.RMSServletManager;
@@ -46,7 +47,7 @@ public class test extends HttpServlet {
             //TODO da spostare nella creazione della tabella
             rmsSession.getAuthDatabaseManager().addUser(new User("", "00000000", false));
             rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
-        } catch (DatabaseException e) {
+        } catch (DatabaseException | ModelException e) {
             e.printStackTrace();
             Logger.error("Session TEST USERS", e);
         }
@@ -66,7 +67,7 @@ public class test extends HttpServlet {
             rmsSession.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
             rmsSession.getAuthDatabaseManager().addUser(new User("", "00000000", false));
             rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
-        } catch (DatabaseException e) {
+        } catch (DatabaseException | ModelException e) {
             e.printStackTrace();
             Logger.error("Session TEST USERS", e);
         }
@@ -83,7 +84,7 @@ public class test extends HttpServlet {
                 }
             }
             rmsSession.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.generateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.generateAlphanumericString(32), "asd@asd.com", "", "WTJsaGJ3PT0="));
-        } catch (DatabaseException e) {
+        } catch (DatabaseException | ModelException e) {
             Logger.error("Session ", e);
         }
 
