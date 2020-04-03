@@ -23,18 +23,19 @@
 </head>
 <body>
 
-<div class="d-flex" id="wrapper">
+<div class="d-flex bg-light" id="wrapper">
 
     <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
+    <div class="border-right bg-dark text-light" id="sidebar-wrapper">
         <div class="sidebar-heading">RMS</div>
         <div class="list-group list-group-flush">
-            <a id="menuHome" href="index.html" class="list-group-item list-group-item-action bg-light">Home</a>
-            <a id="menuDevices" href="devices.html" class="list-group-item list-group-item-action bg-light"
-               style="display: none">Device List</a>
-            <a id="menuUsers" href="users.html" class="list-group-item list-group-item-action bg-light"
+            <a id="menuHome" href="index.html" class="list-group-item list-group-item-action active">Home</a>
+            <a id="menuDevices" href="devices.html"
+               class="list-group-item list-group-item-action bg-secondary text-light" style="display: none">Device
+                List</a>
+            <a id="menuUsers" href="users.html" class="list-group-item list-group-item-action bg-secondary text-light"
                style="display: none">User List</a>
-            <a id="menuRMCs" href="rmcs.html" class="list-group-item list-group-item-action bg-light"
+            <a id="menuRMCs" href="rmcs.html" class="list-group-item list-group-item-action bg-secondary text-light"
                style="display: none">RMC List</a>
         </div>
     </div>
@@ -43,8 +44,9 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-            <button class="btn btn-primary" id="menu-toggle"><span class="navbar-toggler-icon"></span></button>
+        <!-- Nav Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark border-bottom bg-dark text-light">
+            <button class="btn bg-primary" id="menu-toggle"><span class="navbar-toggler-icon"></span></button>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     role="button" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -59,22 +61,25 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
                     <li class="nav-item dropdown show">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" data-toggle="dropdown"
                            role="button" aria-haspopup="true" aria-expanded="false">
                             Welcome <span id="userNearBrand"></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" id="signupNavBar" href="signup.html">SignUp</a>
-                            <a class="dropdown-item" id="loginNavBar" href="login.html">Login</a>
-                            <a class="dropdown-item" id="logoutNavBar" href="index.html">Logout</a>
+                        <div class="dropdown-menu dropdown-menu-right " aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item " id="signupNavBar" href="signup.html">SignUp</a>
+                            <a class="dropdown-item " id="loginNavBar" href="login.html">Login</a>
+                            <a class="dropdown-item " id="logoutNavBar" href="index.html">Logout</a>
                         </div>
                     </li>
                 </ul>
             </div>
         </nav>
 
+        <!-- Content -->
         <div class="container-fluid">
             <h1 class="mt-4">Richkware Manager Server</h1>
+            Service for the management of hosts in which is present an instance of malware developed using **Richkware**
+            framework.
         </div>
     </div>
     <!-- /#page-content-wrapper -->

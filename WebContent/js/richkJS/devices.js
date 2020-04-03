@@ -7,10 +7,10 @@ function loadDevicesTable() {
         //document.getElementById("Email").innerHTML = Person.email;
 
         //status : "success", "notmodified", "error", "timeout", or "parsererror"
-        if (JSONdata.statusCode == 1000) {
+        if (JSONdata.statusCode === 1000) {
             var devices = JSONdata.message;
             loadDevicesJSONtoTable(devices)
-        } else if (JSONdata.statusCode == 2100) {
+        } else if (JSONdata.statusCode === 2100) {
             alert("You are not logged in. You are being redirected to the Login Page");
             window.location.replace = "/Richkware-Manager-Server/login.html";
         } else {

@@ -1,5 +1,6 @@
 package it.richkmeli.rms.web.util;
 
+import it.richkmeli.jframework.auth.web.util.AuthStatusCode;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.BaseStatusCode;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;
 
@@ -12,7 +13,7 @@ import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCo
  * 24xx --> session error
  */
 
-public class RMSStatusCode extends BaseStatusCode {
+public class RMSStatusCode extends AuthStatusCode {
   public static final StatusCode CHANNEL_UNKNOWN = new StatusCode(2401, "Channel Unknown");
 
 }
