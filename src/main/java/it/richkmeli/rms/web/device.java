@@ -2,6 +2,7 @@ package it.richkmeli.rms.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
@@ -20,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -54,8 +54,7 @@ public class device extends HttpServlet {
      */
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) {
         try {
             RMSServletManager rmsServletManager = new RMSServletManager(request, response);
             Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest(false);
@@ -122,20 +121,19 @@ public class device extends HttpServlet {
                 }
 
                 message = rmsServletManager.doDefaultProcessResponse(message);
-                out.println((new OkResponse(RMSStatusCode.SUCCESS, message)).json());
+                AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, message));
             } else {
                 // argomenti non presenti
-                out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, "Parameters missing")).json());
+                AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, "Parameters missing"));
             }
         } catch (JServletException e) {
-            out.println(e.getKoResponseJSON());
+            AuthServletManager.print(response, e.getResponse());
         } catch (Exception e) {
             e.printStackTrace();
-            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
         }
 
-        out.flush();
-        out.close();
+
 
     }
 
@@ -144,68 +142,61 @@ public class device extends HttpServlet {
      * delete device from device list. Every user can delete only its own device, admin user
      * can delete all devices
      *
-     * @param req
-     * @param resp
+     * @param request
+     * @param response
      * @throws javax.servlet.ServletException
      * @throws IOException
      */
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         //if the code below is de-commented, this servlet disables DELETE
-        //super.doDelete(req, resp);
-        HttpSession httpSession = req.getSession();
+        //super.doDelete(request, response);
+        HttpSession httpSession = request.getSession();
         RMSSession rmsSession = null;
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req, resp);
+            RMSServletManager rmsServletManager = new RMSServletManager(request, response);
             rmsSession = rmsServletManager.getRMSServerSession();
         } catch (JServletException e) {
             httpSession.setAttribute("error", e);
-            req.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(req, resp);
+            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
 
         }
 
         try {
-            String out = null;
-
             String user = rmsSession.getUserID();
             // Authentication
             if (user != null) {
-                if (req.getParameterMap().containsKey("name")) {
-                    String name = req.getParameter("name");
+                if (request.getParameterMap().containsKey("name")) {
+                    String name = request.getParameter("name");
 
                     Device device = rmsSession.getDeviceDatabaseManager().getDevice(name);
 
                     if (device.getAssociatedUser().compareTo(rmsSession.getUserID()) == 0 ||
                             rmsSession.isAdmin()) {
                         rmsSession.getDeviceDatabaseManager().removeDevice(name);
-                        out = (new OkResponse(RMSStatusCode.SUCCESS, "Device " + name + " deleted.")).json();
+                        AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, "Device " + name + " deleted."));
                     } else {
                         // TODO rimanda da qualche parte perche c'è errore
                         httpSession.setAttribute("error", "non hai i privilegi");
-                        req.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(req, resp);
+                        request.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(request, response);
                     }
 
                 } else {
                     // TODO rimanda da qualche parte perche c'è errore
                     httpSession.setAttribute("error", "dispositivo non specificato");
-                    req.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(req, resp);
+                    request.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(request, response);
                 }
-                // servlet response
-                PrintWriter printWriter = resp.getWriter();
-                printWriter.println(out);
-                printWriter.flush();
-                printWriter.close();
             } else {
                 // non loggato
                 // TODO rimanda da qualche parte perche c'è errore
                 httpSession.setAttribute("error", "non loggato");
-                req.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(req, resp);
+                request.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(request, response);
             }
         } catch (Exception e) {
             // redirect to the JSP that handles errors
             httpSession.setAttribute("error", e);
-            req.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(req, resp);
+            request.getRequestDispatcher(RMSServletManager.ERROR_JSP).forward(request, response);
         }
 
     }

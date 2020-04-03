@@ -75,27 +75,6 @@ function loadUsersTable() {
      */
 }
 
-/*
-function EditDevicesTableField(name, IP, serverPort, lastConnection) {
-    var editForm = document.getElementById("EditForm");
-    editForm.style.display = "inline";
-
-    var editButton = document.getElementById("AddForm");
-    //editButton.style.display = "none";
-
-    document.getElementById("name_OE").value = name;
-    document.getElementById("name_E").value = name;
-    document.getElementById("IP_OE").value = IP;
-    document.getElementById("IP_E").value = IP;
-    document.getElementById("serverPort_OE").value = serverPort;
-    document.getElementById("serverPort_E").value = serverPort;
-    document.getElementById("lastConnection_OE").value = lastConnection;
-    document.getElementById("lastConnection_E").value = lastConnection;
-    document.getElementById("encryptionKey_OE").value = lastConnection;
-    document.getElementById("encryptionKey_E").value = lastConnection;
-
-}*/
-
 function createUsersTableHeader() {
     var usersTable = document.getElementById("usersTable");
     usersTable.innerHTML = "";

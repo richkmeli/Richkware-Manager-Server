@@ -1,10 +1,10 @@
 $(document).ready(function () {
 
     $("#Login").click(function () {
-        username = $("#exampleInputEmail1").val()
-        password = $("#exampleInputPassword1").val()
+        username = $("#exampleInputEmail1").val();
+        password = $("#exampleInputPassword1").val();
 
-        hashedPassword = hashPassword(password)
+        hashedPassword = hashPassword(password);
 
         console.log("username: " + username + " password: " + hashedPassword)
         if (username != "" && hashedPassword != "") {
@@ -25,33 +25,33 @@ $(document).ready(function () {
     })
 
     function hashPassword(password) {
-        var salt = randomString(9)
-        var tempPsw1 = sha256(password) + salt
-        var tempPsw2 = base64Url(salt + sha256(tempPsw1))
-        return tempPsw2
+        let salt = randomString(9);
+        let tempPsw1 = sha256(password) + salt;
+        let tempPsw2 = base64Url(salt + sha256(tempPsw1));
+        return tempPsw2;
     }
 
     function base64Url(string) {
-        return btoa(string).replace("+", "-").replace("/", "_")
+        return btoa(string).replace("+", "-").replace("/", "_");
     }
 
     function randomString(length) {
-        chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        var result = ''
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
-        return result
+        chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var result = '';
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+        return result;
     }
 
     function sha256(ascii) {
         function rightRotate(value, amount) {
             return (value >>> amount) | (value << (32 - amount));
-        };
+        }
 
         var mathPow = Math.pow;
         var maxWord = mathPow(2, 32);
-        var lengthProperty = 'length'
+        var lengthProperty = 'length';
         var i, j; // Used as a counter across the whole file
-        var result = ''
+        var result = '';
 
         var words = [];
         var asciiBitLength = ascii[lengthProperty] * 8;

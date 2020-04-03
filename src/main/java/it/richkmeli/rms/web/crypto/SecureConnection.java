@@ -38,10 +38,6 @@ public class SecureConnection extends HttpServlet {
         }
     };
 
-    public SecureConnection() {
-        super();
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {

@@ -30,6 +30,16 @@ public class RMSServletManager extends AuthServletManager {
         }
     }
 
+    public RMSServletManager(AuthServletManager authServletManager) {
+        super(authServletManager);
+        try {
+            rmsSession = getRMSServerSession();
+        } catch (JServletException e) {
+            //e.printStackTrace();
+            Logger.error(e);
+        }
+    }
+
     @Override
     public void doSpecificProcessRequestAuth() throws JServletException {
 
@@ -108,7 +118,7 @@ public class RMSServletManager extends AuthServletManager {
             Logger.error("ServletManager, servlet: " + servletPath + ". + channel(server session) is null");
             throw new JServletException(new KoResponse(RMSStatusCode.CHANNEL_UNKNOWN, "channel(server session) is null"));
         }
-        setRMSServerSession(rmsSession, request);
+        setRMSServerSession(rmsSession, httpServletRequest);
         return output;
     }
 
@@ -125,14 +135,14 @@ public class RMSServletManager extends AuthServletManager {
 
     public RMSSession getRMSServerSession() throws JServletException {
         // http session
-        HttpSession httpSession = request.getSession();
+        HttpSession httpSession = httpServletRequest.getSession();
         // server session
         RMSSession rmsSession1 = (RMSSession) httpSession.getAttribute(HTTP_RMS_SESSION_NAME);
         authSession = getAuthServerSession();
         if (rmsSession1 == null) {
             try {
                 rmsSession = new RMSSession(authSession);
-                setRMSServerSession(rmsSession, request);
+                setRMSServerSession(rmsSession, httpServletRequest);
             } catch (DatabaseException e) {
                 throw new JServletException(e);
             }
@@ -140,7 +150,7 @@ public class RMSServletManager extends AuthServletManager {
             if (rmsSession1.getUserID() == null) {
                 Logger.info("RMSSession OK, AuthSession initializing (Login)");
                 rmsSession = new RMSSession(rmsSession, authSession);
-                setRMSServerSession(rmsSession, request);
+                setRMSServerSession(rmsSession, httpServletRequest);
             } else {
                 rmsSession = rmsSession1;
             }

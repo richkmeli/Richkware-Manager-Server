@@ -1,5 +1,6 @@
 package it.richkmeli.rms.web;
 
+import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
@@ -16,10 +17,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
 
 @WebServlet({"/command"})
@@ -43,8 +42,7 @@ public class command extends HttpServlet {
      */
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
             RMSServletManager rmsServletManager = new RMSServletManager(request, response);
             // TODO il cookie non deve essere controllato se è un richkware agent, negli altri casi si
@@ -65,14 +63,14 @@ public class command extends HttpServlet {
                 output = rmsServletManager.doDefaultProcessResponse(output);
             }
             if (!output.isEmpty()) {
-                out.println((new OkResponse(RMSStatusCode.SUCCESS, output)).json());
+                AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, output));
             } else {
-                out.println((new KoResponse(RMSStatusCode.DB_FIELD_EMPTY)).json());
+                AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_FIELD_EMPTY));
             }
         } catch (DatabaseException e) {
-            out.println((new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage()));
         } catch (Exception e) {
-            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
         }
     }
 
@@ -80,27 +78,23 @@ public class command extends HttpServlet {
      * PUT
      * Webapp and RMC upload commands that have to be executed on a specific device
      *
-     * @param req
-     * @param resp
+     * @param request
+     * @param response
      * @throws IOException
      */
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) {
         //TODO: gestire richieste per multipli device
 
-        PrintWriter out = resp.getWriter();
-        HttpSession httpSession = req.getSession();
-        RMSSession rmsSession = null;
-
         try {
-            BufferedReader br = req.getReader();
+            BufferedReader br = request.getReader();
             String data = br.readLine();
             JSONObject JSONData = new JSONObject(data);
             JSONArray devicesName = JSONData.getJSONArray("devices");
             String commands = JSONData.getString("commands");
 
-            RMSServletManager rmsServletManager = new RMSServletManager(req, resp);
-            rmsSession = rmsServletManager.getRMSServerSession();
+            RMSServletManager rmsServletManager = new RMSServletManager(request, response);
+            RMSSession rmsSession = rmsServletManager.getRMSServerSession();
 
             List<String> failedResponse = new ArrayList<>();
             for (Object device : devicesName) {
@@ -110,14 +104,14 @@ public class command extends HttpServlet {
             }
 
             if (failedResponse.isEmpty())
-                out.println((new OkResponse(RMSStatusCode.SUCCESS, "commands added.")).json());
+                AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, "commands added."));
             else {
-                out.println((new KoResponse(RMSStatusCode.DB_FIELD_EMPTY, Arrays.toString(failedResponse.toArray()))).json());
+                AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_FIELD_EMPTY, Arrays.toString(failedResponse.toArray())));
             }
 
             br.close();
-        } catch (JServletException | JSONException | DatabaseException e) {
-            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
+        } catch (JServletException | JSONException | DatabaseException | IOException e) {
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
         }
     }
 
@@ -131,8 +125,8 @@ public class command extends HttpServlet {
      * @throws IOException
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+
         try {
             RMSServletManager rmsServletManager = new RMSServletManager(request, response);
             Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest(false);
@@ -143,7 +137,7 @@ public class command extends HttpServlet {
             // device: deviceID
             // data: command outputs
             if (attribMap.containsKey("device") &&
-                    attribMap.containsKey("data") ) {
+                    attribMap.containsKey("data")) {
 
                 String deviceName = attribMap.get("device");
                 String commandsOutput = attribMap.get("data");
@@ -155,26 +149,23 @@ public class command extends HttpServlet {
                 boolean result = rmsSession.getDeviceDatabaseManager().setCommandsOutput(deviceName, commandsOutput);
                 if (result) {
                     rmsSession.getDeviceDatabaseManager().editCommands(deviceName, "");
-                    out.println((new OkResponse(RMSStatusCode.SUCCESS, "editCommands succeeded")).json());
+                    AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, "editCommands succeeded"));
                 } else {
-                    out.println((new KoResponse(RMSStatusCode.DB_FIELD_EMPTY, "Field not found in DB")).json());
+                    AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_FIELD_EMPTY, "Field not found in DB"));
                 }
             } else {
                 // argomenti non presenti
-                out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, "Parameters missing")).json());
+                AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, "Parameters missing"));
             }
         } catch (JServletException e) {
-            out.println(e.getKoResponseJSON());
+            AuthServletManager.print(response, e.getResponse());
         } catch (DatabaseException e) {
-            out.println((new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage()));
         } catch (Exception e) {
             //e.printStackTrace();
-            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
         }
 
-
-        out.flush();
-        out.close();
     }
 
 }

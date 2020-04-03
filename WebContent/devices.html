@@ -33,9 +33,12 @@
         <div class="sidebar-heading">RMS</div>
         <div class="list-group list-group-flush">
             <a id="menuHome" href="index.html" class="list-group-item list-group-item-action bg-light">Home</a>
-            <a id="menuDevices" href="devices.html" class="list-group-item list-group-item-action bg-light">Device List</a>
-            <a id="menuUsers" href="users.html" class="list-group-item list-group-item-action bg-light">User List</a>
-            <a id="menuRMCs" href="rmcs.html" id="rmcsNavBar" class="list-group-item list-group-item-action bg-light">RMC List</a>
+            <a id="menuDevices" href="devices.html" class="list-group-item list-group-item-action bg-light"
+               style="display: none">Device List</a>
+            <a id="menuUsers" href="users.html" class="list-group-item list-group-item-action bg-light"
+               style="display: none">User List</a>
+            <a id="menuRMCs" href="rmcs.html" class="list-group-item list-group-item-action bg-light"
+               style="display: none">RMC List</a>
         </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -46,24 +49,27 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
             <button class="btn btn-primary" id="menu-toggle"><span class="navbar-toggler-icon"></span></button>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" role="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    role="button" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="nav" style="position: absolute; left:50%; transform: translatex(-50%);">
-                <h2 style="font-family: Comic Sans MS;">Richkware Manager Server</h2>
+                <h2>Richkware Manager Server</h2>
             </div>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
                     <li class="nav-item dropdown show">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false">
                             Welcome <span id="userNearBrand"></span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" id="signupNavBar" href="signup.html">SignUp</a>
                             <a class="dropdown-item" id="loginNavBar" href="login.html">Login</a>
-                            <a class="dropdown-item" id="logoutBtn" href="#">Logout</a>
+                            <a class="dropdown-item" id="logoutNavBar" href="index.html">Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -87,14 +93,15 @@
 
 <!-- Menu Toggle Script -->
 <script>
-    $("#menu-toggle").click(function(e) {
+    $("#menu-toggle").click(function (e) {
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
 </script>
 
 <!-- Modal commands-output console -->
-<div class="modal fade" id="ModalCommand" tabindex="-1" role="dialog" aria-labelledby="ModalCommandTitle" aria-hidden="true">
+<div class="modal fade" id="ModalCommand" tabindex="-1" role="dialog" aria-labelledby="ModalCommandTitle"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -104,7 +111,8 @@
                 </button>
             </div>
             <div id="ModalCommandBody" class="modal-body">
-                <textarea class="container form-control bg-dark text-success" style="font-family: courier;" id="text-area" rows="20"></textarea>
+                <textarea class="container form-control bg-dark text-success" style="font-family: courier;"
+                          id="text-area" rows="20"></textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -22,11 +22,6 @@ import java.io.PrintWriter;
 @WebServlet("/test")
 public class test extends HttpServlet {
 
-    public test() {
-        super();
-    }
-
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         HttpSession httpSession = request.getSession();
@@ -41,6 +36,28 @@ public class test extends HttpServlet {
         }
         String out = "";
 
+        loadRandomTest(rmsSession);
+
+        out = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "\t<head>\n" +
+                "\t\t<script src=\"js/jquery/jquery.min.js\"></script>\n" +
+                "\t\t\t<script>\n" +
+                "\t\t\t$(document).ready(function() {\n" +
+                "\t\t\t\tdocument.location.replace(\"login.html\")\n" +
+                "\t\t\t});\n" +
+                "\t\t</script>\n" +
+                "\t\t</head>\n" +
+                "\t\t<body></body>\n" +
+                "</html>";
+
+        PrintWriter printWriter = response.getWriter();
+        printWriter.println(out);
+        printWriter.flush();
+        printWriter.close();
+    }
+
+    public static void loadRandomTest(RMSSession rmsSession) {
         try {
             rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
             rmsSession.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
@@ -102,23 +119,6 @@ public class test extends HttpServlet {
             Logger.error("Session ", e);
         }
 
-        out = "<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "\t<head>\n" +
-                "\t\t<script src=\"js/jquery/jquery.min.js\"></script>\n" +
-                "\t\t\t<script>\n" +
-                "\t\t\t$(document).ready(function() {\n" +
-                "\t\t\t\tdocument.location.replace(\"login.html\")\n" +
-                "\t\t\t});\n" +
-                "\t\t</script>\n" +
-                "\t\t</head>\n" +
-                "\t\t<body></body>\n" +
-                "</html>";
-
-        PrintWriter printWriter = response.getWriter();
-        printWriter.println(out);
-        printWriter.flush();
-        printWriter.close();
     }
 
 

@@ -1,14 +1,14 @@
 function loadDevicesTable() {
-    console.log("loadDevicesTable")
+    console.log("loadDevicesTable");
     $.get("devices", {channel: "webapp"}, function (data) {
-        var JSONdata = JSON.parse(data)
+        let JSONdata = JSON.parse(data);
 
         //device = JSON.parse(DeviceJSON);
         //document.getElementById("Email").innerHTML = Person.email;
 
         //status : "success", "notmodified", "error", "timeout", or "parsererror"
         if (JSONdata.statusCode == 1000) {
-            var devices = JSONdata.message
+            var devices = JSONdata.message;
             loadDevicesJSONtoTable(devices)
         } else if (JSONdata.statusCode == 2100) {
             alert("You are not logged in. You are being redirected to the Login Page");
@@ -20,12 +20,12 @@ function loadDevicesTable() {
 }
 
 function createDevicesTableHeader() {
-    console.log("createDevicesTableHeader")
-    var devicesTable = document.getElementById("devicesTable");
+    console.log("createDevicesTableHeader");
+    let devicesTable = document.getElementById("devicesTable");
     devicesTable.innerHTML = "";
 
-    var thead = document.createElement("thead");
-    var row = document.createElement("tr");
+    let thead = document.createElement("thead");
+    let row = document.createElement("tr");
     row.innerHTML = ( //"<th>Index</th>" +
         "<th>Name</th>" +
         "<th>Last Connection</th>" +
@@ -40,21 +40,17 @@ function createDevicesTableHeader() {
 }
 
 function loadDevicesJSONtoTable(devicesListJSON) {
-    console.log("loadDevicesJSONtoTable")
+    console.log("loadDevicesJSONtoTable");
     createDevicesTableHeader();
 
-    var devicesList = JSON.parse(devicesListJSON)//jQuery.parseJSON(devicesListJSON);
+    let devicesList = JSON.parse(devicesListJSON);//jQuery.parseJSON(devicesListJSON);
 
-    var tbody = document.createElement("tbody");
+    let tbody = document.createElement("tbody");
 
-    console.log("devicesList: " + devicesList + " type: " + typeof(devicesList) + " length: " + devicesList.length)
-    //var index = 0;
-    //while (devicesList[index] != null) {
-    //for(var device in devicesList){
+    console.log("devicesList: " + devicesList + " type: " + typeof(devicesList) + " length: " + devicesList.length);
+
     for (var i = 0; i < devicesList.length; ++i) {
-//        $.each(devicesList, function (index, value) {
-        //var device = devicesList[index];
-//            var device = value;
+
         console.log(devicesList[i])
 
         var name = devicesList[i].name;
@@ -152,44 +148,6 @@ function deleteDevice(device, indexTableRow) {
     });
 }
 
-
-/*
-function loadUsersTable() {
-    createDevicesTableHeader();
-
-    request = null;
-
-    // microsoft explorer
-    if (window.XMLHttpRequest)
-        request = new XMLHttpRequest();
-    else
-        request = new ActiveXObject("Microsoft.XMLHTTP");
-
-    request.onreadystatechange = newConnection;
-    request.open("GET", "/Richkware-Manager-Server/DevicesList", true, null, null);
-
-    request.send(null);
-}
-
-
-function newConnection() {
-    if (request.readyState != 4) {
-        //alert("request.readystate: "+ request.readystate)
-        return;
-    }
-    if (request.status != 200) {
-        alert("request.status :  " + request.status)
-        return;
-    }
-
-    var JSON = request.responseText;
-    var result;
-    eval("result = " + JSON);
-
-    loadUsersJSONtoTable(result);
-
-}*/
-
 $(document).ready(function() {
     loadDevicesTable();
     setInterval(loadDevicesTable, 30000);
@@ -228,34 +186,5 @@ $(document).ready(function() {
         loadDevicesTable()
     })
 
-    /* sc.onload = function () {
-         document.getElementById("Logout").innerHTML = lang.logout;
-         document.getElementById("Lang").innerHTML = lang.lang;
-     };
-     */
 
-    /*
-    function EditDevicesTableField(name, IP, serverPort, lastConnection) {
-        var editForm = document.getElementById("EditForm");
-        editForm.style.display = "inline";
-
-        var editButton = document.getElementById("AddForm");
-        //editButton.style.display = "none";
-
-        document.getElementById("name_OE").value = name;
-        document.getElementById("name_E").value = name;
-        document.getElementById("IP_OE").value = IP;
-        document.getElementById("IP_E").value = IP;
-        document.getElementById("serverPort_OE").value = serverPort;
-        document.getElementById("serverPort_E").value = serverPort;
-        document.getElementById("lastConnection_OE").value = lastConnection;
-        document.getElementById("lastConnection_E").value = lastConnection;
-        document.getElementById("encryptionKey_OE").value = lastConnection;
-        document.getElementById("encryptionKey_E").value = lastConnection;
-
-    }*/
-
-
-
-
-})
+});

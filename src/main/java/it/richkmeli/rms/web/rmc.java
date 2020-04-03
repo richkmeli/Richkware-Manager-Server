@@ -2,6 +2,7 @@ package it.richkmeli.rms.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
@@ -17,10 +18,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -31,22 +30,21 @@ public class rmc extends HttpServlet {
     /**
      * GET
      *
-     * @param req
-     * @param resp
+     * @param request
+     * @param response
      * @throws ServletException
      * @throws IOException
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
-        List<RMC> clients = null;
-
-        try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+       try {
+            RMSServletManager rmsServletManager = new RMSServletManager(request,response);
             Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest();
             rmsServletManager.checkLogin();
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
-            if (rmsSession.isAdmin()) {
+
+           List<RMC> clients;
+           if (rmsSession.isAdmin()) {
                 //ottiene tutti i client presenti sul db
                 //Logger.info("Admin user");
                 clients = rmsSession.getRmcDatabaseManager().getAllRMCs();
@@ -59,43 +57,38 @@ public class rmc extends HttpServlet {
             String clientsFormatted = generateRmcListJSON(clients);
             //Logger.info("rmc: clientsFormatted: " + clientsFormatted);
             String output = rmsServletManager.doDefaultProcessResponse(clientsFormatted);
-            out.println(new OkResponse(RMSStatusCode.SUCCESS, output).json());
+            AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, output));
 
-            out.flush();
-            out.close();
+
         } catch (JServletException e) {
-            out.println(e.getKoResponseJSON());
+            AuthServletManager.print(response, e.getResponse());
         } catch (DatabaseException e) {
-            out.println((new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage()));
         } catch (Exception e){
             //e.printStackTrace();
-            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
         }
     }
 
     /**
      * DELETE
      *
-     * @param req
-     * @param resp
+     * @param request
+     * @param response
      * @throws IOException
      */
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        super.doDelete(req, resp);
-        PrintWriter out = resp.getWriter();
-        HttpSession httpSession = req.getSession();
-        RMSSession rmsSession = null;
-
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
+//        super.doDelete(request, response);
         try {
-            RMSServletManager rmsServletManager = new RMSServletManager(req,resp);
-            rmsSession = rmsServletManager.getRMSServerSession();
+            RMSServletManager rmsServletManager = new RMSServletManager(request,response);
+            RMSSession rmsSession = rmsServletManager.getRMSServerSession();
 
             // todo controlla che stia cancellando un rmc di cui ha i permessi
-            if (req.getParameterMap().containsKey("associatedUser") && req.getParameterMap().containsKey("rmcId")) {
-                String associatedUser = req.getParameter("associatedUser");
-                String rmcId = req.getParameter("rmcId");
+            if (request.getParameterMap().containsKey("associatedUser") && request.getParameterMap().containsKey("rmcId")) {
+                String associatedUser = request.getParameter("associatedUser");
+                String rmcId = request.getParameter("rmcId");
                 boolean valid = true;
                 if (!rmsSession.isAdmin()) {
                     if (rmsSession.getUserID().equals(associatedUser)) {
@@ -104,7 +97,7 @@ public class rmc extends HttpServlet {
                             valid = false;
                         }
                     } else {
-                        out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, "You are not allowed to delete this state.")).json());
+                        AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, "You are not allowed to delete this state."));
                     }
                 }
                 if (valid) {
@@ -117,10 +110,10 @@ public class rmc extends HttpServlet {
                     rmsSession.getRmcDatabaseManager().removeRMC(rmcId);
                 }
 
-                out.println((new OkResponse(RMSStatusCode.SUCCESS,"RMC "+rmcId+" removed.")).json());
+                AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS,"RMC "+rmcId+" removed."));
             } else {
                 //TODO errore: user does not match
-                out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, "Error in parameters passed.")).json());
+                AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, "Error in parameters passed."));
             }
 
             // TODO cancella utente specifico, decidi se farlo solo da autenticato, magari con email o altro fattore di auth
@@ -128,9 +121,9 @@ public class rmc extends HttpServlet {
 
 
         } catch (JServletException e) {
-            out.println(e.getKoResponseJSON());
+            AuthServletManager.print(response, e.getResponse());
         } catch (DatabaseException e1) {
-            out.println((new KoResponse(RMSStatusCode.DB_ERROR, e1.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e1.getMessage()));
         }
 
     }

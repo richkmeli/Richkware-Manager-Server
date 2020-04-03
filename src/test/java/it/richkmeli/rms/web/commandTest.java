@@ -6,38 +6,29 @@ import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class commandTest extends Mockito {
+public class commandTest extends ServletTestManager {
     //http://localhost:8080/Richkware-Manager-Server/command
 
     @Test
-    public void doGet() throws IOException {
-        /*
-        {
-    "channel": "richkware",
-    "data0": "BbVMwNMgUtglVgJx"
-}
-         */
+    public void doGet() {
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        String jsonInput = "{" +
+                "    \"channel\": \"richkware\"," +
+                "    \"data0\": \"BbVMwNMgUtglVgJx\"" +
+                "}";
+        doBefore(jsonInput);
 
-       when(request.getParameter("channel")).thenReturn("richkware");
-       when(request.getParameter("data0")).thenReturn("BbVMwNMgUtglVgJx");
+        new command().doGet(requestMock, responseMock);
 
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
+        //verify(requestMock, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
 
-        new command().doPost(request, response);
-
-        //verify(request, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
-        writer.flush(); // it may not have been flushed yet...
-        System.out.println(stringWriter);
-        //Assert.assertTrue(stringWriter.toString().contains("OK"));
+        String response = doAfter();
+        //Assert.assertTrue(response.contains("OK"));
     }
 
     @Test
@@ -46,12 +37,18 @@ public class commandTest extends Mockito {
 
     @Test
     public void doPost() {
-        /*
-        {
-    "channel": "richkware",
-    "device": "DEVICE_2",
-    "data": "command output"
-}
-         */
+        String jsonInput = "{" +
+                "    \"channel\": \"richkware\"," +
+                "    \"device\": \"DEVICE_2\"," +
+                "    \"data\": \"command output\"" +
+                "}";
+        doBefore(jsonInput);
+
+        new command().doPost(requestMock, responseMock);
+
+        //verify(requestMock, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
+
+        String response = doAfter();
+        Assert.assertTrue(response.contains("OK"));
     }
 }

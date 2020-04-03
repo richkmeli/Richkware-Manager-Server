@@ -2,6 +2,7 @@ package it.richkmeli.rms.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -26,11 +26,6 @@ import java.util.List;
  */
 @WebServlet("/devices")
 public class devices extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-
-    public devices() {
-        super();
-    }
 
     /**
      * GET
@@ -43,8 +38,7 @@ public class devices extends HttpServlet {
      */
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
             RMSServletManager rmsServletManager = new RMSServletManager(request, response);
             rmsServletManager.doDefaultProcessRequest();
@@ -64,18 +58,15 @@ public class devices extends HttpServlet {
             String deviceListJSON = generateDevicesListJSON(devices);
 
             String message = rmsServletManager.doDefaultProcessResponse(deviceListJSON);
-            out.println((new OkResponse(RMSStatusCode.SUCCESS, message)).json());
-
-            out.flush();
-            out.close();
+            AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, message));
 
         } catch (JServletException e) {
-            out.println(e.getKoResponseJSON());
+            AuthServletManager.print(response, e.getResponse());
         } catch (DatabaseException e) {
-            out.println((new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage()));
         } catch (Exception e) {
             //e.printStackTrace();
-            out.println((new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage())).json());
+            AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
         }
     }
 

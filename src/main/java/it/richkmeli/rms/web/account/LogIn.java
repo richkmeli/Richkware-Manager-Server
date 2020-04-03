@@ -1,6 +1,7 @@
 package it.richkmeli.rms.web.account;
 
 import it.richkmeli.jframework.auth.web.account.LogInJob;
+import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.log.Logger;
@@ -8,20 +9,19 @@ import it.richkmeli.rms.data.rmc.model.RMC;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @WebServlet("/LogIn")
 public class LogIn extends HttpServlet {
     LogInJob logIn = new LogInJob() {
 
         @Override
-        protected void doSpecificAction(HttpServletRequest request, HttpServletResponse response) throws JServletException, DatabaseException {
-            RMSServletManager rmsServletManager = new RMSServletManager(request,response);
+        protected void doSpecificAction(AuthServletManager authServletManager) throws JServletException, DatabaseException {
+            //RMSServletManager rmsServletManager = new RMSServletManager(request,response);
+            RMSServletManager rmsServletManager = new RMSServletManager(authServletManager);
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
             if (rmsSession != null) {
                 if (rmsSession.getChannel() != null) {
@@ -45,19 +45,15 @@ public class LogIn extends HttpServlet {
         }
     };
 
-    public LogIn() {
-        super();
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        RMSServletManager rmsServletManager = new RMSServletManager(request, response);
+        logIn.doAction(rmsServletManager);
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         RMSServletManager rmsServletManager = new RMSServletManager(request, response);
-        logIn.doAction(request, response, rmsServletManager);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        RMSServletManager rmsServletManager = new RMSServletManager(request, response);
-        logIn.doAction(request, response, rmsServletManager);
+        logIn.doAction(rmsServletManager);
     }
 }
