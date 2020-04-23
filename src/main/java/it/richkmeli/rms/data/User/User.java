@@ -39,16 +39,15 @@ public class User {
         this.admin = false;
     }
 
-    public User(String email, String password, Boolean admin) throws ModelException {
+    public User(String email, String password) throws ModelException {
+        this(email, password, false);
+    }
+
+    public User(@Length(max = 50) String email, @NotNull @Length(max = 100) String password, @NotNull Boolean admin) throws ModelException {
         checkUserIntegrity(email, password, admin);
         this.email = email;
         this.password = password;
         this.admin = admin;
-    }
-
-
-    public User(String email, String password) throws ModelException {
-        this(email, password, false);
     }
 
     public String getEmail() {
@@ -73,6 +72,22 @@ public class User {
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public Set<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(Set<Device> devices) {
+        this.devices = devices;
+    }
+
+    public Set<Rmc> getRmcs() {
+        return rmcs;
+    }
+
+    public void setRmcs(Set<Rmc> rmcs) {
+        this.rmcs = rmcs;
     }
 
     public static void checkUserIntegrity(String email, String password, Boolean admin) throws ModelException {

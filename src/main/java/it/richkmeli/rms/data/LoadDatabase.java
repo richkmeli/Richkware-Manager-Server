@@ -11,9 +11,10 @@ import it.richkmeli.rms.data.rmc.model.Rmc;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.query.JpaQueryCreator;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 
 // Annotating a class with the @Configuration annotation indicates
 // that the class will be used by JavaConfig as a source of bean definitions.
@@ -27,18 +28,27 @@ class LoadDatabase {
                     RandomStringGenerator.generateAlphanumericString(4) + "@example.com", "00000000", false)).getEmail();
             userRepository.save(new User("richk@i.it", "00000000", true));
 
+            if (!userRepository.existsById("richk2@i.it")) {
+                userRepository.save(new User("richk2@i.it", "00000000", true));
+            }
+
             deviceRepository.save(new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", ""));
+            deviceRepository.save(new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk2@i.it", "", ""));
 
             Rmc rmc = new Rmc("richk@i.it", "test_rmc_ID");
-            Rmc rmc2 = new Rmc("richk@i.it", "test_rmc_ID2");
+            Rmc rmc2 = new Rmc("richk2@i.it", "test_rmc_ID" + RandomStringGenerator.generateAlphanumericString(4));
 
             rmcRepository.save(rmc);
+            rmcRepository.save(rmc2);
+//            EntityManager em = emf.createEntityManager();
+//            em.getTransaction().begin();
+//            em.persist(rmc2);
+//            em.getTransaction().commit();
+//            em.close();
 
-         /*   EntityManager em = emf.createEntityManager();
-            em.getTransaction().begin();
-            em.persist(rmc2);
-            em.getTransaction().commit();
-            em.close();*/
+            userRepository.deleteById("richk2@i.it");
+
+
         };
     }
 
