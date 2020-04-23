@@ -31,7 +31,7 @@ RMS has been developed following the REST principles; the following table shows 
 ## Requirements
 These are the base requirements to build and use Richkware:
 
--   Java 1.5 or higher
+-   Java 1.8 or higher
 -   MySQL
 
 ## Get Started
