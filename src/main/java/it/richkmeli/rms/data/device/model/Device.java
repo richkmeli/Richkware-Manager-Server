@@ -1,17 +1,38 @@
 package it.richkmeli.rms.data.device.model;
 
-import it.richkmeli.jframework.orm.annotation.Id;
+import it.richkmeli.rms.data.User.User;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
+@Entity
 public class Device {
     @Id
+    @NotNull
+    @Length(max = 50)
     private String name;
+    @NotNull
+    @Length(max = 25)
     private String ip;
+    @Length(max = 10)
     private String serverPort;
+    @Length(max = 25)
     private String lastConnection;
+    @Length(max = 32)
     private String encryptionKey;
-    private String associatedUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User associatedUser;
+    @Length(max = 1000)
     private String commands;
+    @Length(max = 1000)
     private String commandsOutput;
+
+    public Device() {
+    }
 
     public Device(String name, String ip, String serverPort, String lastConnection, String encryptionKey, String associatedUser, String commands, String commandsOutput) {
         this.name = name;
@@ -19,7 +40,7 @@ public class Device {
         this.serverPort = serverPort;
         this.lastConnection = lastConnection;
         this.encryptionKey = encryptionKey;
-        this.associatedUser = associatedUser;
+        this.associatedUser = new User(associatedUser);
         this.commands = commands;
         this.commandsOutput = commandsOutput;
     }
@@ -65,11 +86,11 @@ public class Device {
     }
 
     public String getAssociatedUser() {
-        return associatedUser;
+        return associatedUser.getEmail();
     }
 
     public void setAssociatedUser(String associatedUser) {
-        this.associatedUser = associatedUser;
+        this.associatedUser = new User(associatedUser);
     }
 
     public String getCommands() {
