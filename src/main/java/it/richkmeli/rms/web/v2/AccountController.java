@@ -1,13 +1,11 @@
 package it.richkmeli.rms.web.v2;
 
-import it.richkmeli.jframework.network.tcp.server.http.payload.response.Response;
-import it.richkmeli.rms.data.User.UserRepository;
+import it.richkmeli.rms.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @RestController
 public class AccountController {

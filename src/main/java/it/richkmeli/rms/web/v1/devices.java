@@ -7,8 +7,8 @@ import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoRespon
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
-import it.richkmeli.rms.data.device.DeviceDatabaseManager;
-import it.richkmeli.rms.data.device.model.Device;
+import it.richkmeli.rms.data.model.device._DeviceDatabaseManager;
+import it.richkmeli.rms.data.model.device.Device;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
 import it.richkmeli.rms.web.v1.util.RMSStatusCode;
@@ -50,7 +50,7 @@ public class devices extends HttpServlet {
 
             // server session
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
-            DeviceDatabaseManager databaseManager = rmsSession.getDeviceDatabaseManager();
+            _DeviceDatabaseManager databaseManager = rmsSession.getDeviceDatabaseManager();
             List<Device> devices = null;
             if (rmsSession.isAdmin()) {
                 // if the user is an Admin, it gets the list of all devices

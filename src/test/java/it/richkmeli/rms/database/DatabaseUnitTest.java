@@ -4,10 +4,10 @@
 //import it.richkmeli.jframework.auth.model.User;
 //import it.richkmeli.jframework.database.DatabaseException;
 //import it.richkmeli.jframework.util.Logger;
-//import it.richkmeli.rms.data.device.DeviceDatabaseManager;
-//import it.richkmeli.rms.data.device.model.Device;
-//import it.richkmeli.rms.data.rmc.RMCDatabaseManager;
-//import it.richkmeli.rms.data.rmc.model.RMC;
+//import it.richkmeli.rms.data.entity.device.DeviceDatabaseManager;
+//import it.richkmeli.rms.data.entity.Device;
+//import it.richkmeli.rms.data.entity.rmc.RMCDatabaseManager;
+//import it.richkmeli.rms.data.entity.rmc.model.RMC;
 //import org.junit.After;
 //import org.junit.Before;
 //import org.junit.Test;

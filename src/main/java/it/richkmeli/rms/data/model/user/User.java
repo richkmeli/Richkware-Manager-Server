@@ -1,11 +1,11 @@
-package it.richkmeli.rms.data.User;
+package it.richkmeli.rms.data.model.user;
 
 
 import it.richkmeli.jframework.auth.model.exception.ModelException;
 import it.richkmeli.jframework.util.regex.RegexManager;
 import it.richkmeli.jframework.util.regex.exception.RegexException;
-import it.richkmeli.rms.data.device.model.Device;
-import it.richkmeli.rms.data.rmc.model.Rmc;
+import it.richkmeli.rms.data.model.device.Device;
+import it.richkmeli.rms.data.model.rmc.Rmc;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;

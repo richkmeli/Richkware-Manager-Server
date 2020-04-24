@@ -2,19 +2,15 @@ package it.richkmeli.rms.data;
 
 
 import it.richkmeli.jframework.util.RandomStringGenerator;
-import it.richkmeli.rms.data.User.User;
-import it.richkmeli.rms.data.User.UserRepository;
-import it.richkmeli.rms.data.device.DeviceRepository;
-import it.richkmeli.rms.data.device.model.Device;
-import it.richkmeli.rms.data.rmc.RmcRepository;
-import it.richkmeli.rms.data.rmc.model.Rmc;
+import it.richkmeli.rms.data.model.user.User;
+import it.richkmeli.rms.data.repository.UserRepository;
+import it.richkmeli.rms.data.repository.DeviceRepository;
+import it.richkmeli.rms.data.model.device.Device;
+import it.richkmeli.rms.data.repository.RmcRepository;
+import it.richkmeli.rms.data.model.rmc.Rmc;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.query.JpaQueryCreator;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.TypedQuery;
 
 // Annotating a class with the @Configuration annotation indicates
 // that the class will be used by JavaConfig as a source of bean definitions.

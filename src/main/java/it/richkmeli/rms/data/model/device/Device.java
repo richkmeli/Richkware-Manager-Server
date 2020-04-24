@@ -1,13 +1,10 @@
-package it.richkmeli.rms.data.device.model;
+package it.richkmeli.rms.data.model.device;
 
-import it.richkmeli.rms.data.User.User;
-import org.hibernate.annotations.Cascade;
+import it.richkmeli.rms.data.model.user.User;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Entity
 public class Device {

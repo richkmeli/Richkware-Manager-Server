@@ -1,9 +1,9 @@
-package it.richkmeli.rms.config.datasource;
+package it.richkmeli.rms.data.config;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
 @Profile("docker")
 public class DockerDatasourceConfig implements DatasourceConfig {
     @Override

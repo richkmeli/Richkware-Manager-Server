@@ -9,8 +9,8 @@ import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkRespon
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.util.RandomStringGenerator;
 import it.richkmeli.jframework.util.log.Logger;
-import it.richkmeli.rms.data.device.DeviceDatabaseManager;
-import it.richkmeli.rms.data.device.model.Device;
+import it.richkmeli.rms.data.model.device._DeviceDatabaseManager;
+import it.richkmeli.rms.data.model.device.Device;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
 import it.richkmeli.rms.web.v1.util.RMSStatusCode;
@@ -82,7 +82,7 @@ public class device extends HttpServlet {
                 String name = Crypto.decryptRC4(data0, password);
 
                 // check in the DB if there is an entry with that name
-                DeviceDatabaseManager deviceDatabaseManager = rmsSession.getDeviceDatabaseManager();
+                _DeviceDatabaseManager deviceDatabaseManager = rmsSession.getDeviceDatabaseManager();
                 Device oldDevice = deviceDatabaseManager.getDevice(name);
 
                 // if this entry exists, then it's used to decrypt the encryption key in the DB

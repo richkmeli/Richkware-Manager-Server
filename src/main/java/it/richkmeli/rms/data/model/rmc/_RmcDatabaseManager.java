@@ -1,17 +1,15 @@
-package it.richkmeli.rms.data.rmc;
+package it.richkmeli.rms.data.model.rmc;
 
 
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.orm.DatabaseManager;
-import it.richkmeli.rms.data.rmc.model.Rmc;
-import it.richkmeli.rms.data.rmc.model.RmcModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RmcDatabaseManager extends DatabaseManager implements RmcModel {
+public class _RmcDatabaseManager extends DatabaseManager implements _RmcModel {
 
-    public RmcDatabaseManager() throws DatabaseException {
+    public _RmcDatabaseManager() throws DatabaseException {
         schemaName = "AuthSchema";
         tableName = schemaName + "." + "rmc";
         table = "(" +

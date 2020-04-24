@@ -1,10 +1,10 @@
-package it.richkmeli.rms.data.device.model;
+package it.richkmeli.rms.data.model.device;
 
 import it.richkmeli.jframework.orm.DatabaseException;
 
 import java.util.List;
 
-public interface DeviceModel {
+public interface _DeviceModel {
 
     List<Device> getAllDevices() throws DatabaseException;
 

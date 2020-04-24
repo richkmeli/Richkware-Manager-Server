@@ -1,16 +1,14 @@
-package it.richkmeli.rms.data.device;
+package it.richkmeli.rms.data.model.device;
 
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.orm.DatabaseManager;
-import it.richkmeli.rms.data.device.model.Device;
-import it.richkmeli.rms.data.device.model.DeviceModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeviceDatabaseManager extends DatabaseManager implements DeviceModel {
+public class _DeviceDatabaseManager extends DatabaseManager implements _DeviceModel {
 
-    public DeviceDatabaseManager() throws DatabaseException {
+    public _DeviceDatabaseManager() throws DatabaseException {
         schemaName = "AuthSchema";
         tableName = schemaName + "." + "device";
         table = "(" +

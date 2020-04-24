@@ -1,11 +1,11 @@
-package it.richkmeli.rms.data.rmc.model;
+package it.richkmeli.rms.data.model.rmc;
 
 
 import it.richkmeli.jframework.orm.DatabaseException;
 
 import java.util.List;
 
-public interface RmcModel {
+public interface _RmcModel {
 
     boolean addRMC(Rmc client) throws DatabaseException;
 

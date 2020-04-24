@@ -1,7 +1,7 @@
 package it.richkmeli.rms.web.v2;
 
-import it.richkmeli.rms.data.User.User;
-import it.richkmeli.rms.data.User.UserRepository;
+import it.richkmeli.rms.data.model.user.User;
+import it.richkmeli.rms.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,9 +9,9 @@ import java.util.Optional;
 
 @RestController
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
+    @Autowired
     UserController(UserRepository repository) {
         this.userRepository = repository;
     }

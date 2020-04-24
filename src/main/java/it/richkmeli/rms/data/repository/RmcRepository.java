@@ -1,9 +1,8 @@
-package it.richkmeli.rms.data.rmc;
+package it.richkmeli.rms.data.repository;
 
-import it.richkmeli.rms.data.rmc.model.Rmc;
-import it.richkmeli.rms.data.rmc.model.RmcId;
+import it.richkmeli.rms.data.model.rmc.Rmc;
+import it.richkmeli.rms.data.model.rmc.RmcId;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
