@@ -3,7 +3,7 @@ package it.richkmeli.rms.web.v1;
 import it.richkmeli.rms.data.model.device._DeviceDatabaseManager;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -33,7 +33,7 @@ public class ServletTestManager extends Mockito {
     private StringWriter stringWriter;
     private PrintWriter writer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }

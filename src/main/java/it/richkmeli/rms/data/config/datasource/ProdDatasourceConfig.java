@@ -1,4 +1,4 @@
-package it.richkmeli.rms.data.config;
+package it.richkmeli.rms.data.config.datasource;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

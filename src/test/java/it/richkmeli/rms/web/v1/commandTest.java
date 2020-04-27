@@ -1,7 +1,8 @@
 package it.richkmeli.rms.web.v1;
 
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.util.Assert;
 
 public class commandTest extends ServletTestManager {
     //http://localhost:8080/Richkware-Manager-Server/command
@@ -41,6 +42,6 @@ public class commandTest extends ServletTestManager {
         //verify(requestMock, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
 
         String response = doAfter();
-        Assert.assertTrue(response.contains("OK"));
+        assert response.contains("OK");
     }
 }

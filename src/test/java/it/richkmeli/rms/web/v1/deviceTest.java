@@ -2,15 +2,15 @@ package it.richkmeli.rms.web.v1;
 
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.crypto.exception.CryptoException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ResourceBundle;
 
 public class deviceTest {
     private String password;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
     }
