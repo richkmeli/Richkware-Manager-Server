@@ -1,13 +1,12 @@
 package it.richkmeli.rms.web.v1;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
 
 public class commandTest extends ServletTestManager {
     //http://localhost:8080/Richkware-Manager-Server/command
 
-    @Test
+    //@Test cambia Schema db authschema in richkware
     public void doGet() {
 
         String jsonInput = "{" +
@@ -28,7 +27,8 @@ public class commandTest extends ServletTestManager {
     public void doPut() {
     }
 
-    @Test
+
+    //@Test cambia Schema db authschema in richkware
     public void doPost() {
         String jsonInput = "{" +
                 "    \"channel\": \"richkware\"," +
