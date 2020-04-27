@@ -15,6 +15,9 @@ before_install:
   - sudo apt-get update
   - docker-compose --version
   - cp .travis.settings.xml $HOME/.m2/settings.xml
+  # Disable MYSQL services enabled by default
+  - sudo service mysql stop
+  - docker-compose up -d db
 
 install:
   - mvn clean install
@@ -22,11 +25,11 @@ install:
 
 before_script:
   # Disable services enabled by default
-  - sudo service mysql stop
-  - sudo service postgresql stop
+  #- sudo service mysql stop
+  #- sudo service postgresql stop
 
 script:
-  - docker-compose up -d
+  - docker-compose up -d web
 
 after_success:
 #  - curl http://0.0.0.0:8080/Richkware-Manager-Server/test
