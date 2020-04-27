@@ -2,6 +2,7 @@ package it.richkmeli.rms.web.v2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.richkmeli.jframework.auth.model.exception.ModelException;
 import it.richkmeli.rms.Application;
 import it.richkmeli.rms.data.model.user.User;
 import org.hibernate.Hibernate;
@@ -21,16 +22,14 @@ class UserControllerTest {
 
     @Transactional
     @Test
-    void getUserById(){
+    void getUserById() throws ModelException {
+        userController.createUser(new User("test@test.it", "00000000", false));
+
         Iterable<User> users = userController.getAll();
 
         ObjectMapper mapper = new ObjectMapper();
         try {
             for (User u : users) {
-
-                Hibernate.initialize(u.getDevices());
-                Hibernate.initialize(u.getRmcs());
-
                 String jsonString = mapper.writeValueAsString(u);
                 System.out.println(jsonString);
             }
