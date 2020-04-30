@@ -25,7 +25,7 @@ services:
     volumes:
         - ./init.sql:/data/application/init.sql
     environment:
-      MYSQL_ROOT_PASSWORD: richk
-      MYSQL_DATABASE: richkware
-      MYSQL_USER: richk
-      MYSQL_PASSWORD: richk
+        - MYSQL_ROOT_PASSWORD=richk
+        - MYSQL_DATABASE=richkware
+        - MYSQL_USER=richk
+        - MYSQL_PASSWORD=richk
