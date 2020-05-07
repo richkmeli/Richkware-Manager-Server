@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(
         name = "SignUp",
         description = "",
-        urlPatterns = {"/SignUp"}
+        urlPatterns = {"/SignUp", "/Richkware-Manager-Server/SignUp"}
 )
 public class SignUp extends HttpServlet {
     SignUpJob signUp = new SignUpJob() {

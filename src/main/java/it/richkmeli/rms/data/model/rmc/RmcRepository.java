@@ -1,4 +1,4 @@
-package it.richkmeli.rms.data.repository;
+package it.richkmeli.rms.data.model.rmc;
 
 import it.richkmeli.rms.data.model.rmc.Rmc;
 import it.richkmeli.rms.data.model.rmc.RmcId;

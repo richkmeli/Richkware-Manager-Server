@@ -16,7 +16,7 @@ import java.io.IOException;
 @WebServlet(
         name = "SecureConnection",
         description = "",
-        urlPatterns = {"/SecureConnection"}
+        urlPatterns = {"/SecureConnection", "/Richkware-Manager-Server/SecureConnection"}
 )
 public class SecureConnection extends HttpServlet {
     SecureConnectionJob secureConnection = new SecureConnectionJob() {

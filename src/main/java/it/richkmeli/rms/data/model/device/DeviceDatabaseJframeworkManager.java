@@ -6,9 +6,12 @@ import it.richkmeli.jframework.orm.DatabaseManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class _DeviceDatabaseManager extends DatabaseManager implements _DeviceModel {
+/**
+ * Using Jframework ORM
+ */
+public class DeviceDatabaseJframeworkManager extends DatabaseManager implements DeviceDatabaseModel {
 
-    public _DeviceDatabaseManager() throws DatabaseException {
+    public DeviceDatabaseJframeworkManager() throws DatabaseException {
         schemaName = "AuthSchema";
         tableName = schemaName + "." + "device";
         table = "(" +
@@ -60,12 +63,16 @@ public class _DeviceDatabaseManager extends DatabaseManager implements _DeviceMo
         return add(device);
     }*/
 
-    public boolean addDevice(Device device) throws DatabaseException {
-        return create(device);
+    public Device addDevice(Device device) throws DatabaseException {
+        //return create(device);
+        create(device);
+        return device;
     }
 
-    public boolean editDevice(Device device) throws DatabaseException {
-        return update(device);
+    public Device editDevice(Device device) throws DatabaseException {
+        //return update(device);
+        update(device);
+        return device;
     }
 
     public Device getDevice(String name) throws DatabaseException {
@@ -73,8 +80,9 @@ public class _DeviceDatabaseManager extends DatabaseManager implements _DeviceMo
     }
 
 
-    public boolean removeDevice(String name) throws DatabaseException {
-        return delete(new Device(name, null, null, null, null, null, null, null));
+    public void removeDevice(String name) throws DatabaseException {
+        //return
+        delete(new Device(name, null, null, null, null, null, null, null));
     }
 
     public String getEncryptionKey(String name) throws DatabaseException {

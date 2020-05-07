@@ -1,12 +1,10 @@
 package it.richkmeli.rms.web.v2;
 
 import it.richkmeli.rms.data.model.user.User;
-import it.richkmeli.rms.data.repository.UserRepository;
+import it.richkmeli.rms.data.model.user.UserRepository;
 import it.richkmeli.rms.web.v2.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;

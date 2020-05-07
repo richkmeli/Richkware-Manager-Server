@@ -1,11 +1,15 @@
 package it.richkmeli.rms.web.v1.util;
 
+import it.richkmeli.jframework.auth.AuthDatabaseModel;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.exception.CryptoException;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.log.Logger;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
+import it.richkmeli.rms.data.model.user.AuthDatabaseSpringManager;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -122,10 +126,27 @@ public class RMSServletManager extends AuthServletManager {
         return output;
     }
 
-   /* @Override
+
+    @Override
+    protected AuthDatabaseModel getAuthDatabaseManagerInstance() throws DatabaseException {
+        return AuthDatabaseSpringManager.getInstance();
+    }
+
+     /* @Override
     public <T extends Session> T getNewSessionInstance() throws ServletException, DatabaseException {
         return (T) new RMSSession(getServerSession());
     }*/
+
+    public RMSSession getRMSServerSession() throws JServletException {
+        try {
+            return getRMSServerSession(
+                    DeviceDatabaseSpringManager.getInstance()
+                    //new DeviceDatabaseJframeworkManager()
+            );
+        } catch (DatabaseException e) {
+            throw new JServletException(e);
+        }
+    }
 
     public static void setRMSServerSession(RMSSession rmsSession, HttpServletRequest request) {
         // http session
@@ -133,7 +154,7 @@ public class RMSServletManager extends AuthServletManager {
         httpSession.setAttribute(HTTP_RMS_SESSION_NAME, rmsSession);
     }
 
-    public RMSSession getRMSServerSession() throws JServletException {
+    public RMSSession getRMSServerSession(DeviceDatabaseModel deviceDatabaseModel) throws JServletException {
         // http session
         HttpSession httpSession = httpServletRequest.getSession();
         // server session
@@ -141,7 +162,7 @@ public class RMSServletManager extends AuthServletManager {
         authSession = getAuthServerSession();
         if (rmsSession1 == null) {
             try {
-                rmsSession = new RMSSession(authSession);
+                rmsSession = new RMSSession(deviceDatabaseModel, authSession);
                 setRMSServerSession(rmsSession, httpServletRequest);
             } catch (DatabaseException e) {
                 throw new JServletException(e);

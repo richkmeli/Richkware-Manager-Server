@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(
         name = "user",
         description = "",
-        urlPatterns = {"/user"}
+        urlPatterns = {"/user", "/Richkware-Manager-Server/user"}
 )
 public class user extends HttpServlet {
     UserJob userJob = new UserJob() {

@@ -1,4 +1,4 @@
-package it.richkmeli.rms.data.repository;
+package it.richkmeli.rms.data.model.user;
 
 import it.richkmeli.rms.data.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(
         name = "LogIn",
         description = "",
-        urlPatterns = {"/LogIn"}
+        urlPatterns = {"/LogIn", "/Richkware-Manager-Server/LogIn"}
 )
 public class LogIn extends HttpServlet {
     LogInJob logIn = new LogInJob() {

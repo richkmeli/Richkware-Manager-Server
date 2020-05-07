@@ -1,9 +1,11 @@
 package it.richkmeli.rms.web.v1.util;
 
+import it.richkmeli.jframework.auth.AuthDatabaseModel;
 import it.richkmeli.jframework.auth.web.util.AuthSession;
 import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.log.Logger;
-import it.richkmeli.rms.data.model.device._DeviceDatabaseManager;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
 import it.richkmeli.rms.data.model.rmc._RmcDatabaseManager;
 
 /**
@@ -11,22 +13,22 @@ import it.richkmeli.rms.data.model.rmc._RmcDatabaseManager;
  */
 
 public class RMSSession extends AuthSession {
-    private _DeviceDatabaseManager deviceDatabaseManager;
+    private DeviceDatabaseModel deviceDatabaseModel;
     private _RmcDatabaseManager rmcDatabaseManager;
     private String rmcID;       //client id from RichkwareSchema
     private String channel;
 
-    public RMSSession() throws DatabaseException {
-        super();
-        deviceDatabaseManager = new _DeviceDatabaseManager();
+    public RMSSession(DeviceDatabaseModel deviceDatabaseModel, AuthDatabaseModel authDatabaseModel) throws DatabaseException {
+        super(authDatabaseModel);
+        this.deviceDatabaseModel = deviceDatabaseModel;
         rmcDatabaseManager = new _RmcDatabaseManager();
         channel = null;
         rmcID = null;
     }
 
-    public RMSSession(AuthSession authSession) throws DatabaseException {
+    public RMSSession(DeviceDatabaseModel deviceDatabaseModel, AuthSession authSession) throws DatabaseException {
         super(authSession);
-        deviceDatabaseManager = new _DeviceDatabaseManager();
+        this.deviceDatabaseModel = deviceDatabaseModel;
         rmcDatabaseManager = new _RmcDatabaseManager();
         channel = null;
         rmcID = null;
@@ -34,19 +36,19 @@ public class RMSSession extends AuthSession {
 
     public RMSSession(RMSSession rmsSession, AuthSession authSession) {
         super(authSession);
-        deviceDatabaseManager = rmsSession.deviceDatabaseManager;
+        this.deviceDatabaseModel = rmsSession.deviceDatabaseModel;
         rmcDatabaseManager = rmsSession.rmcDatabaseManager;
         channel = rmsSession.channel;
         rmcID = rmsSession.rmcID;
     }
 
-    public _DeviceDatabaseManager getDeviceDatabaseManager() throws DatabaseException {
+    public DeviceDatabaseModel getDeviceDatabaseManager() throws DatabaseException {
         //Logger.i("deviceDatabaseManager" + deviceDatabaseManager);
-        if (deviceDatabaseManager == null) {
+        if (deviceDatabaseModel == null) {
             Logger.info("init AuthDatabase");
-            deviceDatabaseManager = new _DeviceDatabaseManager();
+            //deviceDatabaseManager = new DeviceDatabaseManager();
         }
-        return deviceDatabaseManager;
+        return deviceDatabaseModel;
     }
 
 

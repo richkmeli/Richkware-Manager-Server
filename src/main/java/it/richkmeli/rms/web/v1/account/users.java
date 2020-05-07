@@ -15,7 +15,7 @@ import java.io.IOException;
 @WebServlet(
         name = "users",
         description = "",
-        urlPatterns = {"/users"}
+        urlPatterns = {"/users", "/Richkware-Manager-Server/users"}
 )
 public class users extends HttpServlet {
     UsersJob usersListJob = new UsersJob() {

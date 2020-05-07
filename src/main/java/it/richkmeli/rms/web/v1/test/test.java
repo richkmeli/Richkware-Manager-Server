@@ -22,7 +22,7 @@ import java.io.PrintWriter;
 @WebServlet(
         name = "test",
         description = "",
-        urlPatterns = {"/test"}
+        urlPatterns = {"/test", "/Richkware-Manager-Server/test"}
 )
 public class test extends HttpServlet {
 
@@ -45,7 +45,7 @@ public class test extends HttpServlet {
         out = "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "\t<head>\n" +
-                "\t\t<script src=\"js/jquery/jquery.min.js\"></script>\n" +
+                "\t\t<script src=\"/webjars/jquery/3.3.1/jquery.min.js\"></script>\n" +
                 "\t\t\t<script>\n" +
                 "\t\t\t$(document).ready(function() {\n" +
                 "\t\t\t\tdocument.location.replace(\"login.html\")\n" +

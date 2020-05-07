@@ -24,7 +24,7 @@ import java.util.*;
 @WebServlet(
         name = "command",
         description = "",
-        urlPatterns = {"/command"}
+        urlPatterns = {"/command", "/Richkware-Manager-Server/command"}
 )
 public class command extends HttpServlet {
     private String password;

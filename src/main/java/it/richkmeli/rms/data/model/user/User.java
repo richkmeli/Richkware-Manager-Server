@@ -1,7 +1,6 @@
 package it.richkmeli.rms.data.model.user;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.richkmeli.jframework.auth.model.exception.ModelException;
 import it.richkmeli.jframework.util.regex.RegexManager;
 import it.richkmeli.jframework.util.regex.exception.RegexException;
@@ -25,12 +24,12 @@ public class User {
     private Boolean admin;
 
     //@JsonIgnore
-    @OneToMany(mappedBy = "associatedUser", cascade={CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "associatedUser", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
     // OR if you want in json object also the device list when it isn't load at that time
     //@OneToMany(mappedBy = "associatedUser", cascade={CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Set<Device> devices;
 
-    @OneToMany(mappedBy = "associatedUser", cascade={CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "associatedUser", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<Rmc> rmcs;
 
     public User() {

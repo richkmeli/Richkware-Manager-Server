@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(
         name = "LogOut",
         description = "",
-        urlPatterns = {"/LogOut"}
+        urlPatterns = {"/LogOut", "/Richkware-Manager-Server/LogOut"}
 )
 public class LogOut extends HttpServlet {
     LogOutJob logOut = new LogOutJob() {

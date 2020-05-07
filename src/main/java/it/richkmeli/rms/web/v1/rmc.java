@@ -27,7 +27,7 @@ import java.util.Map;
 @WebServlet(
         name = "rmc",
         description = "",
-        urlPatterns = {"/rmc"}
+        urlPatterns = {"/rmc", "/Richkware-Manager-Server/rmc"}
 )
 public class rmc extends HttpServlet {
 

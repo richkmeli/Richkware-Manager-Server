@@ -1,5 +1,7 @@
 package it.richkmeli.rms.web.v1;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
@@ -7,7 +9,8 @@ import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoRespon
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.orm.DatabaseException;
-import it.richkmeli.rms.data.model.device._DeviceDatabaseManager;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
 import it.richkmeli.rms.data.model.device.Device;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
@@ -27,7 +30,7 @@ import java.util.List;
 @WebServlet(
         name = "devices",
         description = "",
-        urlPatterns = {"/devices"}
+        urlPatterns = {"/devices", "/Richkware-Manager-Server/devices"}
 )
 public class devices extends HttpServlet {
 
@@ -50,7 +53,7 @@ public class devices extends HttpServlet {
 
             // server session
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
-            _DeviceDatabaseManager databaseManager = rmsSession.getDeviceDatabaseManager();
+            DeviceDatabaseModel databaseManager = rmsSession.getDeviceDatabaseManager();
             List<Device> devices = null;
             if (rmsSession.isAdmin()) {
                 // if the user is an Admin, it gets the list of all devices
@@ -74,14 +77,16 @@ public class devices extends HttpServlet {
         }
     }
 
-    private String generateDevicesListJSON(List<Device> devices) {
-        Type type = new TypeToken<List<Device>>() {
-        }.getType();
-        Gson gson = new Gson();
+    private String generateDevicesListJSON(List<Device> devices) throws JsonProcessingException {
+//        Type type = new TypeToken<List<Device>>() {
+//        }.getType();
+//        Gson gson = new Gson();
+//
+//        // oggetto -> gson
+//        String devicesJSON = gson.toJson(devices, type);
 
-        // oggetto -> gson
-        String devicesJSON = gson.toJson(devices, type);
-
+        ObjectMapper objectMapper = new ObjectMapper();
+        String devicesJSON = objectMapper.writeValueAsString(devices);
         return devicesJSON;
     }
 

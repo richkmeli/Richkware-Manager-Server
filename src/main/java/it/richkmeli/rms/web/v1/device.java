@@ -9,7 +9,8 @@ import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkRespon
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.util.RandomStringGenerator;
 import it.richkmeli.jframework.util.log.Logger;
-import it.richkmeli.rms.data.model.device._DeviceDatabaseManager;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
 import it.richkmeli.rms.data.model.device.Device;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
@@ -31,7 +32,7 @@ import java.util.*;
 @WebServlet(
         name = "device",
         description = "",
-        urlPatterns = {"/device"}
+        urlPatterns = {"/device", "/Richkware-Manager-Server/device"}
 )
 public class device extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -82,8 +83,8 @@ public class device extends HttpServlet {
                 String name = Crypto.decryptRC4(data0, password);
 
                 // check in the DB if there is an entry with that name
-                _DeviceDatabaseManager deviceDatabaseManager = rmsSession.getDeviceDatabaseManager();
-                Device oldDevice = deviceDatabaseManager.getDevice(name);
+                DeviceDatabaseModel deviceDatabaseSpringManager = rmsSession.getDeviceDatabaseManager();
+                Device oldDevice = deviceDatabaseSpringManager.getDevice(name);
 
                 // if this entry exists, then it's used to decrypt the encryption key in the DB
                 String serverPort;
@@ -115,12 +116,12 @@ public class device extends HttpServlet {
 
                 String message = "";
                 if (oldDevice == null) {
-                    deviceDatabaseManager.addDevice(newDevice);
+                    deviceDatabaseSpringManager.addDevice(newDevice);
                     message = "Device " + newDevice.getName() + " added.";
                 } else {
                     // do not change Encryption Key
                     newDevice.setEncryptionKey(oldDevice.getEncryptionKey());
-                    deviceDatabaseManager.editDevice(newDevice);
+                    deviceDatabaseSpringManager.editDevice(newDevice);
                     message = "Device " + newDevice.getName() + " updated.";
                 }
 

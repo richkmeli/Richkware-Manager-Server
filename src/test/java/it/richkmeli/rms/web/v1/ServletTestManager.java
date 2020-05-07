@@ -1,6 +1,6 @@
 package it.richkmeli.rms.web.v1;
 
-import it.richkmeli.rms.data.model.device._DeviceDatabaseManager;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseJframeworkManager;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ public class ServletTestManager extends Mockito {
     @Mock
     protected RMSSession rmsSessionMock;
     @InjectMocks
-    protected _DeviceDatabaseManager deviceDatabaseManagerMock;
+    protected DeviceDatabaseJframeworkManager deviceDatabaseManagerMock;
 
     private StringWriter stringWriter;
     private PrintWriter writer;

@@ -2,11 +2,12 @@ package it.richkmeli.rms.data;
 
 
 import it.richkmeli.jframework.util.RandomStringGenerator;
+import it.richkmeli.rms.data.model.user.AuthDatabaseSpringManager;
 import it.richkmeli.rms.data.model.user.User;
-import it.richkmeli.rms.data.repository.UserRepository;
-import it.richkmeli.rms.data.repository.DeviceRepository;
+import it.richkmeli.rms.data.model.user.UserRepository;
+import it.richkmeli.rms.data.model.device.DeviceRepository;
 import it.richkmeli.rms.data.model.device.Device;
-import it.richkmeli.rms.data.repository.RmcRepository;
+import it.richkmeli.rms.data.model.rmc.RmcRepository;
 import it.richkmeli.rms.data.model.rmc.Rmc;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,7 @@ class LoadDatabase {
         return args -> {
             userRepository.save(new User(
                     RandomStringGenerator.generateAlphanumericString(4) + "@example.com", "00000000", false)).getEmail();
-            userRepository.save(new User("richk@i.it", "00000000", true));
+            userRepository.save(new User("richk@i.it", "MDAwMDAwMDAwZGE2MTNlMGRmYjNmN2VkNzE4OGZjOTE1YzIwYjQ3YmVmODBjNTM4NzFlNmQyMzc5MTE2ZTRiZDI3ZjE0NTZlMw==", true));
 
             if (!userRepository.existsById("richk2@i.it")) {
                 userRepository.save(new User("richk2@i.it", "00000000", true));

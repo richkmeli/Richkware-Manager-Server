@@ -23,10 +23,9 @@ Richkware-Manager-Server.iml
 lib/
 out/
 docker-dir/
-target/Richkware-Manager-Server-1.0-SNAPSHOT.jar
-target/classes/configuration.properties
+target/
+target/*
 target/generated-sources/
 target/maven-archiver/
 target/maven-status/
 META-INF
-/MOUNT2SERVER.sh
