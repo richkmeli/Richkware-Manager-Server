@@ -7,9 +7,9 @@ import it.richkmeli.jframework.orm.DatabaseManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class _RmcDatabaseManager extends DatabaseManager implements _RmcModel {
+public class RmcDatabaseJframeworkManager extends DatabaseManager implements RmcDatabaseModel {
 
-    public _RmcDatabaseManager() throws DatabaseException {
+    public RmcDatabaseJframeworkManager() throws DatabaseException {
         schemaName = "AuthSchema";
         tableName = schemaName + "." + "rmc";
         table = "(" +
@@ -22,21 +22,30 @@ public class _RmcDatabaseManager extends DatabaseManager implements _RmcModel {
     }
 
     @Override
-    public boolean addRMC(Rmc client) throws DatabaseException {
-        return create(client);
+    public Rmc addRMC(Rmc client) throws DatabaseException {
+        if (create(client)) {
+            return client;
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public boolean editRMC(Rmc client) throws DatabaseException {
-        if (removeRmcUserPair(new Rmc("", client.getRmcId())))
+    public Rmc editRMC(Rmc client) throws DatabaseException {
+        //if (
+                removeRmcUserPair(new Rmc("", client.getRmcId()));
+        //) {
             return addRMC(client);
-        return false;
-        //TODO: Fix update -> Anche le chiavi primarie devono essere modificabili
-        // return update(client);
+            //return false;
+            //TODO: Fix update -> Anche le chiavi primarie devono essere modificabili
+            // return update(client);
+       /* } else {
+            return null;
+        }*/
     }
 
     @Override
-    public boolean removeRMCs(String associatedUser) throws DatabaseException {
+    public void removeRMCs(String associatedUser) throws DatabaseException {
         List<Rmc> rmcs = getRMCs(associatedUser);
         boolean response = true;
         for (Rmc rmc : rmcs) {
@@ -44,24 +53,26 @@ public class _RmcDatabaseManager extends DatabaseManager implements _RmcModel {
                 response = false;
             }
         }
-        return response;
+        //return response;
     }
 
     @Override
-    public boolean removeRMC(String rmcId) throws DatabaseException {
+    public void removeRMC(String rmcId) throws DatabaseException {
         List<Rmc> rmcs = getAssociatedUsers(rmcId);
         boolean response = true;
         for (Rmc rmc : rmcs) {
-            if (!removeRmcUserPair(rmc)) {
-                response = false;
-            }
+            //  if (!
+            removeRmcUserPair(rmc);
+            //  ) {
+            //      response = false;
         }
-        return response;
     }
+    //return response;
+    //}
 
     @Override
-    public boolean removeRmcUserPair(Rmc client) throws DatabaseException {
-        return delete(client);
+    public void removeRmcUserPair(Rmc client) throws DatabaseException {
+        delete(client);
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
     private static DeviceRepository deviceRepository;
 
-    public static DeviceDatabaseSpringManager getInstance() throws DatabaseException {
+    public static DeviceDatabaseSpringManager getInstance() {
         return new DeviceDatabaseSpringManager(deviceRepository);
     }
 

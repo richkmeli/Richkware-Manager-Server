@@ -5,17 +5,17 @@ import it.richkmeli.jframework.orm.DatabaseException;
 
 import java.util.List;
 
-public interface _RmcModel {
+public interface RmcDatabaseModel {
 
-    boolean addRMC(Rmc client) throws DatabaseException;
+    Rmc addRMC(Rmc client) throws DatabaseException;
 
-    boolean editRMC(Rmc client) throws DatabaseException;
+    Rmc editRMC(Rmc client) throws DatabaseException;
 
-    boolean removeRMCs(String associatedUser) throws DatabaseException;
+    void removeRMCs(String associatedUser) throws DatabaseException;
 
-    boolean removeRMC(String rmcId) throws DatabaseException;
+    void removeRMC(String rmcId) throws DatabaseException;
 
-    boolean removeRmcUserPair(Rmc client) throws DatabaseException;
+    void removeRmcUserPair(Rmc client) throws DatabaseException;
 
     boolean checkRmcUserPair(Rmc client) throws DatabaseException;
 

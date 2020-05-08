@@ -9,6 +9,8 @@ import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
 import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
+import it.richkmeli.rms.data.model.rmc.RmcDatabaseModel;
+import it.richkmeli.rms.data.model.rmc.RmcDatabaseSpringManager;
 import it.richkmeli.rms.data.model.user.AuthDatabaseSpringManager;
 import org.json.JSONObject;
 
@@ -132,20 +134,17 @@ public class RMSServletManager extends AuthServletManager {
         return AuthDatabaseSpringManager.getInstance();
     }
 
-     /* @Override
-    public <T extends Session> T getNewSessionInstance() throws ServletException, DatabaseException {
-        return (T) new RMSSession(getServerSession());
-    }*/
 
     public RMSSession getRMSServerSession() throws JServletException {
-        try {
+        //try {
             return getRMSServerSession(
-                    DeviceDatabaseSpringManager.getInstance()
+                    DeviceDatabaseSpringManager.getInstance(),
+                    RmcDatabaseSpringManager.getInstance()
                     //new DeviceDatabaseJframeworkManager()
             );
-        } catch (DatabaseException e) {
+        /*} catch (DatabaseException e) {
             throw new JServletException(e);
-        }
+        }*/
     }
 
     public static void setRMSServerSession(RMSSession rmsSession, HttpServletRequest request) {
@@ -154,7 +153,7 @@ public class RMSServletManager extends AuthServletManager {
         httpSession.setAttribute(HTTP_RMS_SESSION_NAME, rmsSession);
     }
 
-    public RMSSession getRMSServerSession(DeviceDatabaseModel deviceDatabaseModel) throws JServletException {
+    public RMSSession getRMSServerSession(DeviceDatabaseModel deviceDatabaseModel, RmcDatabaseModel rmcDatabaseModel) throws JServletException {
         // http session
         HttpSession httpSession = httpServletRequest.getSession();
         // server session
@@ -162,7 +161,7 @@ public class RMSServletManager extends AuthServletManager {
         authSession = getAuthServerSession();
         if (rmsSession1 == null) {
             try {
-                rmsSession = new RMSSession(deviceDatabaseModel, authSession);
+                rmsSession = new RMSSession(authSession, deviceDatabaseModel, rmcDatabaseModel);
                 setRMSServerSession(rmsSession, httpServletRequest);
             } catch (DatabaseException e) {
                 throw new JServletException(e);
