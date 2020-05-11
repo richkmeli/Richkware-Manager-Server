@@ -1,13 +1,13 @@
 package it.richkmeli.rms.web.v1;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.data.model.rmc.Rmc;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +65,7 @@ public class rmc extends HttpServlet {
 
         } catch (JServletException e) {
             AuthServletManager.print(response, e.getResponse());
-        } catch (DatabaseException e) {
+        } catch (AuthDatabaseException e) {
             AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage()));
         } catch (Exception e){
             //e.printStackTrace();
@@ -126,20 +125,22 @@ public class rmc extends HttpServlet {
 
         } catch (JServletException e) {
             AuthServletManager.print(response, e.getResponse());
-        } catch (DatabaseException e1) {
+        } catch (AuthDatabaseException e1) {
             AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e1.getMessage()));
         }
 
     }
 
-    private String generateRmcListJSON(List<Rmc> clients) {
-        Type type = new TypeToken<List<Rmc>>() {
+    private String generateRmcListJSON(List<Rmc> clients) throws JsonProcessingException {
+        /*Type type = new TypeToken<List<Rmc>>() {
         }.getType();
         Gson gson = new Gson();
 
         // oggetto -> gson
         String rmcListJSON = gson.toJson(clients, type);
-
+*/
+        ObjectMapper objectMapper = new ObjectMapper();
+        String rmcListJSON = objectMapper.writeValueAsString(clients);
         return rmcListJSON;
     }
 }

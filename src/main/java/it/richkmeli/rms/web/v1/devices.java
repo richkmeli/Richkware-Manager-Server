@@ -2,16 +2,13 @@ package it.richkmeli.rms.web.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-import it.richkmeli.jframework.orm.DatabaseException;
-import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
-import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
 import it.richkmeli.rms.data.model.device.Device;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
 import it.richkmeli.rms.web.v1.util.RMSStatusCode;
@@ -21,7 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -69,7 +65,7 @@ public class devices extends HttpServlet {
 
         } catch (JServletException e) {
             AuthServletManager.print(response, e.getResponse());
-        } catch (DatabaseException e) {
+        } catch (AuthDatabaseException e) {
             AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage()));
         } catch (Exception e) {
             //e.printStackTrace();

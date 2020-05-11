@@ -1,11 +1,11 @@
 package it.richkmeli.rms.web.v1;
 
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.Crypto;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
 import it.richkmeli.rms.web.v1.util.RMSStatusCode;
@@ -71,7 +71,7 @@ public class command extends HttpServlet {
             } else {
                 AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_FIELD_EMPTY));
             }
-        } catch (DatabaseException e) {
+        } catch (AuthDatabaseException e) {
             AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage()));
         } catch (Exception e) {
             AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
@@ -114,7 +114,7 @@ public class command extends HttpServlet {
             }
 
             br.close();
-        } catch (JServletException | JSONException | DatabaseException | IOException e) {
+        } catch (JServletException | JSONException | AuthDatabaseException | IOException e) {
             AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
         }
     }
@@ -163,7 +163,7 @@ public class command extends HttpServlet {
             }
         } catch (JServletException e) {
             AuthServletManager.print(response, e.getResponse());
-        } catch (DatabaseException e) {
+        } catch (AuthDatabaseException e) {
             AuthServletManager.print(response, new KoResponse(RMSStatusCode.DB_ERROR, e.getMessage()));
         } catch (Exception e) {
             //e.printStackTrace();

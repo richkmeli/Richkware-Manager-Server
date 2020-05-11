@@ -1,8 +1,8 @@
 package it.richkmeli.rms.web.v1.util;
 
-import it.richkmeli.jframework.auth.AuthDatabaseModel;
+import it.richkmeli.jframework.auth.data.AuthDatabaseModel;
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.web.util.AuthSession;
-import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
 import it.richkmeli.rms.data.model.rmc.RmcDatabaseModel;
@@ -18,7 +18,7 @@ public class RMSSession extends AuthSession {
     private String channel;
 
 
-    public RMSSession(AuthDatabaseModel authDatabaseModel, DeviceDatabaseModel deviceDatabaseModel, RmcDatabaseModel rmcDatabaseModel) throws DatabaseException {
+    public RMSSession(AuthDatabaseModel authDatabaseModel, DeviceDatabaseModel deviceDatabaseModel, RmcDatabaseModel rmcDatabaseModel) throws AuthDatabaseException {
         super(authDatabaseModel);
         this.deviceDatabaseModel = deviceDatabaseModel;
         this.rmcDatabaseModel = rmcDatabaseModel;
@@ -26,7 +26,7 @@ public class RMSSession extends AuthSession {
         rmcID = null;
     }
 
-    public RMSSession(AuthSession authSession, DeviceDatabaseModel deviceDatabaseModel, RmcDatabaseModel rmcDatabaseModel) throws DatabaseException {
+    public RMSSession(AuthSession authSession, DeviceDatabaseModel deviceDatabaseModel, RmcDatabaseModel rmcDatabaseModel) throws AuthDatabaseException {
         super(authSession);
         this.deviceDatabaseModel = deviceDatabaseModel;
         this.rmcDatabaseModel = rmcDatabaseModel;
@@ -42,7 +42,7 @@ public class RMSSession extends AuthSession {
         rmcID = rmsSession.rmcID;
     }
 
-    public DeviceDatabaseModel getDeviceDatabaseManager() throws DatabaseException {
+    public DeviceDatabaseModel getDeviceDatabaseManager() throws AuthDatabaseException {
         //Logger.i("deviceDatabaseManager" + deviceDatabaseManager);
         if (deviceDatabaseModel == null) {
             Logger.info("init deviceDatabaseModel");
@@ -52,7 +52,7 @@ public class RMSSession extends AuthSession {
     }
 
 
-    public RmcDatabaseModel getRmcDatabaseManager() throws DatabaseException {
+    public RmcDatabaseModel getRmcDatabaseManager() throws AuthDatabaseException {
         if (rmcDatabaseModel == null) {
             Logger.info("init rmcDatabaseManager");
             //rmcDatabaseManager = new _RmcDatabaseManager();

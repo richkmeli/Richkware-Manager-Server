@@ -1,9 +1,9 @@
 package it.richkmeli.rms.data.model.user;
 
-import it.richkmeli.jframework.auth.AuthDatabaseModel;
+import it.richkmeli.jframework.auth.data.AuthDatabaseModel;
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.model.exception.ModelException;
 import it.richkmeli.jframework.crypto.Crypto;
-import it.richkmeli.jframework.orm.DatabaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,31 +19,31 @@ import java.util.Optional;
 public class AuthDatabaseSpringManager implements AuthDatabaseModel {
     private static UserRepository userRepository;
 
-    public static AuthDatabaseSpringManager getInstance() throws DatabaseException {
+    public static AuthDatabaseSpringManager getInstance() throws AuthDatabaseException {
         return new AuthDatabaseSpringManager(userRepository);
     }
 
     @Autowired
-    public AuthDatabaseSpringManager(UserRepository userRepository) throws DatabaseException {
+    public AuthDatabaseSpringManager(UserRepository userRepository) throws AuthDatabaseException {
         this.userRepository = userRepository;
     }
 
     @Override
-    public List<it.richkmeli.jframework.auth.model.User> getAllUsers() throws DatabaseException {
+    public List<it.richkmeli.jframework.auth.model.User> getAllUsers() throws AuthDatabaseException {
         List<it.richkmeli.rms.data.model.user.User> users = userRepository.findAll();
         List<it.richkmeli.jframework.auth.model.User> users1 = new ArrayList<>();
         for (it.richkmeli.rms.data.model.user.User u : users) {
             try {
-                users1.add(new it.richkmeli.jframework.auth.model.User(u.getEmail(),u.getPassword(),u.getAdmin()));
+                users1.add(new it.richkmeli.jframework.auth.model.User(u.getEmail(), u.getPassword(), u.getAdmin()));
             } catch (ModelException e) {
-                throw new DatabaseException(e);
+                throw new AuthDatabaseException(e);
             }
         }
         return users1;
     }
 
     @Override
-    public boolean addUser(it.richkmeli.jframework.auth.model.User user) throws DatabaseException {
+    public boolean addUser(it.richkmeli.jframework.auth.model.User user) throws AuthDatabaseException {
         try {
             userRepository.save(new it.richkmeli.rms.data.model.user.User(
                     user.getEmail(),
@@ -51,24 +51,35 @@ public class AuthDatabaseSpringManager implements AuthDatabaseModel {
                     user.getAdmin()));
             return true;
         } catch (ModelException e) {
-            throw new DatabaseException(e);
+            throw new AuthDatabaseException(e);
         }
     }
 
+    public User addUser(User user) throws AuthDatabaseException {
+        try {
+            return userRepository.save(new User(
+                    user.getEmail(),
+                    Crypto.hashPassword(user.getPassword(), false),
+                    user.getAdmin()));
+        } catch (ModelException e) {
+            throw new AuthDatabaseException(e);
+        }
+    }
+
+
     @Override
-    public boolean removeUser(String s) throws DatabaseException, ModelException {
+    public boolean removeUser(String s) throws AuthDatabaseException, ModelException {
         userRepository.deleteById(s);
         return true;
     }
 
     @Override
-    public boolean isUserPresent(String s) throws DatabaseException, ModelException {
-        userRepository.existsById(s);
-        return true;
+    public boolean isUserPresent(String s) throws AuthDatabaseException, ModelException {
+        return userRepository.existsById(s);
     }
 
     @Override
-    public boolean editPassword(String email, String password) throws DatabaseException, ModelException {
+    public boolean editPassword(String email, String password) throws AuthDatabaseException, ModelException {
         Optional<User> user = userRepository.findById(email);
         if (user.isPresent()) {
             User user1 = user.get();
@@ -81,7 +92,7 @@ public class AuthDatabaseSpringManager implements AuthDatabaseModel {
     }
 
     @Override
-    public boolean editAdmin(String email, Boolean aBoolean) throws DatabaseException, ModelException {
+    public boolean editAdmin(String email, Boolean aBoolean) throws AuthDatabaseException, ModelException {
         Optional<User> user = userRepository.findById(email);
         if (user.isPresent()) {
             User user1 = user.get();
@@ -94,7 +105,7 @@ public class AuthDatabaseSpringManager implements AuthDatabaseModel {
     }
 
     @Override
-    public boolean checkPassword(String email, String password) throws DatabaseException, ModelException {
+    public boolean checkPassword(String email, String password) throws AuthDatabaseException, ModelException {
         Optional<User> user = userRepository.findById(email);
         if (user.isPresent()) {
             Crypto.verifyPassword(user.get().getPassword(), password);
@@ -105,7 +116,7 @@ public class AuthDatabaseSpringManager implements AuthDatabaseModel {
     }
 
     @Override
-    public boolean isAdmin(String email) throws DatabaseException, ModelException {
+    public boolean isAdmin(String email) throws AuthDatabaseException, ModelException {
         Optional<User> user = userRepository.findById(email);
         if (user.isPresent()) {
             return user.get().getAdmin();

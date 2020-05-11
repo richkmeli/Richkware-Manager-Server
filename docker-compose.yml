@@ -21,11 +21,11 @@ services:
   db:
     image: mysql:5.7
     ports:
-        - "3306:3306"
+      - "3306:3306"
     volumes:
-        - ./init.sql:/data/application/init.sql
+      - ./init.sql:/data/application/init.sql
     environment:
-        - MYSQL_ROOT_PASSWORD=richk
-        - MYSQL_DATABASE=richkware
-        - MYSQL_USER=richk
-        - MYSQL_PASSWORD=richk
+      - MYSQL_ROOT_PASSWORD=richk
+      - MYSQL_DATABASE=richkware
+      - MYSQL_USER=richk
+      - MYSQL_PASSWORD=richk

@@ -2,13 +2,12 @@ package it.richkmeli.rms.data;
 
 
 import it.richkmeli.jframework.util.RandomStringGenerator;
+import it.richkmeli.rms.data.model.device.Device;
+import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
+import it.richkmeli.rms.data.model.rmc.Rmc;
+import it.richkmeli.rms.data.model.rmc.RmcDatabaseSpringManager;
 import it.richkmeli.rms.data.model.user.AuthDatabaseSpringManager;
 import it.richkmeli.rms.data.model.user.User;
-import it.richkmeli.rms.data.model.user.UserRepository;
-import it.richkmeli.rms.data.model.device.DeviceRepository;
-import it.richkmeli.rms.data.model.device.Device;
-import it.richkmeli.rms.data.model.rmc.RmcRepository;
-import it.richkmeli.rms.data.model.rmc.Rmc;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,31 +18,32 @@ import org.springframework.context.annotation.Configuration;
 class LoadDatabase {
 
     @Bean
-    CommandLineRunner initDatabase(/*EntityManagerFactory emf,*/ UserRepository userRepository, DeviceRepository deviceRepository, RmcRepository rmcRepository) {
+    CommandLineRunner initDatabase(/*EntityManagerFactory emf,*/ AuthDatabaseSpringManager authDatabaseSpringManager, DeviceDatabaseSpringManager deviceDatabaseSpringManager, RmcDatabaseSpringManager rmcDatabaseSpringManager) {
         return args -> {
-            userRepository.save(new User(
-                    RandomStringGenerator.generateAlphanumericString(4) + "@example.com", "00000000", false)).getEmail();
-            userRepository.save(new User("richk@i.it", "MDAwMDAwMDAwZGE2MTNlMGRmYjNmN2VkNzE4OGZjOTE1YzIwYjQ3YmVmODBjNTM4NzFlNmQyMzc5MTE2ZTRiZDI3ZjE0NTZlMw==", true));
+            authDatabaseSpringManager.addUser(new User(
+                    RandomStringGenerator.generateAlphanumericString(4) + "@example.com", "00000000", false));
 
-            if (!userRepository.existsById("richk2@i.it")) {
-                userRepository.save(new User("richk2@i.it", "00000000", true));
+            if (!authDatabaseSpringManager.isUserPresent("richk@i.it")) {
+                authDatabaseSpringManager.addUser(new User("richk@i.it", "00000000", true));
             }
 
-            deviceRepository.save(new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", ""));
-            deviceRepository.save(new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk2@i.it", "", ""));
+            authDatabaseSpringManager.addUser(new User("richk2@i.it", "00000000", false));
+
+            deviceDatabaseSpringManager.addDevice(new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", ""));
+            deviceDatabaseSpringManager.addDevice(new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk2@i.it", "", ""));
 
             Rmc rmc = new Rmc("richk@i.it", "test_rmc_ID");
             Rmc rmc2 = new Rmc("richk2@i.it", "test_rmc_ID" + RandomStringGenerator.generateAlphanumericString(4));
 
-            rmcRepository.save(rmc);
-            rmcRepository.save(rmc2);
+            rmcDatabaseSpringManager.addRMC(rmc);
+            rmcDatabaseSpringManager.addRMC(rmc2);
 //            EntityManager em = emf.createEntityManager();
 //            em.getTransaction().begin();
 //            em.persist(rmc2);
 //            em.getTransaction().commit();
 //            em.close();
 
-            userRepository.deleteById("richk2@i.it");
+            authDatabaseSpringManager.removeUser("richk2@i.it");
 
 
         };

@@ -28,7 +28,7 @@ $(document).ready(function () {
     })
 })
 
-function getDevice(){
+function getDevice() {
     return $('#ModalCommandTitle').val();
 }
 

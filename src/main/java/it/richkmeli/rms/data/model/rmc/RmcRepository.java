@@ -1,15 +1,20 @@
 package it.richkmeli.rms.data.model.rmc;
 
-import it.richkmeli.rms.data.model.rmc.Rmc;
-import it.richkmeli.rms.data.model.rmc.RmcId;
-import it.richkmeli.rms.data.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface RmcRepository extends JpaRepository<Rmc, RmcId> {
 
-    void deleteRmcByRmcIdAndAssociatedUser(String rmcId, String user);
+    void deleteRmcByRmcIdAndAssociatedUser_Email(String rmcId, String associatedUser);
     void deleteRmcByRmcId(String rmcId);
-    void deleteAllByAssociatedUser(String user);
+    void deleteAllByAssociatedUser_Email(String associatedUser);
+    boolean existsRmcByRmcIdAndAssociatedUser_Email(String rmcId, String associatedUser);
+    boolean existsRmcByRmcId(String rmcId);
+    List<Rmc> findAllByAssociatedUser_Email(String associatedUser);
+    List<Rmc> findAllByRmcId(String rmcId);
+    List<Rmc> findAllByAssociatedUserIsNull();
+
 }

@@ -1,9 +1,9 @@
 package it.richkmeli.rms.web.v1.account;
 
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.web.account.LogInJob;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.model.rmc.Rmc;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
@@ -23,7 +23,7 @@ public class LogIn extends HttpServlet {
     LogInJob logIn = new LogInJob() {
 
         @Override
-        protected void doSpecificAction(AuthServletManager authServletManager) throws JServletException, DatabaseException {
+        protected void doSpecificAction(AuthServletManager authServletManager) throws JServletException, AuthDatabaseException {
             //RMSServletManager rmsServletManager = new RMSServletManager(request,response);
             RMSServletManager rmsServletManager = new RMSServletManager(authServletManager);
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();

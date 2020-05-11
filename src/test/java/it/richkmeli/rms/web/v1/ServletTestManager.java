@@ -1,6 +1,5 @@
 package it.richkmeli.rms.web.v1;
 
-import it.richkmeli.rms.data.model.device.DeviceDatabaseJframeworkManager;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +26,8 @@ public class ServletTestManager extends Mockito {
     protected RMSServletManager rmsServletManagerMock;
     @Mock
     protected RMSSession rmsSessionMock;
-    @InjectMocks
-    protected DeviceDatabaseJframeworkManager deviceDatabaseManagerMock;
+    //@InjectMocks
+    //protected DeviceDatabaseJframeworkManager deviceDatabaseManagerMock;
 
     private StringWriter stringWriter;
     private PrintWriter writer;
@@ -51,7 +50,7 @@ public class ServletTestManager extends Mockito {
 
             when(rmsServletManagerMock.getRMSServerSession()).thenReturn(rmsSessionMock);
 
-            when(rmsSessionMock.getDeviceDatabaseManager()).thenReturn(deviceDatabaseManagerMock);
+            //when(rmsSessionMock.getDeviceDatabaseManager()).thenReturn(deviceDatabaseManagerMock);
             //test.loadRandomTest(rmsSession);
 
             stringWriter = new StringWriter();

@@ -16,8 +16,10 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- Web dependencies -->
-<!--        <webjars-locator-core.version>0.45</webjars-locator-core.version>-->
+        <!-- Dependencies -->
+        <jframework.version>1.2.5</jframework.version>
+        <!-- Webjars dependencies -->
+        <!--        <webjars-locator-core.version>0.45</webjars-locator-core.version>-->
         <webjars-bootstrap.version>4.0.0</webjars-bootstrap.version>
         <webjars-jquery.version>3.3.1</webjars-jquery.version>
         <webjars-font-awesome.version>4.7.0</webjars-font-awesome.version>
@@ -99,8 +101,9 @@
     <dependencies>
         <dependency>
             <groupId>it.richkmeli.jframework</groupId>
-            <artifactId>JFramework</artifactId>
-            <version>1.2.4</version>
+            <!--            <artifactId>JFramework</artifactId>-->
+            <artifactId>auth-core</artifactId>
+            <version>${jframework.version}</version>
         </dependency>
 
         <!-- Testing -->
@@ -130,10 +133,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-       <!-- <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>-->
+        <!-- <dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-security</artifactId>
+         </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -168,11 +171,11 @@
         </dependency>
 
         <!-- webjars -->
-<!--        <dependency>-->
-<!--            <groupId>org.webjars</groupId>-->
-<!--            <artifactId>webjars-locator-core</artifactId>-->
-<!--            <version>${webjars-locator-core.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.webjars</groupId>-->
+        <!--            <artifactId>webjars-locator-core</artifactId>-->
+        <!--            <version>${webjars-locator-core.version}</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>

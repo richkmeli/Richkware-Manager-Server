@@ -1,32 +1,31 @@
 package it.richkmeli.rms.data.model.rmc;
 
-
-import it.richkmeli.jframework.orm.DatabaseException;
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 
 import java.util.List;
 
 public interface RmcDatabaseModel {
 
-    Rmc addRMC(Rmc client) throws DatabaseException;
+    Rmc addRMC(Rmc client) throws AuthDatabaseException;
 
-    Rmc editRMC(Rmc client) throws DatabaseException;
+    Rmc editRMC(Rmc client) throws AuthDatabaseException;
 
-    void removeRMCs(String associatedUser) throws DatabaseException;
+    void removeRMCs(String associatedUser) throws AuthDatabaseException;
 
-    void removeRMC(String rmcId) throws DatabaseException;
+    void removeRMC(String rmcId) throws AuthDatabaseException;
 
-    void removeRmcUserPair(Rmc client) throws DatabaseException;
+    void removeRmcUserPair(Rmc client) throws AuthDatabaseException;
 
-    boolean checkRmcUserPair(Rmc client) throws DatabaseException;
+    boolean checkRmcUserPair(Rmc client) throws AuthDatabaseException;
 
-    boolean checkRmc(String rmcID) throws DatabaseException;
+    boolean checkRmc(String rmcID) throws AuthDatabaseException;
 
-    List<Rmc> getRMCs(String user) throws DatabaseException;
+    List<Rmc> getRMCs(String user) throws AuthDatabaseException;
 
-    List<Rmc> getAssociatedUsers(String rmcId) throws DatabaseException;
+    List<Rmc> getAssociatedUsers(String rmcId) throws AuthDatabaseException;
 
-    List<Rmc> getAllRMCs() throws DatabaseException;
+    List<Rmc> getAllRMCs() throws AuthDatabaseException;
 
-    public List<String> getUnassociatedRmcs(String rmcID) throws DatabaseException;
+    public List<Rmc> getUnassociatedRmcs(String rmcID) throws AuthDatabaseException;
 
 }

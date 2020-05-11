@@ -47,7 +47,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
 
     let tbody = document.createElement("tbody");
 
-    console.log("devicesList: " + devicesList + " type: " + typeof(devicesList) + " length: " + devicesList.length);
+    console.log("devicesList: " + devicesList + " type: " + typeof (devicesList) + " length: " + devicesList.length);
 
     for (var i = 0; i < devicesList.length; ++i) {
 
@@ -78,32 +78,31 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "<td><button title='Remove' type=\"button\" id=\"remove#" + name + "#" + i + "\" class=\"btn btn-danger\" onclick=\"deleteDevice('" + name + "', '" + i + "')\"><span class=\"fa fa-trash\"></span></button></td>");
 
 
-
         tbody.appendChild(row);
         //      index++
     }
     devicesTable.appendChild(tbody);
 }
 
-function infoDev(devL){
-    return '<table class="table" style="padding-left:50px;">'+
-        '<tr>'+
-        '<td>IP:Port</td>'+
-        '<td>'+devL.ip + ':' + devL.serverPort +'</td>'+
-        '</tr>'+
-        '<tr>'+
-        '<td>EncryptionKey:</td>'+
-        '<td>'+devL.encryptionKey+'</td>'+
-        '</tr>'+
+function infoDev(devL) {
+    return '<table class="table" style="padding-left:50px;">' +
+        '<tr>' +
+        '<td>IP:Port</td>' +
+        '<td>' + devL.ip + ':' + devL.serverPort + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td>EncryptionKey:</td>' +
+        '<td>' + devL.encryptionKey + '</td>' +
+        '</tr>' +
         '</table>';
 }
 
-function popInfo(){
+function popInfo() {
     $("[data-toggle=popover]").popover();
 }
 
 //Open CommandsModal
-function commandsM(device){
+function commandsM(device) {
     console.log(device);
     $('#ModalCommandTitle').text("Device: " + device);
     $('#ModalCommandTitle').val(device);
@@ -114,7 +113,7 @@ function commandsM(device){
 }
 
 //Open CommandOutputModal
-function outputM(device){
+function outputM(device) {
     console.log(device);
     $('#ModalCommandTitle').text("Device: " + device);
     $('#ModalCommandTitle').val(device);
@@ -148,15 +147,15 @@ function deleteDevice(device, indexTableRow) {
     });
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     loadDevicesTable();
     setInterval(loadDevicesTable, 30000);
 
-    $('#devicesTable tbody').on('click', 'button.btn', function(){
+    $('#devicesTable tbody').on('click', 'button.btn', function () {
         var tr = $(this).closest('tr');
-        var row = table.row( tr );
+        var row = table.row(tr);
 
-        if(row.child.isShown()){
+        if (row.child.isShown()) {
             // This row is already open - close it
             row.child.hide();
             tr.removeClass('shown');

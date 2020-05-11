@@ -3,7 +3,10 @@ package it.richkmeli.rms.data.model.device;
 import it.richkmeli.rms.data.model.user.User;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 @Entity

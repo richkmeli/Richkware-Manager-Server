@@ -1,7 +1,6 @@
 package it.richkmeli.rms.data.model.device;
 
-import it.richkmeli.jframework.orm.DatabaseException;
-import it.richkmeli.rms.data.model.user.AuthDatabaseSpringManager;
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,37 +24,37 @@ public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
     }
 
     @Override
-    public List<Device> getAllDevices() throws DatabaseException {
+    public List<Device> getAllDevices() throws AuthDatabaseException {
         return deviceRepository.findAll();
     }
 
     @Override
-    public List<Device> getUserDevices(String user) throws DatabaseException {
+    public List<Device> getUserDevices(String user) throws AuthDatabaseException {
         return deviceRepository.findDevicesByAssociatedUser(user);
     }
 
     @Override
-    public Device addDevice(Device device) throws DatabaseException {
+    public Device addDevice(Device device) throws AuthDatabaseException {
         return deviceRepository.save(device);
     }
 
     @Override
-    public Device editDevice(Device device) throws DatabaseException {
+    public Device editDevice(Device device) throws AuthDatabaseException {
         return deviceRepository.save(device);
     }
 
     @Override
-    public void removeDevice(String device) throws DatabaseException {
+    public void removeDevice(String device) throws AuthDatabaseException {
         deviceRepository.deleteById(device);
     }
 
     @Override
-    public Device getDevice(String name) throws DatabaseException {
+    public Device getDevice(String name) throws AuthDatabaseException {
         return deviceRepository.findById(name).orElse(null);
     }
 
     @Override
-    public String getEncryptionKey(String name) throws DatabaseException {
+    public String getEncryptionKey(String name) throws AuthDatabaseException {
         Device device = deviceRepository.findById(name).orElse(null);
         if (device != null) {
             return device.getEncryptionKey();
@@ -65,22 +64,22 @@ public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
     }
 
     @Override
-    public boolean editCommands(String deviceName, String commands) throws DatabaseException {
+    public boolean editCommands(String deviceName, String commands) throws AuthDatabaseException {
         return false;
     }
 
     @Override
-    public String getCommands(String deviceName) throws DatabaseException {
+    public String getCommands(String deviceName) throws AuthDatabaseException {
         return null;
     }
 
     @Override
-    public boolean setCommandsOutput(String deviceName, String commandsOutput) throws DatabaseException {
+    public boolean setCommandsOutput(String deviceName, String commandsOutput) throws AuthDatabaseException {
         return false;
     }
 
     @Override
-    public String getCommandsOutput(String deviceName) throws DatabaseException {
+    public String getCommandsOutput(String deviceName) throws AuthDatabaseException {
         return null;
     }
 }

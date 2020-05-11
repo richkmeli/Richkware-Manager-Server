@@ -1,7 +1,5 @@
 package it.richkmeli.rms.web.config;
 
-import org.springframework.stereotype.Component;
-
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

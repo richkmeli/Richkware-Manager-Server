@@ -1,15 +1,16 @@
 package it.richkmeli.rms.web.v2;
 
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.web.account.LogInJob;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.model.rmc.Rmc;
 import it.richkmeli.rms.data.model.user.UserRepository;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -25,7 +26,7 @@ public class AccountController {
     LogInJob logIn = new LogInJob() {
 
         @Override
-        protected void doSpecificAction(AuthServletManager authServletManager) throws JServletException, DatabaseException {
+        protected void doSpecificAction(AuthServletManager authServletManager) throws JServletException, AuthDatabaseException {
             //RMSServletManager rmsServletManager = new RMSServletManager(request,response);
             RMSServletManager rmsServletManager = new RMSServletManager(authServletManager);
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();

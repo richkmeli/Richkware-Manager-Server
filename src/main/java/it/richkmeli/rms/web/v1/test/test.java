@@ -1,9 +1,9 @@
 package it.richkmeli.rms.web.v1.test;
 
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.model.User;
 import it.richkmeli.jframework.auth.model.exception.ModelException;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.RandomStringGenerator;
 import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.model.device.Device;
@@ -68,7 +68,7 @@ public class test extends HttpServlet {
             //TODO da spostare nella creazione della tabella
             rmsSession.getAuthDatabaseManager().addUser(new User("", "00000000", false));
             rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
-        } catch (DatabaseException | ModelException e) {
+        } catch (AuthDatabaseException | ModelException e) {
             e.printStackTrace();
             Logger.error("Session TEST USERS", e);
         }
@@ -79,7 +79,7 @@ public class test extends HttpServlet {
             rmsSession.getDeviceDatabaseManager().addDevice(new Device("rick1", "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "er@fv.it", "", ""));
             //used for reverse commands
             rmsSession.getDeviceDatabaseManager().addDevice(new Device("DESKTOP-1EVF5Q8/win_10_desktop1", "172.24.9.142", "none", "20-10-18", "ckeroivervioeon", "richk@i.it", "YzNSaGNuUT0jI2MzUmhjblE9IyNjM1JoY25RPQ==", ""));
-        } catch (DatabaseException e) {
+        } catch (AuthDatabaseException e) {
             Logger.error("Session TEST DEVICES", e);
         }
 
@@ -88,7 +88,7 @@ public class test extends HttpServlet {
             rmsSession.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
             rmsSession.getAuthDatabaseManager().addUser(new User("", "00000000", false));
             rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
-        } catch (DatabaseException | ModelException e) {
+        } catch (AuthDatabaseException | ModelException e) {
             e.printStackTrace();
             Logger.error("Session TEST USERS", e);
         }
@@ -105,7 +105,7 @@ public class test extends HttpServlet {
                 }
             }
             rmsSession.getDeviceDatabaseManager().addDevice(new Device(RandomStringGenerator.generateAlphanumericString(8), "12.34.45.67", "8080", "20-10-2019", RandomStringGenerator.generateAlphanumericString(32), "asd@asd.com", "", "WTJsaGJ3PT0="));
-        } catch (DatabaseException | ModelException e) {
+        } catch (AuthDatabaseException | ModelException e) {
             Logger.error("Session ", e);
         }
 
@@ -119,7 +119,7 @@ public class test extends HttpServlet {
             rmsSession.getRmcDatabaseManager().addRMC(rmc2);
             rmsSession.getRmcDatabaseManager().addRMC(rmc3);
             rmsSession.getRmcDatabaseManager().addRMC(rmc4);
-        } catch (DatabaseException e) {
+        } catch (AuthDatabaseException e) {
             Logger.error("Session ", e);
         }
 

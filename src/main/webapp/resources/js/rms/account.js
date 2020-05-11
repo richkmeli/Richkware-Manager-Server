@@ -35,7 +35,7 @@ $(document).ready(function () {
                 $("#userNearBrand").html("").append($("<i></i>").text(JSONmessage.user))
             }
             append($("<p></p>").text(response.description))
-        } else if (JSONdata.statusCode === 2100){
+        } else if (JSONdata.statusCode === 2100) {
             // Account buttons
             $("#signupNavBar").show();
             $("#loginNavBar").show();

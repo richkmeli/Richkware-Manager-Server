@@ -1,5 +1,5 @@
-$(document).ready(function() {
-    $("#Register").click(function() {
+$(document).ready(function () {
+    $("#Register").click(function () {
         var email = $("#exampleInputEmail1").val()
         var pass = $("#exampleInputPassword1").val()
         var confirmPass = $("#exampleConfirmPassword").val()
@@ -12,7 +12,7 @@ $(document).ready(function() {
         if (mailCheck == "OK" && passwordCheck == "OK") {
             console.log("checks passed")
             var send = {email: email, password: pass, channel: "webapp"}
-            $.post("SignUp", send, function(data) {
+            $.post("SignUp", send, function (data) {
                 var JSONdata = JSON.parse(data)
                 console.log(JSONdata)
                 if (JSONdata.statusCode == 1000) {

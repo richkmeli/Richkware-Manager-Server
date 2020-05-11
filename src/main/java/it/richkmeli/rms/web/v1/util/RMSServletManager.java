@@ -1,11 +1,11 @@
 package it.richkmeli.rms.web.v1.util;
 
-import it.richkmeli.jframework.auth.AuthDatabaseModel;
+import it.richkmeli.jframework.auth.data.AuthDatabaseModel;
+import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.exception.CryptoException;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-import it.richkmeli.jframework.orm.DatabaseException;
 import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
 import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
@@ -130,7 +130,7 @@ public class RMSServletManager extends AuthServletManager {
 
 
     @Override
-    protected AuthDatabaseModel getAuthDatabaseManagerInstance() throws DatabaseException {
+    protected AuthDatabaseModel getAuthDatabaseManagerInstance() throws AuthDatabaseException {
         return AuthDatabaseSpringManager.getInstance();
     }
 
@@ -142,7 +142,7 @@ public class RMSServletManager extends AuthServletManager {
                     RmcDatabaseSpringManager.getInstance()
                     //new DeviceDatabaseJframeworkManager()
             );
-        /*} catch (DatabaseException e) {
+        /*} catch (AuthDatabaseException e) {
             throw new JServletException(e);
         }*/
     }
@@ -163,7 +163,7 @@ public class RMSServletManager extends AuthServletManager {
             try {
                 rmsSession = new RMSSession(authSession, deviceDatabaseModel, rmcDatabaseModel);
                 setRMSServerSession(rmsSession, httpServletRequest);
-            } catch (DatabaseException e) {
+            } catch (AuthDatabaseException e) {
                 throw new JServletException(e);
             }
         } else {
