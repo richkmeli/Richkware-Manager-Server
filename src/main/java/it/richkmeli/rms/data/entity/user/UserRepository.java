@@ -1,5 +1,6 @@
-package it.richkmeli.rms.data.model.user;
+package it.richkmeli.rms.data.entity.user;
 
+import it.richkmeli.rms.data.entity.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

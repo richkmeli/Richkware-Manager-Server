@@ -1,5 +1,7 @@
-package it.richkmeli.rms.data.model.rmc;
+package it.richkmeli.rms.data.entity.rmc;
 
+import it.richkmeli.rms.data.entity.rmc.model.Rmc;
+import it.richkmeli.rms.data.entity.rmc.model.RmcId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

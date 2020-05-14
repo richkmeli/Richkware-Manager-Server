@@ -1,9 +1,10 @@
-package it.richkmeli.rms.data.model.user;
+package it.richkmeli.rms.data.entity.user;
 
 import it.richkmeli.jframework.auth.data.AuthDatabaseModel;
 import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.model.exception.ModelException;
 import it.richkmeli.jframework.crypto.Crypto;
+import it.richkmeli.rms.data.entity.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,9 +31,9 @@ public class AuthDatabaseSpringManager implements AuthDatabaseModel {
 
     @Override
     public List<it.richkmeli.jframework.auth.model.User> getAllUsers() throws AuthDatabaseException {
-        List<it.richkmeli.rms.data.model.user.User> users = userRepository.findAll();
+        List<User> users = userRepository.findAll();
         List<it.richkmeli.jframework.auth.model.User> users1 = new ArrayList<>();
-        for (it.richkmeli.rms.data.model.user.User u : users) {
+        for (User u : users) {
             try {
                 users1.add(new it.richkmeli.jframework.auth.model.User(u.getEmail(), u.getPassword(), u.getAdmin()));
             } catch (ModelException e) {
@@ -45,7 +46,7 @@ public class AuthDatabaseSpringManager implements AuthDatabaseModel {
     @Override
     public boolean addUser(it.richkmeli.jframework.auth.model.User user) throws AuthDatabaseException {
         try {
-            userRepository.save(new it.richkmeli.rms.data.model.user.User(
+            userRepository.save(new User(
                     user.getEmail(),
                     Crypto.hashPassword(user.getPassword(), false),
                     user.getAdmin()));

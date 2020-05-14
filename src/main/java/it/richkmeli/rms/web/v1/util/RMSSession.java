@@ -4,8 +4,8 @@ import it.richkmeli.jframework.auth.data.AuthDatabaseModel;
 import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.jframework.auth.web.util.AuthSession;
 import it.richkmeli.jframework.util.log.Logger;
-import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
-import it.richkmeli.rms.data.model.rmc.RmcDatabaseModel;
+import it.richkmeli.rms.data.entity.device.DeviceDatabaseModel;
+import it.richkmeli.rms.data.entity.rmc.RmcDatabaseModel;
 
 /**
  * do not add static modifier to these fields, because this respective ServletManager has a static object of this class

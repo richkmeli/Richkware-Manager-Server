@@ -2,12 +2,12 @@ package it.richkmeli.rms.data;
 
 
 import it.richkmeli.jframework.util.RandomStringGenerator;
-import it.richkmeli.rms.data.model.device.Device;
-import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
-import it.richkmeli.rms.data.model.rmc.Rmc;
-import it.richkmeli.rms.data.model.rmc.RmcDatabaseSpringManager;
-import it.richkmeli.rms.data.model.user.AuthDatabaseSpringManager;
-import it.richkmeli.rms.data.model.user.User;
+import it.richkmeli.rms.data.entity.device.model.Device;
+import it.richkmeli.rms.data.entity.device.DeviceDatabaseSpringManager;
+import it.richkmeli.rms.data.entity.rmc.model.Rmc;
+import it.richkmeli.rms.data.entity.rmc.RmcDatabaseSpringManager;
+import it.richkmeli.rms.data.entity.user.AuthDatabaseSpringManager;
+import it.richkmeli.rms.data.entity.user.model.User;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

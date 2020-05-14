@@ -1,6 +1,7 @@
-package it.richkmeli.rms.data.model.rmc;
+package it.richkmeli.rms.data.entity.rmc;
 
 import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
+import it.richkmeli.rms.data.entity.rmc.model.Rmc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

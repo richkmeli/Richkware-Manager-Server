@@ -1,7 +1,7 @@
 package it.richkmeli.rms.web.v2;
 
-import it.richkmeli.rms.data.model.user.User;
-import it.richkmeli.rms.data.model.user.UserRepository;
+import it.richkmeli.rms.data.entity.user.model.User;
+import it.richkmeli.rms.data.entity.user.UserRepository;
 import it.richkmeli.rms.web.v2.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

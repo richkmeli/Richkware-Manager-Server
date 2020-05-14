@@ -1,6 +1,7 @@
-package it.richkmeli.rms.data.model.device;
+package it.richkmeli.rms.data.entity.device;
 
 import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
+import it.richkmeli.rms.data.entity.device.model.Device;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,7 @@ public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
 
     @Override
     public List<Device> getUserDevices(String user) throws AuthDatabaseException {
-        return deviceRepository.findDevicesByAssociatedUser(user);
+        return deviceRepository.findDevicesByAssociatedUser_Email(user);
     }
 
     @Override

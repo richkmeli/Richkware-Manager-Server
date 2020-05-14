@@ -1,6 +1,6 @@
-package it.richkmeli.rms.data.model.rmc;
+package it.richkmeli.rms.data.entity.rmc.model;
 
-import it.richkmeli.rms.data.model.user.User;
+import it.richkmeli.rms.data.entity.user.model.User;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;

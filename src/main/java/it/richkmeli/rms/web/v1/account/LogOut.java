@@ -2,6 +2,7 @@ package it.richkmeli.rms.web.v1.account;
 
 import it.richkmeli.jframework.auth.web.account.LogOutJob;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
+import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 
 import javax.servlet.annotation.WebServlet;

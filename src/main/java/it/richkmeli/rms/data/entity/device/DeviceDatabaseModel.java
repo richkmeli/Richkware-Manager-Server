@@ -1,7 +1,8 @@
-package it.richkmeli.rms.data.model.device;
+package it.richkmeli.rms.data.entity.device;
 
 
 import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
+import it.richkmeli.rms.data.entity.device.model.Device;
 
 import java.util.List;
 

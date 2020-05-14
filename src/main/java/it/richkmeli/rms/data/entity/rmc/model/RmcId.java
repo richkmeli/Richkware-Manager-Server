@@ -1,4 +1,4 @@
-package it.richkmeli.rms.data.model.rmc;
+package it.richkmeli.rms.data.entity.rmc.model;
 
 import java.io.Serializable;
 import java.util.Objects;

@@ -7,11 +7,11 @@ import it.richkmeli.jframework.crypto.exception.CryptoException;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.util.log.Logger;
-import it.richkmeli.rms.data.model.device.DeviceDatabaseModel;
-import it.richkmeli.rms.data.model.device.DeviceDatabaseSpringManager;
-import it.richkmeli.rms.data.model.rmc.RmcDatabaseModel;
-import it.richkmeli.rms.data.model.rmc.RmcDatabaseSpringManager;
-import it.richkmeli.rms.data.model.user.AuthDatabaseSpringManager;
+import it.richkmeli.rms.data.entity.device.DeviceDatabaseModel;
+import it.richkmeli.rms.data.entity.device.DeviceDatabaseSpringManager;
+import it.richkmeli.rms.data.entity.rmc.RmcDatabaseModel;
+import it.richkmeli.rms.data.entity.rmc.RmcDatabaseSpringManager;
+import it.richkmeli.rms.data.entity.user.AuthDatabaseSpringManager;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +48,6 @@ public class RMSServletManager extends AuthServletManager {
 
     @Override
     public void doSpecificProcessRequestAuth() throws JServletException {
-
         // check channel: rmc or webapp, if rmc secureconnection first (set something in session)
         if (attribMap.containsKey(Channel.CHANNEL)) {
             String channel = attribMap.get(Channel.CHANNEL);
@@ -57,14 +56,14 @@ public class RMSServletManager extends AuthServletManager {
                     rmsSession.setChannel(Channel.RMC);
                     // Extract encrypted data from map
                     String payload = attribMap.get(DATA_PARAMETER_KEY);
-                    if (!"".equalsIgnoreCase(payload)) {
+                    if (payload != null && !"".equalsIgnoreCase(payload)) {
                         String decryptedPayload = null;
                         try {
                             decryptedPayload = session.getCryptoServer().decrypt(payload);
                         } catch (CryptoException e) {
                             throw new JServletException(e);
                         }
-                        if (!"".equalsIgnoreCase(decryptedPayload)) {
+                        if (decryptedPayload != null && !"".equalsIgnoreCase(decryptedPayload)) {
                             JSONObject decryptedPayloadJSON = new JSONObject(decryptedPayload);
                             // add each attribute inside encrypted data to map
                             for (String key : decryptedPayloadJSON.keySet()) {
@@ -85,11 +84,11 @@ public class RMSServletManager extends AuthServletManager {
                     // all attributes are already in map
                     break;
                 default:
-                    Logger.error("ServletManager, servlet: " + servletPath + ". + channel " + channel + " unknown");
+                    Logger.error("ServletManager, servlet: " + servletPath + ". channel " + channel + " unknown");
                     throw new JServletException(new KoResponse(RMSStatusCode.CHANNEL_UNKNOWN, "channel " + channel + " unknown"));
             }
         } else {
-            Logger.error("ServletManager, servlet: " + servletPath + ". + channel key is not present.");
+            Logger.error("ServletManager, servlet: " + servletPath + ". channel key is not present.");
             throw new JServletException(new KoResponse(RMSStatusCode.CHANNEL_UNKNOWN, "channel key is not present"));
         }
     }
@@ -107,6 +106,7 @@ public class RMSServletManager extends AuthServletManager {
                     try {
                         output = session.getCryptoServer().encrypt(input);
                     } catch (CryptoException e) {
+                        e.printStackTrace();
                         throw new JServletException(e);
                     }
                     break;
