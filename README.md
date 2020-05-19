@@ -53,6 +53,9 @@ then you can deploy RMS using __docker-compose__
 
 finally, you can open [RMS](http://0.0.0.0:8080/Richkware-Manager-Server/).
 
-## Developed with JetBrains Intellij IDEA
+## IDE
+
+This project is developed with Intellij IDEA.
+[Open Sources Licences](https://www.jetbrains.com/opensource/) provided by JetBrains.
 
 <img src="https://raw.githubusercontent.com/richkmeli/richkmeli.github.io/master/Richkware/Jetbrains/jetbrains.svg" width="100" alt="Jetbrains Logo"/>
