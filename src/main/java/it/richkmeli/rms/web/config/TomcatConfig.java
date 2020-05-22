@@ -2,6 +2,8 @@ package it.richkmeli.rms.web.config;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.tomcat.util.descriptor.web.SecurityCollection;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +23,15 @@ public class TomcatConfig extends TomcatServletWebServerFactory{
     protected void postProcessContext(Context context) {
         super.postProcessContext(context);
 
+        // SSL - Redirect HTTP requests to HTTPS
+//        SecurityConstraint securityConstraint = new SecurityConstraint();
+//        securityConstraint.setUserConstraint("CONFIDENTIAL");
+//        SecurityCollection collection = new SecurityCollection();
+//        collection.addPattern("/*");
+//        securityConstraint.addCollection(collection);
+//        context.addConstraint(securityConstraint);
+
+        // add JNDI
         //ContextResource resource = new ContextResource();
         //resource.setName("jdbc/DOCKER");
         //resource.setType(DataSource.class.getName());
