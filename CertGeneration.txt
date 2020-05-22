@@ -1,0 +1,6 @@
+keytool -genkeypair -alias rms -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore rms.p12 -validity 3650 -storepass richkware
+
+then move to src/main/resources/keystore
+
+# Verify the keystore content
+keytool -list -v -storetype pkcs12 -keystore rms.p12
