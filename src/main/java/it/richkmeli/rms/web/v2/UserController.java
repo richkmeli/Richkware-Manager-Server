@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController
+//@RestController TODO API v2
 public class UserController {
     private final UserRepository userRepository;
 

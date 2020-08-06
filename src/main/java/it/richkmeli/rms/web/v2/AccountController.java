@@ -17,7 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@RestController
+//@RestController TODO API v2
 public class AccountController {
     private final UserRepository userRepository;
     //@Autowired

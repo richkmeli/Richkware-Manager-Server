@@ -28,7 +28,7 @@
     <groupId>it.richkmeli.rms</groupId>
     <artifactId>Richkware-Manager-Server</artifactId>
     <!--TODO RELEASE: update version-->
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <packaging>war</packaging>
 
     <repositories>
