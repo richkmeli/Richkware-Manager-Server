@@ -1,6 +1,8 @@
 # Richkware-Manager-Server
+
 [![Build Status](https://travis-ci.org/richkmeli/Richkware-Manager-Server.svg?branch=master)](https://travis-ci.org/richkmeli/Richkware-Manager-Server)
 [![](https://jitpack.io/v/richkmeli/Richkware-Manager-Server.svg)](https://jitpack.io/#richkmeli/Richkware-Manager-Server)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e246694691aa4a44b2aa5008b74e61ef)](https://app.codacy.com/app/richkmeli/Richkware-Manager-Server?utm_source=github.com&utm_medium=referral&utm_content=richkmeli/Richkware-Manager-Server&utm_campaign=Badge_Grade_Dashboard)
 
 
 Service for the management of hosts in which is present an instance of malware developed using **Richkware** framework.
