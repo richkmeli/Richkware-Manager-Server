@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Dependencies -->
-        <jframework.version>1.2.5</jframework.version>
+        <jframework.version>1.2.6</jframework.version>
         <!-- Webjars dependencies -->
         <!--        <webjars-locator-core.version>0.45</webjars-locator-core.version>-->
         <webjars-bootstrap.version>4.0.0</webjars-bootstrap.version>

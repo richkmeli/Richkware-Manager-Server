@@ -75,7 +75,7 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
 
 function deleteRmc(associatedUser, indexTableRow, rmcId) {
     $.ajax({
-        url: '/Richkware-Manager-Server/rmc?associatedUser=' + associatedUser + '&rmcId=' + rmcId,
+        url: '/Richkware-Manager-Server/rmc?associatedUser=' + associatedUser + '&rmcId=' + rmcId + "&channel=webapp",
         type: 'DELETE',
         success: function (result) {
             console.log("result from server: " + result)

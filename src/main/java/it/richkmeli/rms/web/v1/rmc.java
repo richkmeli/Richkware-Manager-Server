@@ -104,8 +104,8 @@ public class rmc extends HttpServlet {
                     }
                 }
                 if (valid) {
-                    File secureDataServer = new File("TESTsecureDataServer.txt");
-                    String serverKey = "testkeyServer";
+                    File secureDataServer = new File("secureDataServer.txt");
+                    String serverKey = "keyServer";
                     Crypto.Server cryptoServer = new Crypto.Server();
                     cryptoServer.init(secureDataServer, serverKey, rmcId, "");
                     cryptoServer.deleteClientData();

@@ -4,6 +4,7 @@ import it.richkmeli.rms.data.entity.rmc.model.Rmc;
 import it.richkmeli.rms.data.entity.rmc.model.RmcId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public interface RmcRepository extends JpaRepository<Rmc, RmcId> {
 
     void deleteRmcByRmcIdAndAssociatedUser_Email(String rmcId, String associatedUser);
+    @Transactional
     void deleteRmcByRmcId(String rmcId);
     void deleteAllByAssociatedUser_Email(String associatedUser);
     boolean existsRmcByRmcIdAndAssociatedUser_Email(String rmcId, String associatedUser);

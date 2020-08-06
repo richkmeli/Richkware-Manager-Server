@@ -2,7 +2,6 @@ package it.richkmeli.rms.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,22 +18,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // Spring Security to require HTTPS requests
-         httpSecurity.requiresChannel()
-                .anyRequest()
-                .requiresSecure();
+        // Spring Security to require only HTTPS requests, commenting this code it enables both protocols.
+        //  httpSecurity.requiresChannel()
+        // .anyRequest()
+        // .requiresSecure();
+        // .requiresInsecure();
 
-        httpSecurity.authorizeRequests()
+        // bypass spring security, keeping jframework one
+        httpSecurity
+                .csrf()
+                .disable()
+                .authorizeRequests()
                 .antMatchers("/**", "/Richkware-Manager-Server/**")
-//                .antMatchers("/","home").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .permitAll()
-//                .and()
-//                .logout()
+                .anonymous();
+/*
+        // accessible without authentication,
+        httpSecurity.authorizeRequests()
+                .antMatchers("/anonymous*")
+                .anonymous();
+
+        // login and signup pages
+        httpSecurity.authorizeRequests()
+                .antMatchers("/login*")
+                // .and()
+                // .formLogin()
+                // .loginPage("/login")
+                // .and()
+                // .logout()
                 .permitAll();
+
+        // accessible after a successful login
+        httpSecurity.authorizeRequests()
+                .anyRequest()
+                .authenticated();
+    */
     }
 
     @Override
