@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.crypto.Crypto;
+import it.richkmeli.jframework.crypto.exception.CryptoException;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
@@ -77,7 +78,7 @@ public class device extends HttpServlet {
                 String data1 = attribMap.get("data1");
                 String data2 = attribMap.get("data2");
 
-                //Logger.info("data0: " + data0 + " data1: " + data1 + " data2: " + data2);
+                Logger.info("data0: " + data0 + " data1: " + data1 + " data2: " + data2);
 
                 String name = Crypto.decryptRC4(data0, password);
 
@@ -86,15 +87,23 @@ public class device extends HttpServlet {
                 Device oldDevice = deviceDatabaseSpringManager.getDevice(name);
 
                 // if this entry exists, then it's used to decrypt the encryption key in the DB
-                String serverPort;
-                String associatedUser;
+                String serverPort = null;
+                String associatedUser = null;
                 // at the first call is encrypted with preshared key, at the following with server-side generated key
                 if (oldDevice == null) {
                     serverPort = Crypto.decryptRC4(data1, password);
                     associatedUser = Crypto.decryptRC4(data2, password);
                 } else {
-                    serverPort = Crypto.decryptRC4(data1, oldDevice.getEncryptionKey());
-                    associatedUser = Crypto.decryptRC4(data2, oldDevice.getEncryptionKey());
+                    try {
+                        serverPort = Crypto.decryptRC4(data1, oldDevice.getEncryptionKey());
+                        associatedUser = Crypto.decryptRC4(data2, oldDevice.getEncryptionKey());
+                    }catch (CryptoException ce){
+                        if (ce.getMessage().contains("Key is not correct.")){
+                            Logger.info("Probable deletion of the key saved locally. Decrypting using default key.");
+                            serverPort = Crypto.decryptRC4(data1, password);
+                            associatedUser = Crypto.decryptRC4(data2, password);
+                        }
+                    }
                 }
 
                 String encryptionKey = RandomStringGenerator.generateAlphanumericString(keyLength);
