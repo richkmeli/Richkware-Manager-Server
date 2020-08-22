@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+// TODO use elements paging of spring
+
 //@RestController TODO API v2
 public class UserController {
     private final UserRepository userRepository;
@@ -17,7 +19,6 @@ public class UserController {
     UserController(UserRepository repository) {
         this.userRepository = repository;
     }
-
 
     //@RequestMapping(path = "/users2", method = RequestMethod.GET)
     @GetMapping(path = "/users2")
