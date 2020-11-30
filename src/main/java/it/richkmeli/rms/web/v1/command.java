@@ -60,8 +60,12 @@ public class command extends HttpServlet {
             String output = null;
 
             if (RMSServletManager.Channel.RICHKWARE.equalsIgnoreCase(rmsSession.getChannel())) {
+                // get the deviceName decrypting with the default key
                 deviceName = Crypto.decryptRC4(deviceName, password);
                 output = rmsSession.getDeviceDatabaseManager().getCommands(deviceName);
+                rmsSession.getDeviceDatabaseManager().editCommands(deviceName,"");
+                // TODO return the commands to be executed encrypted with the specific key of that device
+                //output = Crypto.encryptRC4(output,rmsSession.getDeviceDatabaseManager().getEncryptionKey(deviceName));
             } else {
                 output = rmsSession.getDeviceDatabaseManager().getCommandsOutput(deviceName);
                 output = rmsServletManager.doDefaultProcessResponse(output);

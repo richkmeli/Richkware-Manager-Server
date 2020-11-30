@@ -15,13 +15,13 @@ import java.util.List;
 public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
     private static DeviceRepository deviceRepository;
 
-    public static DeviceDatabaseSpringManager getInstance() {
-        return new DeviceDatabaseSpringManager(deviceRepository);
-    }
-
     @Autowired
     public DeviceDatabaseSpringManager(DeviceRepository deviceRepository) {
         this.deviceRepository = deviceRepository;
+    }
+
+    public static DeviceDatabaseSpringManager getInstance() {
+        return new DeviceDatabaseSpringManager(deviceRepository);
     }
 
     @Override
@@ -66,21 +66,45 @@ public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
 
     @Override
     public boolean editCommands(String deviceName, String commands) throws AuthDatabaseException {
-        return false;
+        Device device = deviceRepository.findById(deviceName).orElse(null);
+        if (device != null) {
+            device.setCommands(commands);
+            deviceRepository.save(device);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public String getCommands(String deviceName) throws AuthDatabaseException {
-        return null;
+        Device device = deviceRepository.findById(deviceName).orElse(null);
+        if (device != null) {
+            return device.getCommands();
+        } else {
+            return "";
+        }
     }
 
     @Override
     public boolean setCommandsOutput(String deviceName, String commandsOutput) throws AuthDatabaseException {
-        return false;
+        Device device = deviceRepository.findById(deviceName).orElse(null);
+        if (device != null) {
+            device.setCommandsOutput(commandsOutput);
+            deviceRepository.save(device);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public String getCommandsOutput(String deviceName) throws AuthDatabaseException {
-        return null;
+        Device device = deviceRepository.findById(deviceName).orElse(null);
+        if (device != null) {
+            return device.getCommandsOutput();
+        } else {
+            return "";
+        }
     }
 }
