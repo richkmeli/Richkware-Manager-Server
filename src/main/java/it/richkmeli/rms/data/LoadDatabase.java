@@ -40,7 +40,6 @@ class LoadDatabase {
             // user1 will be deleted later in RMC test phase
 
 
-
             Device device = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", "");
             Device device1 = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk2@i.it", "", "");
             deviceDatabaseSpringManager.addDevice(device);
@@ -61,7 +60,7 @@ class LoadDatabase {
             authDatabaseSpringManager.addUser(adminUser);
 
             //configurationDatabaseManager.getValue(ConfigurationEnum.DEFAULT_CONFIGURATION_1.getKey());
-            ConfigurationManager.getValue(ConfigurationEnum.DEFAULT_CONFIGURATION_1);
+            ConfigurationManager.getValue(ConfigurationEnum.DEFAULT_CONFIGURATION_3);
 
         };
     }
