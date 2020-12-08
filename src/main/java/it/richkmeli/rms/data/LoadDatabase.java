@@ -2,10 +2,13 @@ package it.richkmeli.rms.data;
 
 
 import it.richkmeli.jframework.util.RandomStringGenerator;
-import it.richkmeli.rms.data.entity.device.model.Device;
+import it.richkmeli.rms.data.entity.configuration.ConfigurationDatabaseManager;
+import it.richkmeli.rms.data.entity.configuration.ConfigurationEnum;
+import it.richkmeli.rms.data.entity.configuration.ConfigurationManager;
 import it.richkmeli.rms.data.entity.device.DeviceDatabaseSpringManager;
-import it.richkmeli.rms.data.entity.rmc.model.Rmc;
+import it.richkmeli.rms.data.entity.device.model.Device;
 import it.richkmeli.rms.data.entity.rmc.RmcDatabaseSpringManager;
+import it.richkmeli.rms.data.entity.rmc.model.Rmc;
 import it.richkmeli.rms.data.entity.user.AuthDatabaseSpringManager;
 import it.richkmeli.rms.data.entity.user.model.User;
 import org.springframework.boot.CommandLineRunner;
@@ -18,33 +21,47 @@ import org.springframework.context.annotation.Configuration;
 class LoadDatabase {
 
     @Bean
-    CommandLineRunner initDatabase(/*EntityManagerFactory emf,*/ AuthDatabaseSpringManager authDatabaseSpringManager, DeviceDatabaseSpringManager deviceDatabaseSpringManager, RmcDatabaseSpringManager rmcDatabaseSpringManager) {
+    CommandLineRunner initDatabase(AuthDatabaseSpringManager authDatabaseSpringManager, DeviceDatabaseSpringManager deviceDatabaseSpringManager, RmcDatabaseSpringManager rmcDatabaseSpringManager, ConfigurationDatabaseManager configurationDatabaseManager) {
         return args -> {
-            authDatabaseSpringManager.addUser(new User(
-                    RandomStringGenerator.generateAlphanumericString(4) + "@example.com", "00000000", false));
 
-            if (!authDatabaseSpringManager.isUserPresent("richk@i.it")) {
-                authDatabaseSpringManager.addUser(new User("richk@i.it", "00000000", true));
+            // add login entry
+            User adminUser = new User("richk@i.it", "00000000", true);
+            if (!authDatabaseSpringManager.isUserPresent(adminUser.getEmail())) {
+                authDatabaseSpringManager.addUser(adminUser);
             }
 
-            authDatabaseSpringManager.addUser(new User("richk2@i.it", "00000000", false));
 
-            deviceDatabaseSpringManager.addDevice(new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", ""));
-            deviceDatabaseSpringManager.addDevice(new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk2@i.it", "", ""));
+            // test
+            User user = new User(RandomStringGenerator.generateAlphanumericString(4) + "@example.com", "00000000", false);
+            User user1 = new User("richk2@i.it", "00000000", false);
+            authDatabaseSpringManager.addUser(user);
+            authDatabaseSpringManager.removeUser(user.getEmail());
+            authDatabaseSpringManager.addUser(user1);
+            // user1 will be deleted later in RMC test phase
 
-            Rmc rmc = new Rmc("richk@i.it", "test_rmc_ID");
+
+
+            Device device = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", "");
+            Device device1 = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk2@i.it", "", "");
+            deviceDatabaseSpringManager.addDevice(device);
+            deviceDatabaseSpringManager.addDevice(device1);
+            deviceDatabaseSpringManager.removeDevice(device.getName());
+            deviceDatabaseSpringManager.removeDevice(device1.getName());
+
+            Rmc rmc = new Rmc(adminUser.getEmail(), "test_rmc_ID");
             Rmc rmc2 = new Rmc("richk2@i.it", "test_rmc_ID" + RandomStringGenerator.generateAlphanumericString(4));
 
             rmcDatabaseSpringManager.addRMC(rmc);
             rmcDatabaseSpringManager.addRMC(rmc2);
-//            EntityManager em = emf.createEntityManager();
-//            em.getTransaction().begin();
-//            em.persist(rmc2);
-//            em.getTransaction().commit();
-//            em.close();
 
-            authDatabaseSpringManager.removeUser("richk2@i.it");
+            authDatabaseSpringManager.removeUser(rmc.getAssociatedUser());
+            assert rmcDatabaseSpringManager.checkRmc(rmc.getRmcId());
+            authDatabaseSpringManager.removeUser(user1.getEmail());
+            assert rmcDatabaseSpringManager.checkRmc(rmc2.getRmcId());
+            authDatabaseSpringManager.addUser(adminUser);
 
+            //configurationDatabaseManager.getValue(ConfigurationEnum.DEFAULT_CONFIGURATION_1.getKey());
+            ConfigurationManager.getValue(ConfigurationEnum.DEFAULT_CONFIGURATION_1);
 
         };
     }
