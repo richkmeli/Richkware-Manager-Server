@@ -2,6 +2,7 @@ package it.richkmeli.rms.web.v2;
 
 import it.richkmeli.jframework.util.log.Logger;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.RequestDispatcher;

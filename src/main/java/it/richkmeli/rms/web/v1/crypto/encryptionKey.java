@@ -10,6 +10,7 @@ import it.richkmeli.rms.data.entity.device.DeviceDatabaseModel;
 import it.richkmeli.rms.web.v1.util.RMSServletManager;
 import it.richkmeli.rms.web.v1.util.RMSSession;
 import it.richkmeli.rms.web.v1.util.RMSStatusCode;
+import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
