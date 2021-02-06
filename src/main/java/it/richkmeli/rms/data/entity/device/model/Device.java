@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class Device {
     @Id
     @NotNull
-    @Length(max = 50)
+    @Length(max = 64)
     private String name;
     @NotNull
     @Length(max = 25)

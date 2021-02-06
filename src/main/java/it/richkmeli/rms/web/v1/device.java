@@ -3,8 +3,6 @@ package it.richkmeli.rms.web.v1;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
-import it.richkmeli.jframework.crypto.Crypto;
-import it.richkmeli.jframework.crypto.exception.CryptoException;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
@@ -24,7 +22,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Servlet implementation class DevicesListServlet
@@ -37,12 +38,9 @@ import java.util.*;
 public class device extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final int keyLength = 32;
-    private String password;
-
 
     public device() {
         super();
-        password = ResourceBundle.getBundle("configuration").getString("encryptionkey");
     }
 
     /**
@@ -66,45 +64,13 @@ public class device extends HttpServlet {
 
             // server session
             RMSSession rmsSession = rmsServletManager.getRMSServerSession();
+            if (attribMap.containsKey(RMSServletManager.PAYLOAD_KEY.NAME) &&
+                    attribMap.containsKey(RMSServletManager.PAYLOAD_KEY.SERVER_PORT) &&
+                    attribMap.containsKey(RMSServletManager.PAYLOAD_KEY.ASSOCIATED_USER)) {
 
-            // data0: contains deviceID (always encrypted with preshared key)
-            // data1: contains serverPort
-            // data2: contains associatedUser
-            if (attribMap.containsKey("data0") &&
-                    attribMap.containsKey("data1") &&
-                    attribMap.containsKey("data2")) {
-
-                String data0 = attribMap.get("data0");
-                String data1 = attribMap.get("data1");
-                String data2 = attribMap.get("data2");
-
-                Logger.info("data0: " + data0 + " data1: " + data1 + " data2: " + data2);
-
-                String name = Crypto.decryptRC4(data0, password);
-
-                // check in the DB if there is an entry with that name
-                DeviceDatabaseModel deviceDatabaseSpringManager = rmsSession.getDeviceDatabaseManager();
-                Device oldDevice = deviceDatabaseSpringManager.getDevice(name);
-
-                // if this entry exists, then it's used to decrypt the encryption key in the DB
-                String serverPort = null;
-                String associatedUser = null;
-                // at the first call is encrypted with preshared key, at the following with server-side generated key
-                if (oldDevice == null) {
-                    serverPort = Crypto.decryptRC4(data1, password);
-                    associatedUser = Crypto.decryptRC4(data2, password);
-                } else {
-                    try {
-                        serverPort = Crypto.decryptRC4(data1, oldDevice.getEncryptionKey());
-                        associatedUser = Crypto.decryptRC4(data2, oldDevice.getEncryptionKey());
-                    }catch (CryptoException ce){
-                        if (ce.getMessage().contains("Key is not correct.")){
-                            Logger.info("Probable deletion of the key saved locally. Decrypting using default key.");
-                            serverPort = Crypto.decryptRC4(data1, password);
-                            associatedUser = Crypto.decryptRC4(data2, password);
-                        }
-                    }
-                }
+                String name = attribMap.get(RMSServletManager.PAYLOAD_KEY.NAME);
+                String serverPort = attribMap.get(RMSServletManager.PAYLOAD_KEY.SERVER_PORT);
+                String associatedUser = attribMap.get(RMSServletManager.PAYLOAD_KEY.ASSOCIATED_USER);
 
                 String encryptionKey = RandomStringGenerator.generateAlphanumericString(keyLength);
 
@@ -120,7 +86,11 @@ public class device extends HttpServlet {
                         "",
                         "");
 
-                Logger.info("SERVLET device, doGet: Device: " + name + " " + request.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + associatedUser + " ");
+                Logger.info("SERVLET device, doPut: Device: " + name + " " + request.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + associatedUser + " ");
+
+                // check in the DB if there is an entry with that name
+                DeviceDatabaseModel deviceDatabaseSpringManager = rmsSession.getDeviceDatabaseManager();
+                Device oldDevice = deviceDatabaseSpringManager.getDevice(name);
 
                 String message = "";
                 if (oldDevice == null) {
@@ -136,7 +106,7 @@ public class device extends HttpServlet {
                 message = rmsServletManager.doDefaultProcessResponse(message);
                 AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, message));
             } else {
-                // argomenti non presenti
+                // arguments not present
                 AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, "Parameters missing"));
             }
         } catch (JServletException e) {
@@ -145,7 +115,6 @@ public class device extends HttpServlet {
             e.printStackTrace();
             AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
         }
-
 
 
     }
