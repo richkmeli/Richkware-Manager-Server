@@ -12,18 +12,18 @@ $(document).ready(function () {
         devicesArray.push(device);
         console.log(devicesArray);
         $.ajax({
-            url: '/Richkware-Manager-Server/command',
+            url: '/command',
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify({devices: [device], commands: encryptedString}),
             success: function (result) {
                 // alert(result)
-                window.location.replace("/Richkware-Manager-Server/devices.html")
+                window.location.replace("/html/devices.html")
             }
         });
-        // $.put("command", {device: dev, commands: encryptedString}, function(data) {
+        // $.put("/command", {device: dev, commands: encryptedString}, function(data) {
         //     console.log(data)
-        //     window.location.replace("/Richkware-Manager-Server/devices.html")
+        //     window.location.replace("/html/devices.html")
         // })
     })
 })

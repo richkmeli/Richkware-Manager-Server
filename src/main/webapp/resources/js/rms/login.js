@@ -8,12 +8,12 @@ $(document).ready(function () {
 
         console.log("username: " + username + " password: " + hashedPassword)
         if (username != "" && hashedPassword != "") {
-            $.post("LogIn", {email: username, password: hashedPassword, channel: 'webapp'}, function (data) {
+            $.post("/LogIn", {email: username, password: hashedPassword, channel: 'webapp'}, function (data) {
                 console.log(data)
                 var JSONdata = JSON.parse(data);
-                console.log(JSONdata + ", " + JSONdata.statusCode)
+                //console.log(JSONdata.message + ", " + JSONdata.statusCode)
                 if (JSONdata.statusCode == 1000 || JSONdata.statusCode == 2101) {
-                    window.location.replace("/Richkware-Manager-Server/devices.html")
+                    window.location.replace("/html/devices.html")
                 } else if (JSONdata.statusCode == 2103 || JSONdata.statusCode == 2104 || JSONdata.statusCode == 2000 || JSONdata.statusCode == 2107) {
                     // show an alert only for these errors
                     alert(JSONdata.message)

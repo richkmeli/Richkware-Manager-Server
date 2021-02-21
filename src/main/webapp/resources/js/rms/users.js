@@ -10,7 +10,7 @@ function bodyOnLoad() {
 // function accountInformation() {
 //
 //     $(document).ready(function () {
-//         $.get("user", {channel: "webapp"}, /*data,*/ function (data, status) {
+//         $.get("/user", {channel: "webapp"}, /*data,*/ function (data, status) {
 //
 //             user = data[0];
 //             // load name near to the brand
@@ -52,7 +52,7 @@ function bodyOnLoad() {
 function loadUsersTable() {
 
     $(document).ready(function () {
-        $.get("users", {channel: "webapp"}, function (data) {
+        $.get("/users", {channel: "webapp"}, function (data) {
             var JSONdata = JSON.parse(data)
             if (JSONdata.statusCode == 1000) {
                 var users = JSONdata.message
@@ -60,7 +60,7 @@ function loadUsersTable() {
             } else if (JSONdata.statusCode == 2100) {
                 var choice = confirm(JSONdata.message)
                 if (choice)
-                    window.location.replace("/Richkware-Manager-Server/index.html")
+                    window.location.replace("/html/index.html")
             } else {
                 alert(JSONdata.message)
             }
@@ -122,7 +122,7 @@ function loadUsersJSONtoTable(usersListJSON) {
 
 function deleteUser(email, indexTableRow) {
     $.ajax({
-        url: '/Richkware-Manager-Server/user?email=' + email + "&channel=webapp",
+        url: '/user?email=' + email + "&channel=webapp",
         type: 'DELETE',
         success: function (result) {
             console.log(result)

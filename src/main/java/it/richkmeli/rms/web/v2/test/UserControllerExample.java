@@ -1,4 +1,4 @@
-package it.richkmeli.rms.web.v2;
+package it.richkmeli.rms.web.v2.test;
 
 import it.richkmeli.rms.data.entity.user.UserRepository;
 import it.richkmeli.rms.data.entity.user.model.User;
@@ -11,12 +11,12 @@ import java.util.Optional;
 
 // TODO use elements paging of spring
 
-//@RestController TODO API v2
-public class UserController {
+//@RestController //TODO API v2
+public class UserControllerExample {
     private final UserRepository userRepository;
 
     @Autowired
-    UserController(UserRepository repository) {
+    UserControllerExample(UserRepository repository) {
         this.userRepository = repository;
     }
 

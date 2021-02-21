@@ -12,11 +12,11 @@ $(document).ready(function () {
         if (mailCheck == "OK" && passwordCheck == "OK") {
             console.log("checks passed")
             var send = {email: email, password: pass, channel: "webapp"}
-            $.post("SignUp", send, function (data) {
+            $.post("/SignUp", send, function (data) {
                 var JSONdata = JSON.parse(data)
                 console.log(JSONdata)
                 if (JSONdata.statusCode == 1000) {
-                    window.location.replace("/Richkware-Manager-Server/devices.html")
+                    window.location.replace("/html/devices.html")
                 } else {
                     alert(JSONdata.message)
                 }

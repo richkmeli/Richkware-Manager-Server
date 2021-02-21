@@ -17,12 +17,12 @@
     <link rel="stylesheet" href="/webjars/bootstrap/4.0.0/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/webjars/font-awesome/4.7.0/css/font-awesome.min.css"/>
 
-    <link rel="stylesheet" href="css/simple-sidebar.css"/>
-    <script src="js/rms/account.js"></script>
-    <script src="js/rms/login.js"></script>
+    <link rel="stylesheet" href="../css/simple-sidebar.css"/>
+    <script src="../js/rms/account.js"></script>
+    <script src="../js/rms/users.js"></script>
 
 </head>
-<body>
+<body onload="bodyOnLoad()">
 
 <div class="d-flex bg-light" id="wrapper">
 
@@ -32,12 +32,10 @@
         <div class="list-group list-group-flush">
             <a id="menuHome" href="index.html" class="list-group-item list-group-item-action bg-secondary text-light">Home</a>
             <a id="menuDevices" href="devices.html"
-               class="list-group-item list-group-item-action bg-secondary text-light"
-               style="display: none">Device List</a>
-            <a id="menuUsers" href="users.html" class="list-group-item list-group-item-action bg-secondary text-light"
-               style="display: none">User List</a>
-            <a id="menuRMCs" href="rmcs.html" class="list-group-item list-group-item-action bg-secondary text-light"
-               style="display: none">RMC List</a>
+               class="list-group-item list-group-item-action bg-secondary text-light">Device List</a>
+            <a id="menuUsers" href="users.html" class="list-group-item list-group-item-action  active">User List</a>
+            <a id="menuRMCs" href="rmcs.html" class="list-group-item list-group-item-action bg-secondary text-light">RMC
+                List</a>
         </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -78,31 +76,10 @@
 
         <!-- Content -->
         <div class="container-fluid">
-            <div class="col-md-4 offset-md-4">
-                <div class="card card-login mx-auto mt-5">
-                    <div class="card-header" id="Logintitle">LogIn</div>
-                    <div class="card-body">
-                        <form id="loginForm">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1" id="Email">E-Mail</label>
-                                <input class="form-control" id="exampleInputEmail1" name="email" type="email"
-                                       aria-describedby="emailHelp" placeholder="Email">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Password</label>
-                                <input class="form-control" id="exampleInputPassword1" name="password" type="password"
-                                       placeholder="Password">
-                            </div>
-                            <button class="btn btn-primary btn-block" id="Login" type="button" value="submit">Login
-                            </button>
-
-                        </form>
-                        <div class="text-center">
-                            <a class="d-block small mt-3" href="signup.html" id="Registerpage">SignUp</a>
-                            <a class="d-block small" href="forgot-password.html" id="Forgot">Forgot Password?</a>
-                        </div>
-                    </div>
-                </div>
+            <h2>User List</h2>
+            <div class="table-responsive">
+                <table class="table table-hover" id="usersTable">
+                </table>
             </div>
         </div>
     </div>

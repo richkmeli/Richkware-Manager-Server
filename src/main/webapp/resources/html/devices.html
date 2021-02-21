@@ -17,25 +17,28 @@
     <link rel="stylesheet" href="/webjars/bootstrap/4.0.0/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/webjars/font-awesome/4.7.0/css/font-awesome.min.css"/>
 
-    <link rel="stylesheet" href="css/simple-sidebar.css"/>
-    <script src="js/rms/account.js"></script>
+    <link rel="stylesheet" href="../css/simple-sidebar.css"/>
+    <script src="../js/rms/account.js"></script>
+    <script src="../js/rms/devices.js"></script>
+    <script src="../js/rms/reverseCommands.js"></script>
+    <script src="../js/rms/reverseCommandsOutput.js"></script>
+
 </head>
 <body>
 
 <div class="d-flex bg-light" id="wrapper">
 
     <!-- Sidebar -->
-    <div class="border-right bg-dark text-light" id="sidebar-wrapper">
+    <div class=" border-right bg-dark text-light" id="sidebar-wrapper">
         <div class="sidebar-heading">RMS</div>
         <div class="list-group list-group-flush">
-            <a id="menuHome" href="index.html" class="list-group-item list-group-item-action active">Home</a>
-            <a id="menuDevices" href="devices.html"
-               class="list-group-item list-group-item-action bg-secondary text-light" style="display: none">Device
+            <a id="menuHome" href="index.html" class="list-group-item list-group-item-action bg-secondary text-light">Home</a>
+            <a id="menuDevices" href="devices.html" class="list-group-item list-group-item-action active">Device
                 List</a>
             <a id="menuUsers" href="users.html" class="list-group-item list-group-item-action bg-secondary text-light"
                style="display: none">User List</a>
-            <a id="menuRMCs" href="rmcs.html" class="list-group-item list-group-item-action bg-secondary text-light"
-               style="display: none">RMC List</a>
+            <a id="menuRMCs" href="rmcs.html" class="list-group-item list-group-item-action bg-secondary text-light">RMC
+                List</a>
         </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -76,9 +79,11 @@
 
         <!-- Content -->
         <div class="container-fluid">
-            <h1 class="mt-4">Richkware Manager Server</h1>
-            Service for the management of hosts in which is present an instance of malware developed using **Richkware**
-            framework.
+            <h3>Device List</h3>
+            <div class="table-responsive">
+                <table class="table table-hover" id="devicesTable">
+                </table>
+            </div>
         </div>
     </div>
     <!-- /#page-content-wrapper -->
@@ -96,6 +101,29 @@
     });
 </script>
 
+<!-- Modal commands-output console -->
+<div class="modal fade" id="ModalCommand" tabindex="-1" role="dialog" aria-labelledby="ModalCommandTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCommandTitle">Device: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="ModalCommandBody" class="modal-body">
+                <textarea class="container form-control bg-dark text-success" style="font-family: courier;"
+                          id="text-area" rows="20"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="submit-commands" type="button" class="btn btn-primary">Send Commands</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Modal commands-output console -->
 </body>
 
 

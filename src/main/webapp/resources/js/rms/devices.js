@@ -1,6 +1,6 @@
 function loadDevicesTable() {
     console.log("loadDevicesTable");
-    $.get("devices", {channel: "webapp"}, function (data) {
+    $.get("/devices", {channel: "webapp"}, function (data) {
         let JSONdata = JSON.parse(data);
 
         //device = JSON.parse(DeviceJSON);
@@ -12,7 +12,7 @@ function loadDevicesTable() {
             loadDevicesJSONtoTable(devices)
         } else if (JSONdata.statusCode === 2100) {
             alert("You are not logged in. You are being redirected to the Login Page");
-            window.location.replace = "/Richkware-Manager-Server/login.html";
+            window.location.replace = "/html/login.html";
         } else {
             alert(JSONdata.message)
         }
@@ -139,7 +139,7 @@ function handleReverseCommandOutput(encCommands) {
 
 function deleteDevice(device, indexTableRow) {
     $.ajax({
-        url: '/Richkware-Manager-Server/device?name=' + device,
+        url: '/device?name=' + device,
         type: 'DELETE',
         success: function (result) {
             $("#tableRow" + indexTableRow).remove();
@@ -148,6 +148,7 @@ function deleteDevice(device, indexTableRow) {
 }
 
 $(document).ready(function () {
+    console.log("get devices from server")
     loadDevicesTable();
     setInterval(loadDevicesTable, 30000);
 
@@ -169,7 +170,7 @@ $(document).ready(function () {
     $("[id*=remove]").click(function () {
         var dev = event.target.id.split("#")[1];
         var index = event.target.id.split("#")[2];
-        $.delete("device", {name: dev}, function () {
+        $.delete("/device", {name: dev}, function () {
             $("#tableRow" + index).remove()
         })
     });
@@ -177,7 +178,7 @@ $(document).ready(function () {
     $("[id*=manage]").click(function () {
         console.log("element clicked -> redirecting")
         var name = event.target.id.split("#")[1]
-        window.location.replace = "/Richkware-Manager-Server/reverse-commands.html?device=" + name;
+        window.location.replace = "/html/reverse-commands.html?device=" + name;
     });
 
     $("#refreshButton").click(function () {

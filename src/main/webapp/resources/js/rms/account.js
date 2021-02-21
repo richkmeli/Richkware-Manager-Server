@@ -5,7 +5,7 @@ $(document).ready(function () {
      $("#menuUsers").hide();
      $("#menuRMCs").hide();*/
 
-    $.get("user", {channel: "webapp"}, function (data) {
+    $.get("/user", {channel: "webapp"}, function (data) {
         console.log(data);
         let JSONdata = JSON.parse(data);
         // Logged
@@ -34,7 +34,7 @@ $(document).ready(function () {
                 $("#menuUsers").hide();
                 $("#userNearBrand").html("").append($("<i></i>").text(JSONmessage.user))
             }
-            append($("<p></p>").text(response.description))
+            // .append($("<p></p>").text(response.description))
         } else if (JSONdata.statusCode === 2100) {
             // Account buttons
             $("#signupNavBar").show();
@@ -44,10 +44,12 @@ $(document).ready(function () {
             $("#menuDevices").hide();
             $("#menuUsers").hide();
             $("#menuRMCs").hide();
-            let JSONmessage = JSON.parse(JSONdata.message);
+            let JSONmessage = JSONdata.message;//JSON.parse(JSONdata.message);
             let choice = confirm(JSONmessage);
             if (choice) {
-                window.location.replace("/Richkware-Manager-Server/index.html");
+                window.location.replace("/html/index.html");
+            } else {
+                //alert(JSONdata.message)
             }
         }
     }).fail(function () {
@@ -63,10 +65,10 @@ $(document).ready(function () {
 
     $("#logoutNavBar").click(function () {
         console.log("logout clicked");
-        $.get("LogOut", {channel: 'webapp'}, function (data) {
+        $.get("/LogOut", {channel: 'webapp'}, function (data) {
             let JSONdata = JSON.parse(data);
             if (JSONdata.statusCode === 1000) {
-                window.location.replace("/Richkware-Manager-Server/index.html")
+                window.location.replace("/html/index.html")
             } else {
                 alert(JSONdata.message)
             }

@@ -17,7 +17,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 //.addResourceHandler("/resources/**")
+                // example http://localhost:8080/**
                 .addResourceHandler("/**")
+                // example: from webapp/resources/
                 .addResourceLocations("/resources/", "/other-resources/")
                 .setCachePeriod(3600)
                 .resourceChain(true)

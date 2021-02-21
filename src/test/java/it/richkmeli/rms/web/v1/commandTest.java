@@ -1,5 +1,6 @@
 package it.richkmeli.rms.web.v1;
 
+import it.richkmeli.rms.web.v2.entity.DeviceController;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
 
@@ -15,7 +16,7 @@ public class commandTest extends ServletTestManager {
                 "}";
         doBefore(jsonInput);
 
-        new command().doGet(requestMock, responseMock);
+        //new command().doGet(requestMock, responseMock);
 
         //verify(requestMock, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
 
@@ -37,7 +38,7 @@ public class commandTest extends ServletTestManager {
                 "}";
         doBefore(jsonInput);
 
-        new command().doPost(requestMock, responseMock);
+        //new command().doPost(requestMock, responseMock);
 
         //verify(requestMock, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
 

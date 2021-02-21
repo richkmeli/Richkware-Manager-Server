@@ -1,6 +1,6 @@
 function loadRmcsTable() {
     console.log("loadRmcsTable")
-    $.get("rmc", {channel: "webapp"}, function (data) {
+    $.get("/rmc", {channel: "webapp"}, function (data) {
         var JSONdata = JSON.parse(data)
 
         //device = JSON.parse(DeviceJSON);
@@ -12,7 +12,7 @@ function loadRmcsTable() {
             loadRmcsJSONtoTable(rmcs)
         } else if (JSONdata.statusCode == 2100) {
             alert("You are not logged in. You are being redirected to the Login Page");
-            window.location.replace = "/Richkware-Manager-Server/login.html";
+            window.location.replace = "/html/login.html";
         } else {
             alert(JSONdata.message)
         }
@@ -65,7 +65,7 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
             "<td>" + rmcId + "</td>" +
             "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteRmc('" + associatedUser + "', '" + i + "', '" + rmcId + "')\"><span class=\"fa fa-trash\"></button></td>");
 
-        //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/Richkware-Manager-Server/device?name=" + name + "\';\">Remove</button></td>");
+        //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/device?name=" + name + "\';\">Remove</button></td>");
 
         tbody.appendChild(row);
         //      index++
@@ -75,7 +75,7 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
 
 function deleteRmc(associatedUser, indexTableRow, rmcId) {
     $.ajax({
-        url: '/Richkware-Manager-Server/rmc?associatedUser=' + associatedUser + '&rmcId=' + rmcId + "&channel=webapp",
+        url: '/rmc?associatedUser=' + associatedUser + '&rmcId=' + rmcId + "&channel=webapp",
         type: 'DELETE',
         success: function (result) {
             console.log("result from server: " + result)
@@ -97,7 +97,7 @@ $(document).ready(function () {
     //     var id = event.target.id.split("#")[1];
     //     var index = event.target.id.split("#")[2];
     //     var account = event.target.id.split('#')[3];
-    //     $.delete("rmc", {associatedUser: account, rmcid: id}, function () {
+    //     $.delete("/rmc", {associatedUser: account, rmcid: id}, function () {
     //         $("#tableRow" + index).remove()
     //     })
     // });

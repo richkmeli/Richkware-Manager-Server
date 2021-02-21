@@ -1,6 +1,6 @@
 function getOutput(deviceName) {
     console.error(deviceName);
-    $.get("command", {data0: deviceName, channel: "webapp"}, function (response) {
+    $.get("/command", {data0: deviceName, channel: "webapp"}, function (response) {
         var JSONdata = JSON.parse(response)
         if (JSONdata.statusCode == 1000) {
             var output = JSONdata.message

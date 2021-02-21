@@ -54,27 +54,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     */
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .passwordEncoder(new BCryptPasswordEncoder())
-                .withUser("richk@i.it").password(new BCryptPasswordEncoder().encode("00000000")).roles("USER")
-                .and()
-                .withUser("admin").password("admin").roles("ADMIN");
-    }
-
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("password")
-                        .roles("USER")
-                        .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication()
+//                .passwordEncoder(new BCryptPasswordEncoder())
+//                .withUser("richk@i.it").password(new BCryptPasswordEncoder().encode("00000000")).roles("USER")
+//                .and()
+//                .withUser("admin").password("admin").roles("ADMIN");
+//    }
+//
+//    @Bean
+//    @Override
+//    public UserDetailsService userDetailsService() {
+//        UserDetails user =
+//                User.withDefaultPasswordEncoder()
+//                        .username("user")
+//                        .password("password")
+//                        .roles("USER")
+//                        .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 
 
 }
