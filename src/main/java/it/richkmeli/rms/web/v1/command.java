@@ -6,9 +6,9 @@
 //import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoResponse;
 //import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 //import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
-//import it.richkmeli.rms.web.v1.util.RMSServletManager;
-//import it.richkmeli.rms.web.v1.util.RMSSession;
-//import it.richkmeli.rms.web.v1.util.RMSStatusCode;
+//import it.richkmeli.rms.web.util.RMSServletManager;
+//import it.richkmeli.rms.web.util.RMSSession;
+//import it.richkmeli.rms.web.util.RMSStatusCode;
 //import org.json.JSONArray;
 //import org.json.JSONException;
 //import org.json.JSONObject;

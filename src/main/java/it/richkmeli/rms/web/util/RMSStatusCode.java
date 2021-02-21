@@ -1,4 +1,4 @@
-package it.richkmeli.rms.web.v1.util;
+package it.richkmeli.rms.web.util;
 
 import it.richkmeli.jframework.auth.web.util.AuthStatusCode;
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.StatusCode;

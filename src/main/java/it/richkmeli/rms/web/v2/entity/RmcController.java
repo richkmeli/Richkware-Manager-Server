@@ -10,9 +10,9 @@ import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkRespon
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.rms.data.entity.rmc.model.Rmc;
 import it.richkmeli.rms.data.entity.user.UserRepository;
-import it.richkmeli.rms.web.v1.util.RMSServletManager;
-import it.richkmeli.rms.web.v1.util.RMSSession;
-import it.richkmeli.rms.web.v1.util.RMSStatusCode;
+import it.richkmeli.rms.web.util.RMSServletManager;
+import it.richkmeli.rms.web.util.RMSSession;
+import it.richkmeli.rms.web.util.RMSStatusCode;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

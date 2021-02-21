@@ -3,8 +3,8 @@
 //import it.richkmeli.jframework.network.tcp.server.http.crypto.SecureConnectionJob;
 //import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 //import it.richkmeli.rms.data.entity.rmc.model.Rmc;
-//import it.richkmeli.rms.web.v1.util.RMSServletManager;
-//import it.richkmeli.rms.web.v1.util.RMSSession;
+//import it.richkmeli.rms.web.util.RMSServletManager;
+//import it.richkmeli.rms.web.util.RMSSession;
 //
 //import javax.servlet.ServletException;
 //import javax.servlet.annotation.WebServlet;

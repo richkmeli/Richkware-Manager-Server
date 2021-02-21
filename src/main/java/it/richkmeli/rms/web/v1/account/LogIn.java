@@ -6,8 +6,8 @@
 //import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 //import it.richkmeli.jframework.util.log.Logger;
 //import it.richkmeli.rms.data.entity.rmc.model.Rmc;
-//import it.richkmeli.rms.web.v1.util.RMSServletManager;
-//import it.richkmeli.rms.web.v1.util.RMSSession;
+//import it.richkmeli.rms.web.util.RMSServletManager;
+//import it.richkmeli.rms.web.util.RMSSession;
 //
 //import javax.servlet.annotation.WebServlet;
 //import javax.servlet.http.HttpServlet;

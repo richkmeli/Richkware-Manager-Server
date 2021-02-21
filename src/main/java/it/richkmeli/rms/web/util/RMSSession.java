@@ -1,4 +1,4 @@
-package it.richkmeli.rms.web.v1.util;
+package it.richkmeli.rms.web.util;
 
 import it.richkmeli.jframework.auth.data.AuthDatabaseModel;
 import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;

@@ -5,7 +5,7 @@ import it.richkmeli.jframework.auth.web.account.UsersJob;
 import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.rms.data.entity.user.UserRepository;
-import it.richkmeli.rms.web.v1.util.RMSServletManager;
+import it.richkmeli.rms.web.util.RMSServletManager;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

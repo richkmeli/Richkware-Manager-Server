@@ -2,7 +2,7 @@
 //
 //import it.richkmeli.jframework.auth.web.account.SignUpJob;
 //import it.richkmeli.jframework.auth.web.util.AuthServletManager;
-//import it.richkmeli.rms.web.v1.util.RMSServletManager;
+//import it.richkmeli.rms.web.util.RMSServletManager;
 //
 //import javax.servlet.annotation.WebServlet;
 //import javax.servlet.http.HttpServlet;

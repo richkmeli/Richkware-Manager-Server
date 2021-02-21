@@ -1,9 +1,8 @@
 package it.richkmeli.rms.web.v1;
 
-import it.richkmeli.rms.web.v1.util.RMSServletManager;
-import it.richkmeli.rms.web.v1.util.RMSSession;
+import it.richkmeli.rms.web.util.RMSServletManager;
+import it.richkmeli.rms.web.util.RMSSession;
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
