@@ -40,8 +40,8 @@ class LoadDatabase {
             // user1 will be deleted later in RMC test phase
 
 
-            Device device = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", "");
-            Device device1 = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk2@i.it", "", "");
+            Device device = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", "","iid","loc");
+            Device device1 = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk2@i.it", "", "","iid","loc");
             deviceDatabaseSpringManager.addDevice(device);
             deviceDatabaseSpringManager.addDevice(device1);
             deviceDatabaseSpringManager.removeDevice(device.getName());

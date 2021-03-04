@@ -1,5 +1,5 @@
 ignore:
-  - "src/main/java/org/bouncycastle"  # ignore folders and all its contents
+#  - "src/main/java/org/bouncycastle"  # ignore folders and all its contents
 #  - "test_*.rb"       # wildcards accepted
 #  - "**/*.py"         # glob accepted
 #  - "[a-z]+/test_.*"  # regexp accepted

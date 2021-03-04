@@ -30,11 +30,15 @@ public class Device {
     private String commands;
     @Length(max = 1000)
     private String commandsOutput;
+    @Length(max = 64)
+    private String installationId;
+    @Length(max = 200)
+    private String location;
 
     public Device() {
     }
 
-    public Device(String name, String ip, String serverPort, String lastConnection, String encryptionKey, String associatedUser, String commands, String commandsOutput) {
+    public Device(String name, String ip, String serverPort, String lastConnection, String encryptionKey, String associatedUser, String commands, String commandsOutput, String installationId, String location) {
         this.name = name;
         this.ip = ip;
         this.serverPort = serverPort;
@@ -43,6 +47,24 @@ public class Device {
         this.associatedUser = new User(associatedUser);
         this.commands = commands;
         this.commandsOutput = commandsOutput;
+        this.installationId = installationId;
+        this.location = location;
+    }
+
+    public String getInstallationId() {
+        return installationId;
+    }
+
+    public void setInstallationId(String installationId) {
+        this.installationId = installationId;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getName() {
@@ -89,6 +111,10 @@ public class Device {
         return associatedUser.getEmail();
     }
 
+    public void setAssociatedUser(User associatedUser) {
+        this.associatedUser = associatedUser;
+    }
+
     public void setAssociatedUser(String associatedUser) {
         this.associatedUser = new User(associatedUser);
     }
@@ -119,7 +145,9 @@ public class Device {
                 + getEncryptionKey() + ", "
                 + getAssociatedUser() + ", "
                 + getCommands() + ", "
-                + getCommandsOutput()
+                + getCommandsOutput() + ", "
+                + getInstallationId() + ", "
+                + getLocation()
                 + "}";
 
         return output;

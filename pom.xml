@@ -201,7 +201,11 @@
             <version>${webjars-font-awesome.version}</version>
         </dependency>
         <!-- end of webjars -->
-
+        <dependency>
+            <groupId>com.mapbox.mapboxsdk</groupId>
+            <artifactId>mapbox-java-services</artifactId>
+            <version>2.2.10</version>
+        </dependency>
     </dependencies>
 
     <!-- Apache 2 license -->

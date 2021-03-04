@@ -253,7 +253,8 @@ public class RMSServletManager extends AuthServletManager {
         public static final String STATE_IN_RMS = "stateInRMS";
         public static final String ASSOCIATED_USER = "associatedUser";
         public static final String SERVER_PORT = "serverPort";
+        public static final String LOCATION = "location";
+        public static final String INSTALLATION_ID = "installationId";
     }
-
 }
 

@@ -12,6 +12,7 @@ import it.richkmeli.jframework.util.RandomStringGenerator;
 import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.entity.device.DeviceDatabaseModel;
 import it.richkmeli.rms.data.entity.device.model.Device;
+import it.richkmeli.rms.util.GeoLocation;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
 import it.richkmeli.rms.web.util.RMSStatusCode;
@@ -27,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -65,13 +65,17 @@ public class DeviceController {
                     attribMap.containsKey(RMSServletManager.PAYLOAD_KEY.SERVER_PORT) &&
                     attribMap.containsKey(RMSServletManager.PAYLOAD_KEY.ASSOCIATED_USER)) {
 
+                // common fields
                 String name = attribMap.get(RMSServletManager.PAYLOAD_KEY.NAME);
                 String serverPort = attribMap.get(RMSServletManager.PAYLOAD_KEY.SERVER_PORT);
                 String associatedUser = attribMap.get(RMSServletManager.PAYLOAD_KEY.ASSOCIATED_USER);
-
                 String encryptionKey = RandomStringGenerator.generateAlphanumericString(keyLength);
+                String timeStamp = String.valueOf(new Date().getTime()); //new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
-                String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+                // mobile fields
+                String installationId = attribMap.getOrDefault(RMSServletManager.PAYLOAD_KEY.INSTALLATION_ID, "");
+                String location = attribMap.getOrDefault(RMSServletManager.PAYLOAD_KEY.LOCATION, "");
+                String extractedLocation = GeoLocation.extractLocation(location);
 
                 Device newDevice = new Device(
                         name,
@@ -81,7 +85,9 @@ public class DeviceController {
                         encryptionKey,
                         associatedUser,
                         "",
-                        "");
+                        "",
+                        installationId,
+                        extractedLocation);
 
                 Logger.info("SERVLET device, doPut: Device: " + name + " " + request.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + associatedUser + " ");
 
@@ -113,7 +119,6 @@ public class DeviceController {
             AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, e.getMessage()));
         }
     }
-
 
     /**
      * DELETE

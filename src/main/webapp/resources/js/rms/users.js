@@ -106,11 +106,12 @@ function loadUsersJSONtoTable(usersListJSON) {
 
         var row = document.createElement("tr");
         row.id = "tableRow" + i;
-
         row.innerHTML = (
             //"<td>" + (index + 1) + "</td>" +
             "<td>" + email + "</td>" +
-            "<td>" + password + "</td>" +
+            "<td><a type=\"button\" class=\"btn btn-outline-secondary\" data-toggle=\"popover\" tabindex='0' title=\"Password\" data-content=\"" + password + "\">Show Password</a></td>" +
+            //"<td><button title='Show Password' type=\"button\" class=\"btn btn-secondary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + admin + "')\"><span class=\"fa fa-pencil\">Show Password</button></td>" +
+            //"<td>" + password + "</td>" +
             "<td>" + admin + "</td>" +
             "<td><button title='Edit' type=\"button\" class=\"btn btn-primary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + admin + "')\"><span class=\"fa fa-pencil\"></button></td>" +
             "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteUser('" + email + "','" + i + "')\"><span class=\"fa fa-trash\"></button></td>");
@@ -118,6 +119,7 @@ function loadUsersJSONtoTable(usersListJSON) {
         tbody.appendChild(row);
     }
     usersTable.appendChild(tbody);
+    popInfo();
 }
 
 function deleteUser(email, indexTableRow) {
@@ -132,4 +134,8 @@ function deleteUser(email, indexTableRow) {
             }
         }
     });
+}
+
+function popInfo() {
+    $("[data-toggle=popover]").popover();
 }

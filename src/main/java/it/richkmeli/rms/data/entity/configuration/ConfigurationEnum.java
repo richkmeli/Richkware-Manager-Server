@@ -1,7 +1,7 @@
 package it.richkmeli.rms.data.entity.configuration;
 
 public enum ConfigurationEnum {
-    DEFAULT_CONFIGURATION_1("dafault_value_1"),
+    MAPBOX_ACCESS_TOKEN("REPLACE_WITH_API_TOKEN"),
     DEFAULT_CONFIGURATION_2("dafault_value_2"),
     DEFAULT_CONFIGURATION_3("dafault_value_3");
 
