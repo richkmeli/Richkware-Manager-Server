@@ -23,7 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Dependencies -->
-        <jframework.version>1.2.12</jframework.version>
+        <jframework.version>1.2.13</jframework.version>
         <!-- Webjars dependencies -->
         <!--        <webjars-locator-core.version>0.45</webjars-locator-core.version>-->
         <webjars-bootstrap.version>4.0.0</webjars-bootstrap.version>
@@ -109,8 +109,9 @@
 
     <dependencies>
         <dependency>
+            <!--            <groupId>com.github.richkmeli.JFramework</groupId>-->
+            <!--            <artifactId>auth-core</artifactId>-->
             <groupId>com.github.richkmeli.JFramework</groupId>
-            <!--            <artifactId>JFramework</artifactId>-->
             <artifactId>auth-core</artifactId>
             <version>${jframework.version}</version>
         </dependency>

@@ -49,7 +49,7 @@ public class CryptoController {
             //TODO fare controllo se rmcId è già presente. se sì, allora non fare la add
             if (rmsSession.getRmcID() != null) {
                 if (!rmsSession.getRmcDatabaseManager().checkRmc(rmsSession.getRmcID())) {
-                    rmsSession.getRmcDatabaseManager().addRMC(new Rmc("", rmsSession.getRmcID()));
+                    rmsSession.getRmcDatabaseManager().addRMC(new Rmc(null, rmsSession.getRmcID()));
                 }
             }
         }

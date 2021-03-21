@@ -28,6 +28,7 @@ function createDevicesTableHeader() {
     let row = document.createElement("tr");
     row.innerHTML = ( //"<th>Index</th>" +
         "<th>Name</th>" +
+        "<th>Device Info</th>" +
         "<th>Last Connection</th>" +
         "<th>Last Location</th>" +
         "<th>Associated User</th>" +
@@ -58,11 +59,12 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         var serverPort = devicesList[i].serverPort;
         var lastConnection = devicesList[i].lastConnection;
         var encryptionKey = devicesList[i].encryptionKey;
-        var associatedUser = devicesList[i].associatedUser;
+        var associatedUser = devicesList[i].associatedUserEmail;
         var commands = devicesList[i].commands;
         var commandsOutput = devicesList[i].commandsOutput;
         var installationId = devicesList[i].installationId;
-        var location = devicesList[i].location;
+        var location = devicesList[i].locationAsPosition;
+        var deviceInfo = devicesList[i].deviceInfoDevName;
 
         var timeSinceNow = timeSince(new Date(Number(lastConnection))) + " ago";
 
@@ -80,6 +82,7 @@ function loadDevicesJSONtoTable(devicesListJSON) {
             "</div>\"> " + name + "</a>" +
             "</td>" +
             //"<td><button class=\"btn\" data-toggle=\"collapse\" data-target=\"#coll-" + name + "\" aria-expanded=\"true\" aria-controls=\"coll-" + name +"\">" + name + "</button>" +
+            "<td>" + deviceInfo + "</td>" +
             "<td>" + timeSinceNow + "</td>" +
             "<td>" + location + "</td>" +
             "<td>" + associatedUser + "</td>" +

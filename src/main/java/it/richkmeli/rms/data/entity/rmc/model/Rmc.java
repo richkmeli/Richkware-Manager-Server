@@ -18,17 +18,17 @@ public class Rmc {
     public Rmc() {
     }
 
-    public Rmc(String associatedUser, String rmcId) {
-        this.associatedUser = new User(associatedUser);
+    public Rmc(User associatedUser, String rmcId) {
+        this.associatedUser = associatedUser;
         this.rmcId = rmcId;
     }
 
-    public String getAssociatedUser() {
-        return associatedUser.getEmail();
+    public User getAssociatedUser() {
+        return associatedUser;
     }
 
-    public void setAssociatedUser(String associatedUser) {
-        this.associatedUser = new User(associatedUser);
+    public void setAssociatedUser(User associatedUser) {
+        this.associatedUser = associatedUser;
     }
 
     public String getRmcId() {

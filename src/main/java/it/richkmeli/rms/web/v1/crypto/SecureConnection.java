@@ -33,7 +33,7 @@
 //        @Override
 //        protected void doFinalCryptoAction() throws Exception {
 //
-//            //TODO fare controllo se rmcId è già presente. se sì, allora non fare la add
+//            // _TODO fare controllo se rmcId è già presente. se sì, allora non fare la add
 //            if (rmsSession.getRmcID() != null) {
 //                if (!rmsSession.getRmcDatabaseManager().checkRmc(rmsSession.getRmcID())) {
 //                    rmsSession.getRmcDatabaseManager().addRMC(new Rmc("", rmsSession.getRmcID()));

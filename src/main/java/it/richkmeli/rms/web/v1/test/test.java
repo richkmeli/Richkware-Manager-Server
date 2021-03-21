@@ -65,7 +65,7 @@
 //        try {
 //            rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
 //            rmsSession.getAuthDatabaseManager().addUser(new User("er@fv.it", "00000000", false));
-//            //TODO da spostare nella creazione della tabella
+//            // _TODO da spostare nella creazione della tabella
 //            rmsSession.getAuthDatabaseManager().addUser(new User("", "00000000", false));
 //            rmsSession.getAuthDatabaseManager().addUser(new User("richk@i.it", "00000000", true));
 //        } catch (AuthDatabaseException | ModelException e) {

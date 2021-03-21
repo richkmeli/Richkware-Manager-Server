@@ -42,12 +42,12 @@ public class RmcDatabaseSpringManager implements RmcDatabaseModel {
 
     @Override
     public void removeRmcUserPair(Rmc client) throws AuthDatabaseException {
-        rmcRepository.deleteRmcByRmcIdAndAssociatedUser_Email(client.getRmcId(),client.getAssociatedUser());
+        rmcRepository.deleteRmcByRmcIdAndAssociatedUser_Email(client.getRmcId(),client.getAssociatedUser().getEmail());
     }
 
     @Override
     public boolean checkRmcUserPair(Rmc client) throws AuthDatabaseException {
-        return rmcRepository.existsRmcByRmcIdAndAssociatedUser_Email(client.getRmcId(),client.getAssociatedUser());
+        return rmcRepository.existsRmcByRmcIdAndAssociatedUser_Email(client.getRmcId(),client.getAssociatedUser().getEmail());
     }
 
     @Override

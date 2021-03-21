@@ -49,7 +49,7 @@
 //    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 //        try {
 //            RMSServletManager rmsServletManager = new RMSServletManager(request, response);
-//            // TODO il cookie non deve essere controllato se è un richkware agent, negli altri casi si
+//            // _TODO il cookie non deve essere controllato se è un richkware agent, negli altri casi si
 //            Map<String, String> attribMap = rmsServletManager.doDefaultProcessRequest(false);
 //
 //            // server session
@@ -64,7 +64,7 @@
 //                deviceName = Crypto.decryptRC4(deviceName, password);
 //                output = rmsSession.getDeviceDatabaseManager().getCommands(deviceName);
 //                rmsSession.getDeviceDatabaseManager().editCommands(deviceName,"");
-//                // TODO return the commands to be executed encrypted with the specific key of that device
+//                // _TODO return the commands to be executed encrypted with the specific key of that device
 //                //output = Crypto.encryptRC4(output,rmsSession.getDeviceDatabaseManager().getEncryptionKey(deviceName));
 //            } else {
 //                output = rmsSession.getDeviceDatabaseManager().getCommandsOutput(deviceName);
@@ -92,7 +92,7 @@
 //     */
 //    @Override
 //    protected void doPut(HttpServletRequest request, HttpServletResponse response) {
-//        //TODO: gestire richieste per multipli device
+//        // _TODO: gestire richieste per multipli device
 //
 //        try {
 //            BufferedReader br = request.getReader();

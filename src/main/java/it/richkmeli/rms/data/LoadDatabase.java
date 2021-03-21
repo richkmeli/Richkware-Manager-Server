@@ -30,30 +30,39 @@ class LoadDatabase {
                 authDatabaseSpringManager.addUser(adminUser);
             }
 
+            // add login entry
+            User adminUser2 = new User("richk3@i.it", "00000000", true);
+            if (!authDatabaseSpringManager.isUserPresent(adminUser2.getEmail())) {
+                authDatabaseSpringManager.addUser(adminUser2);
+            }
+
 
             // test
             User user = new User(RandomStringGenerator.generateAlphanumericString(4) + "@example.com", "00000000", false);
             User user1 = new User("richk2@i.it", "00000000", false);
             authDatabaseSpringManager.addUser(user);
             authDatabaseSpringManager.removeUser(user.getEmail());
-            authDatabaseSpringManager.addUser(user1);
+            if(!authDatabaseSpringManager.isUserPresent(user1.getEmail())) {
+                authDatabaseSpringManager.addUser(user1);
+            }
             // user1 will be deleted later in RMC test phase
 
-
-            Device device = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk@i.it", "", "","iid","loc");
-            Device device1 = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", "richk2@i.it", "", "","iid","loc");
+            User u1 = authDatabaseSpringManager.findUserByEmail("richk@i.it");
+            User u2 = authDatabaseSpringManager.findUserByEmail("richk2@i.it");
+            Device device = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", u1, "", "", "iid", null, null);
+            Device device1 = new Device(RandomStringGenerator.generateAlphanumericString(4), "43.34.43.34", "40", "20-10-18", "ckeroivervioeon", u2, "", "", "iid", null, null);
             deviceDatabaseSpringManager.addDevice(device);
             deviceDatabaseSpringManager.addDevice(device1);
             deviceDatabaseSpringManager.removeDevice(device.getName());
             deviceDatabaseSpringManager.removeDevice(device1.getName());
 
-            Rmc rmc = new Rmc(adminUser.getEmail(), "test_rmc_ID");
-            Rmc rmc2 = new Rmc("richk2@i.it", "test_rmc_ID" + RandomStringGenerator.generateAlphanumericString(4));
+            Rmc rmc = new Rmc(u1, "test_rmc_ID");
+            Rmc rmc2 = new Rmc(u2, "test_rmc_ID" + RandomStringGenerator.generateAlphanumericString(4));
 
             rmcDatabaseSpringManager.addRMC(rmc);
             rmcDatabaseSpringManager.addRMC(rmc2);
 
-            authDatabaseSpringManager.removeUser(rmc.getAssociatedUser());
+            authDatabaseSpringManager.removeUser(rmc.getAssociatedUser().getEmail());
             assert rmcDatabaseSpringManager.checkRmc(rmc.getRmcId());
             authDatabaseSpringManager.removeUser(user1.getEmail());
             assert rmcDatabaseSpringManager.checkRmc(rmc2.getRmcId());

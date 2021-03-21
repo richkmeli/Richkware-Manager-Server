@@ -1,6 +1,7 @@
 package it.richkmeli.rms.data.entity.user.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import it.richkmeli.jframework.auth.model.exception.ModelException;
 import it.richkmeli.jframework.util.regex.RegexManager;
 import it.richkmeli.jframework.util.regex.exception.RegexException;
@@ -15,6 +16,10 @@ import java.util.Set;
 @Entity
 public class User{
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(unique = true)
+    @NotNull
     @Length(max = 50)
     private String email;
     @NotNull
@@ -23,23 +28,17 @@ public class User{
     @NotNull
     private Boolean admin;
 
-    //@JsonIgnore
     @OneToMany(mappedBy = "associatedUser", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
     // OR if you want in json object also the device list when it isn't load at that time
     //@OneToMany(mappedBy = "associatedUser", cascade={CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Set<Device> devices;
 
     @OneToMany(mappedBy = "associatedUser", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Rmc> rmcs;
 
     public User() {
-    }
-
-    // for foreign keys
-    public User(String email) {
-        this.email = email;
-        this.password = "";
-        this.admin = false;
     }
 
     public User(String email, String password) throws ModelException {
@@ -51,6 +50,14 @@ public class User{
         this.email = email;
         this.password = password;
         this.admin = admin;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -102,4 +109,14 @@ public class User{
         // ...
     }
 
+    @Override
+    public String toString() {
+        String output = "";
+        output = "{" + getEmail() + ", "
+                + getPassword() + ", "
+                + getAdmin()
+                + "}";
+
+        return output;
+    }
 }

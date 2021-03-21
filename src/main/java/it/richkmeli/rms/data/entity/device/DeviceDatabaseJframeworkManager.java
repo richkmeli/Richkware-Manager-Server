@@ -37,7 +37,7 @@
 //    }
 //
 //
-//    // TODO ORM aggiungi foreign keys
+//    // _TODO ORM aggiungi foreign keys
 //    public List<Device> getUserDevices(String user) throws AuthDatabaseException {
 //        List<Device> devices = readAll(Device.class);
 //        if (devices != null) {

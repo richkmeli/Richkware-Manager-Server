@@ -11,7 +11,6 @@ services:
     volumes:
       #- ./out/artifacts/ROOT/ROOT.war:/usr/local/tomcat/webapps/ROOT.war:z
       #- ./out/artifacts/Richkware_Manager_Server/Richkware-Manager-Server.war:/usr/local/tomcat/webapps/Richkware-Manager-Server.war:z
-      # TODO RELEASE: update version
       #- ./target/Richkware-Manager-Server :/usr/local/tomcat/webapps/Richkware-Manager-Server_EXP:z
       - ./target/Richkware-Manager-Server.war :/usr/local/tomcat/webapps/Richkware-Manager-Server.war:z
 

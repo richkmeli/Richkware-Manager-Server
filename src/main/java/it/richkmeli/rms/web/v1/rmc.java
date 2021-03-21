@@ -88,7 +88,7 @@
 //            RMSServletManager rmsServletManager = new RMSServletManager(request,response);
 //            RMSSession rmsSession = rmsServletManager.getRMSServerSession();
 //
-//            // todo controlla che stia cancellando un rmc di cui ha i permessi
+//            // _TODO controlla che stia cancellando un rmc di cui ha i permessi
 //            if (request.getParameterMap().containsKey("associatedUser") && request.getParameterMap().containsKey("rmcId")) {
 //                String associatedUser = request.getParameter("associatedUser");
 //                String rmcId = request.getParameter("rmcId");
@@ -115,11 +115,11 @@
 //
 //                AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS,"RMC "+rmcId+" removed."));
 //            } else {
-//                //TODO errore: user does not match
+//                // _TODO errore: user does not match
 //                AuthServletManager.print(response, new KoResponse(RMSStatusCode.GENERIC_ERROR, "Error in parameters passed."));
 //            }
 //
-//            // TODO cancella utente specifico, decidi se farlo solo da autenticato, magari con email o altro fattore di auth
+//            // _TODO cancella utente specifico, decidi se farlo solo da autenticato, magari con email o altro fattore di auth
 ////            session.getCryptoServer().deleteClientData();
 //
 //

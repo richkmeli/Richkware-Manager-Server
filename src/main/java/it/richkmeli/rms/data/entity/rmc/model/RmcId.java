@@ -1,16 +1,18 @@
 package it.richkmeli.rms.data.entity.rmc.model;
 
+import it.richkmeli.rms.data.entity.user.model.User;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class RmcId implements Serializable {
-    private String associatedUser;
+    private Long associatedUser;
     private String rmcId;
 
     public RmcId() {
     }
 
-    public RmcId(String associatedUser, String rmcId) {
+    public RmcId(Long associatedUser, String rmcId) {
         this.associatedUser = associatedUser;
         this.rmcId = rmcId;
     }

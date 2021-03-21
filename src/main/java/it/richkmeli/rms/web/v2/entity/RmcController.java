@@ -9,6 +9,7 @@ import it.richkmeli.jframework.network.tcp.server.http.payload.response.KoRespon
 import it.richkmeli.jframework.network.tcp.server.http.payload.response.OkResponse;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.rms.data.entity.rmc.model.Rmc;
+import it.richkmeli.rms.data.entity.user.AuthDatabaseSpringManager;
 import it.richkmeli.rms.data.entity.user.UserRepository;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
@@ -89,7 +90,7 @@ public class RmcController {
                 boolean valid = true;
                 if (!rmsSession.isAdmin()) {
                     if (rmsSession.getUserID().equals(associatedUser)) {
-                        Rmc temp = new Rmc(associatedUser, rmcId);
+                        Rmc temp = new Rmc(AuthDatabaseSpringManager.getInstance().findUserByEmail(associatedUser), rmcId);
                         if (!rmsSession.getRmcDatabaseManager().getRMCs(associatedUser).contains(temp)) {
                             valid = false;
                         }

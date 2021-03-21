@@ -8,6 +8,7 @@ import it.richkmeli.jframework.auth.web.util.AuthServletManager;
 import it.richkmeli.jframework.network.tcp.server.http.util.JServletException;
 import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.entity.rmc.model.Rmc;
+import it.richkmeli.rms.data.entity.user.AuthDatabaseSpringManager;
 import it.richkmeli.rms.data.entity.user.UserRepository;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
@@ -36,10 +37,10 @@ public class AccountController {
             if (rmsSession != null) {
                 if (rmsSession.getChannel() != null) {
                     if (rmsSession.getChannel().equalsIgnoreCase(RMSServletManager.Channel.RMC)) {
-                        Rmc rmc = new Rmc(rmsSession.getUserID(), rmsSession.getRmcID());
+                        Rmc rmc = new Rmc(AuthDatabaseSpringManager.getInstance().findUserByEmail(rmsSession.getUserID()), rmsSession.getRmcID());
                         Logger.info("RMC: " + rmc.getAssociatedUser() + " - " + rmc.getRmcId());
                         if (!rmsSession.getRmcDatabaseManager().checkRmcUserPair(rmc)) {
-                            if (rmsSession.getRmcDatabaseManager().checkRmcUserPair(new Rmc("", rmsSession.getRmcID()))) {
+                            if (rmsSession.getRmcDatabaseManager().checkRmcUserPair(new Rmc(null, rmsSession.getRmcID()))) {
                                 rmsSession.getRmcDatabaseManager().editRMC(rmc);
                             } else {
                                 rmsSession.getRmcDatabaseManager().addRMC(rmc);

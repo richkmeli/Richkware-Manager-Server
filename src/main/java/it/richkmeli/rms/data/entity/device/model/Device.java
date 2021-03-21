@@ -1,12 +1,11 @@
 package it.richkmeli.rms.data.entity.device.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import it.richkmeli.rms.data.entity.user.model.User;
+import it.richkmeli.rms.util.GeoLocation;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -25,6 +24,8 @@ public class Device {
     @Length(max = 32)
     private String encryptionKey;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JoinColumn(name="user_email")
     private User associatedUser;
     @Length(max = 1000)
     private String commands;
@@ -32,23 +33,38 @@ public class Device {
     private String commandsOutput;
     @Length(max = 64)
     private String installationId;
-    @Length(max = 200)
-    private String location;
+    @OneToOne(mappedBy = "device", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}/*, orphanRemoval = true*/)
+    @PrimaryKeyJoinColumn
+    @JsonBackReference
+    private Location location;
+    @OneToOne(mappedBy = "device", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}/*, orphanRemoval = true*/)
+    @PrimaryKeyJoinColumn
+    @JsonBackReference
+    private DeviceInfo deviceInfo;
 
     public Device() {
     }
 
-    public Device(String name, String ip, String serverPort, String lastConnection, String encryptionKey, String associatedUser, String commands, String commandsOutput, String installationId, String location) {
+    public Device(String name, String ip, String serverPort, String lastConnection, String encryptionKey, User associatedUser, String commands, String commandsOutput, String installationId, Location location, DeviceInfo deviceInfo) {
         this.name = name;
         this.ip = ip;
         this.serverPort = serverPort;
         this.lastConnection = lastConnection;
         this.encryptionKey = encryptionKey;
-        this.associatedUser = new User(associatedUser);
+        this.associatedUser = associatedUser;
         this.commands = commands;
         this.commandsOutput = commandsOutput;
         this.installationId = installationId;
         this.location = location;
+        if (this.location != null) {
+            this.location.setId(name);
+            this.location.setDevice(this);
+        }
+        this.deviceInfo = deviceInfo;
+        if (this.deviceInfo != null) {
+            this.deviceInfo.setId(name);
+            this.deviceInfo.setDevice(this);
+        }
     }
 
     public String getInstallationId() {
@@ -57,14 +73,6 @@ public class Device {
 
     public void setInstallationId(String installationId) {
         this.installationId = installationId;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getName() {
@@ -107,16 +115,12 @@ public class Device {
         this.encryptionKey = encryptionKey;
     }
 
-    public String getAssociatedUser() {
-        return associatedUser.getEmail();
+    public User getAssociatedUser() {
+        return associatedUser;
     }
 
     public void setAssociatedUser(User associatedUser) {
         this.associatedUser = associatedUser;
-    }
-
-    public void setAssociatedUser(String associatedUser) {
-        this.associatedUser = new User(associatedUser);
     }
 
     public String getCommands() {
@@ -135,6 +139,37 @@ public class Device {
         this.commandsOutput = commandsOutput;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public DeviceInfo getDeviceInfo() {
+        return deviceInfo;
+    }
+
+    public void setDeviceInfo(DeviceInfo deviceInfo) {
+        this.deviceInfo = deviceInfo;
+    }
+
+    // called by the serialization, location is not serialized due to JsonBackReference
+    public String getLocationAsPosition() {
+        return GeoLocation.getPositionFromCoordinates(location.getLongitude(), location.getLatitude(), location.getAltitude());
+    }
+
+    // called by the serialization, location is not serialized due to JsonBackReference
+    public String getAssociatedUserEmail() {
+        return associatedUser.getEmail();
+    }
+
+    // called by the serialization, location is not serialized due to JsonBackReference
+    public String getDeviceInfoDevName() {
+        return deviceInfo.getDevName();
+    }
+
     @Override
     public String toString() {
         String output = "";
@@ -147,7 +182,8 @@ public class Device {
                 + getCommands() + ", "
                 + getCommandsOutput() + ", "
                 + getInstallationId() + ", "
-                + getLocation()
+                + getLocation() + ", "
+                + getDeviceInfo()
                 + "}";
 
         return output;

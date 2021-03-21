@@ -2,6 +2,7 @@ package it.richkmeli.rms.data.entity.device;
 
 import it.richkmeli.jframework.auth.data.exception.AuthDatabaseException;
 import it.richkmeli.rms.data.entity.device.model.Device;
+import it.richkmeli.rms.data.entity.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +15,18 @@ import java.util.List;
 @Component
 public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
     private static DeviceRepository deviceRepository;
+    private static LocationRepository locationRepository;
+    private static DeviceInfoRepository deviceInfoRepository;
 
     @Autowired
-    public DeviceDatabaseSpringManager(DeviceRepository deviceRepository) {
+    public DeviceDatabaseSpringManager(DeviceRepository deviceRepository, LocationRepository locationRepository, DeviceInfoRepository deviceInfoRepository) {
         this.deviceRepository = deviceRepository;
+        this.locationRepository = locationRepository;
+        this.deviceInfoRepository = deviceInfoRepository;
     }
 
     public static DeviceDatabaseSpringManager getInstance() {
-        return new DeviceDatabaseSpringManager(deviceRepository);
+        return new DeviceDatabaseSpringManager(deviceRepository, locationRepository, deviceInfoRepository);
     }
 
     @Override
@@ -41,22 +46,26 @@ public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
 
     @Override
     public Device editDevice(Device device) throws AuthDatabaseException {
+
         return deviceRepository.save(device);
     }
 
     @Override
-    public void removeDevice(String device) throws AuthDatabaseException {
-        deviceRepository.deleteById(device);
+    public void removeDevice(String name) throws AuthDatabaseException {
+        Device device = deviceRepository.findDeviceByName(name);
+        if(device != null) {
+            deviceRepository.delete(device);
+        }
     }
 
     @Override
     public Device getDevice(String name) throws AuthDatabaseException {
-        return deviceRepository.findById(name).orElse(null);
+        return deviceRepository.findDeviceByName(name);
     }
 
     @Override
     public String getEncryptionKey(String name) throws AuthDatabaseException {
-        Device device = deviceRepository.findById(name).orElse(null);
+        Device device = deviceRepository.findDeviceByName(name);
         if (device != null) {
             return device.getEncryptionKey();
         } else {
@@ -66,7 +75,7 @@ public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
 
     @Override
     public boolean editCommands(String deviceName, String commands) throws AuthDatabaseException {
-        Device device = deviceRepository.findById(deviceName).orElse(null);
+        Device device = deviceRepository.findDeviceByName(deviceName);
         if (device != null) {
             device.setCommands(commands);
             deviceRepository.save(device);
@@ -78,7 +87,7 @@ public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
 
     @Override
     public String getCommands(String deviceName) throws AuthDatabaseException {
-        Device device = deviceRepository.findById(deviceName).orElse(null);
+        Device device = deviceRepository.findDeviceByName(deviceName);
         if (device != null) {
             return device.getCommands();
         } else {
@@ -88,7 +97,7 @@ public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
 
     @Override
     public boolean setCommandsOutput(String deviceName, String commandsOutput) throws AuthDatabaseException {
-        Device device = deviceRepository.findById(deviceName).orElse(null);
+        Device device = deviceRepository.findDeviceByName(deviceName);
         if (device != null) {
             device.setCommandsOutput(commandsOutput);
             deviceRepository.save(device);
@@ -100,7 +109,7 @@ public class DeviceDatabaseSpringManager implements DeviceDatabaseModel {
 
     @Override
     public String getCommandsOutput(String deviceName) throws AuthDatabaseException {
-        Device device = deviceRepository.findById(deviceName).orElse(null);
+        Device device = deviceRepository.findDeviceByName(deviceName);
         if (device != null) {
             return device.getCommandsOutput();
         } else {

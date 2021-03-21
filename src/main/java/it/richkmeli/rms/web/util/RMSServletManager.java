@@ -255,6 +255,7 @@ public class RMSServletManager extends AuthServletManager {
         public static final String SERVER_PORT = "serverPort";
         public static final String LOCATION = "location";
         public static final String INSTALLATION_ID = "installationId";
+        public static final String DEVICE_INFO = "deviceInfo";
     }
 }
 

@@ -12,6 +12,10 @@ import it.richkmeli.jframework.util.RandomStringGenerator;
 import it.richkmeli.jframework.util.log.Logger;
 import it.richkmeli.rms.data.entity.device.DeviceDatabaseModel;
 import it.richkmeli.rms.data.entity.device.model.Device;
+import it.richkmeli.rms.data.entity.device.model.DeviceInfo;
+import it.richkmeli.rms.data.entity.device.model.Location;
+import it.richkmeli.rms.data.entity.user.AuthDatabaseSpringManager;
+import it.richkmeli.rms.data.entity.user.model.User;
 import it.richkmeli.rms.util.GeoLocation;
 import it.richkmeli.rms.web.util.RMSServletManager;
 import it.richkmeli.rms.web.util.RMSSession;
@@ -69,13 +73,16 @@ public class DeviceController {
                 String name = attribMap.get(RMSServletManager.PAYLOAD_KEY.NAME);
                 String serverPort = attribMap.get(RMSServletManager.PAYLOAD_KEY.SERVER_PORT);
                 String associatedUser = attribMap.get(RMSServletManager.PAYLOAD_KEY.ASSOCIATED_USER);
+                User user = AuthDatabaseSpringManager.getInstance().findUserByEmail(associatedUser);
                 String encryptionKey = RandomStringGenerator.generateAlphanumericString(keyLength);
                 String timeStamp = String.valueOf(new Date().getTime()); //new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
                 // mobile fields
                 String installationId = attribMap.getOrDefault(RMSServletManager.PAYLOAD_KEY.INSTALLATION_ID, "");
-                String location = attribMap.getOrDefault(RMSServletManager.PAYLOAD_KEY.LOCATION, "");
-                String extractedLocation = GeoLocation.extractLocation(location);
+                String locationJson = attribMap.getOrDefault(RMSServletManager.PAYLOAD_KEY.LOCATION, "");
+                Location location = new Location(locationJson);
+                String deviceInfoJson = attribMap.getOrDefault(RMSServletManager.PAYLOAD_KEY.DEVICE_INFO, "");
+                DeviceInfo deviceInfo = new DeviceInfo(deviceInfoJson);
 
                 Device newDevice = new Device(
                         name,
@@ -83,13 +90,14 @@ public class DeviceController {
                         serverPort,
                         timeStamp,
                         encryptionKey,
-                        associatedUser,
+                        user,
                         "",
                         "",
                         installationId,
-                        extractedLocation);
+                        location,
+                        deviceInfo);
 
-                Logger.info("SERVLET device, doPut: Device: " + name + " " + request.getRemoteAddr() + " " + serverPort + " " + timeStamp + " " + encryptionKey + " " + associatedUser + " ");
+                Logger.info("SERVLET device, doPut: Device: " + newDevice.toString());
 
                 // check in the DB if there is an entry with that name
                 DeviceDatabaseModel deviceDatabaseSpringManager = rmsSession.getDeviceDatabaseManager();
@@ -153,25 +161,25 @@ public class DeviceController {
 
                         Device device = rmsSession.getDeviceDatabaseManager().getDevice(name);
 
-                        if (device.getAssociatedUser().compareTo(rmsSession.getUserID()) == 0 ||
+                        if (device.getAssociatedUser().getEmail().compareTo(rmsSession.getUserID()) == 0 ||
                                 rmsSession.isAdmin()) {
                             rmsSession.getDeviceDatabaseManager().removeDevice(name);
                             AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, "Device " + name + " deleted."));
                         } else {
                             // TODO rimanda da qualche parte perche c'è errore
-                            httpSession.setAttribute("error", "non hai i privilegi");
+                            httpSession.setAttribute("error", "you don't have the rights");
                             request.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(request, response);
                         }
 
                     } else {
                         // TODO rimanda da qualche parte perche c'è errore
-                        httpSession.setAttribute("error", "dispositivo non specificato");
+                        httpSession.setAttribute("error", "device not specified");
                         request.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(request, response);
                     }
                 } else {
                     // non loggato
                     // TODO rimanda da qualche parte perche c'è errore
-                    httpSession.setAttribute("error", "non loggato");
+                    httpSession.setAttribute("error", "not logged in");
                     request.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(request, response);
                 }
             } catch (Exception e) {

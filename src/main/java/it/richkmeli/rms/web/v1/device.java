@@ -159,19 +159,19 @@
 //                        rmsSession.getDeviceDatabaseManager().removeDevice(name);
 //                        AuthServletManager.print(response, new OkResponse(RMSStatusCode.SUCCESS, "Device " + name + " deleted."));
 //                    } else {
-//                        // TODO rimanda da qualche parte perche c'è errore
+//                        // _TODO rimanda da qualche parte perche c'è errore
 //                        httpSession.setAttribute("error", "non hai i privilegi");
 //                        request.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(request, response);
 //                    }
 //
 //                } else {
-//                    // TODO rimanda da qualche parte perche c'è errore
+//                    // _TODO rimanda da qualche parte perche c'è errore
 //                    httpSession.setAttribute("error", "dispositivo non specificato");
 //                    request.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(request, response);
 //                }
 //            } else {
 //                // non loggato
-//                // TODO rimanda da qualche parte perche c'è errore
+//                // _TODO rimanda da qualche parte perche c'è errore
 //                httpSession.setAttribute("error", "non loggato");
 //                request.getRequestDispatcher(RMSServletManager.LOGIN_HTML).forward(request, response);
 //            }

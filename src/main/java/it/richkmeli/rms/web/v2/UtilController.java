@@ -11,13 +11,18 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RestController
-public class StatusController {
+public class UtilController {
 
-    StatusController() {
+    UtilController() {
     }
 
     @GetMapping(name = "status", path = "/status")
     public String getStatus() {
         return new OkResponse(RMSStatusCode.SUCCESS, "UP").json();
     }
+
+//    @GetMapping(name = "version", path = "/version")
+//    public String getVersion() {
+//        return new OkResponse(RMSStatusCode.SUCCESS, it.richkmeli.jframework.util.AppInfo.getVersion(this.getClass())).json();
+//    }
 }
