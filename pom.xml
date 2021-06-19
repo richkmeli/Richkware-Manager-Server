@@ -26,8 +26,8 @@
         <jframework.version>1.2.13</jframework.version>
         <!-- Webjars dependencies -->
         <!--        <webjars-locator-core.version>0.45</webjars-locator-core.version>-->
-        <webjars-bootstrap.version>4.0.0</webjars-bootstrap.version>
-        <webjars-jquery.version>3.3.1</webjars-jquery.version>
+        <webjars-bootstrap.version>4.5.0</webjars-bootstrap.version>
+        <webjars-jquery.version>3.5.0</webjars-jquery.version>
         <webjars-font-awesome.version>4.7.0</webjars-font-awesome.version>
     </properties>
 
