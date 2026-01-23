@@ -72,12 +72,7 @@ The easiest way to build and deploy RMS is using Docker:
 ### Manual Deployment
 
 1. **Configure the Application**:
-   Edit `/src/main/resources/configuration.properties`:
-   
-   - `database.url`: JDBC URL of the database (default: `jdbc:mysql://db:3306/`)
-   - `database.username`: Database username (default: `root`)
-   - `database.password`: Database password (default: `richk`)
-   - `encryptionkey`: Key used to encrypt messages exchanged with Richkware and RMC (default: `richktest`). **Important**: If you change this, you must update the configuration in the malware and client as well.
+   Application secrets are configured exclusively through environment variables. Refer to `.env.example` for a complete list of required variables.
 
 2. **Deploy**:
    Copy the generated WAR file to the `webapps` directory of your Tomcat server.
