@@ -1,0 +1,4 @@
+## 2024-05-20 - Hardcoded Secrets in Docker Configuration
+**Vulnerability:** The application used hardcoded default credentials (`richk`/`changeme`) and a default `ENCRYPTION_KEY` in `docker-compose.yml` and `Dockerfile`. This violates the security policy and creates a high risk of unauthorized access if deployed without proper `.env` configuration.
+**Learning:** Removing secrets from one configuration file (`Dockerfile`) without ensuring they are passed in from another (`docker-compose.yml`) can lead to application startup failure. A complete fix requires tracing the secret's path from the environment to the application.
+**Prevention:** Always ensure that when a hardcoded secret is removed, a corresponding mechanism is in place to inject it at runtime. All secrets, including database credentials and encryption keys, must be managed via environment variables, and `.env.example` should clearly document this requirement.
