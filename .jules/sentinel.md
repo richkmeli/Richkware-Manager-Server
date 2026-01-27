@@ -1,0 +1,7 @@
+## 2024-01-27 - Hardcoded Default Secrets in Docker Configuration
+
+**Vulnerability:** The application's `Dockerfile` and `docker-compose.yml` files contained hardcoded default credentials (e.g., `DB_PASSWORD=changeme`) and secrets (`ENCRYPTION_KEY=changeme`).
+
+**Learning:** This pattern creates a significant security risk. Developers might inadvertently run the application in a development or even production environment with these known, weak credentials. The `Dockerfile` baked the secrets into the image layers, and `docker-compose.yml` provided insecure fallbacks, making a secure setup optional rather than enforced. The application was also missing a necessary secret (`ENCRYPTION_KEY`) in its runtime configuration in `docker-compose.yml`, which would likely lead to runtime errors or insecure operation.
+
+**Prevention:** All secrets must be removed from `Dockerfile` `ENV` default values and from `docker-compose.yml` fallback values. Configuration should rely exclusively on environment variables passed at runtime (e.g., from a `.env` file that is not checked into version control). The `.env.example` file should use placeholder values like `<your-secure-password>` instead of actual default passwords to guide developers. All secrets required by the application must be explicitly passed to the container in `docker-compose.yml`.

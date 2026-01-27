@@ -19,8 +19,6 @@ EXPOSE 8080
 ENV DB_HOST=db \
     DB_PORT=5432 \
     DB_USERNAME=richk \
-    DB_PASSWORD=changeme \
-    ENCRYPTION_KEY=changeme \
     DEBUG_MODE=false \
     SPRING_PROFILES_ACTIVE=docker
 
