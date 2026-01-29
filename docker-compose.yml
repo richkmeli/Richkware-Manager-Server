@@ -5,15 +5,15 @@ services:
     image: postgres:15
     environment:
       POSTGRES_DB: richkware
-      POSTGRES_USER: ${DB_USERNAME:-richk}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-richk}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,11 +25,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    env_file: .env
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_USERNAME: ${DB_USERNAME:-richk}
-      DB_PASSWORD: ${DB_PASSWORD:-changeme}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8080:8080"
