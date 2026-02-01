@@ -43,53 +43,75 @@ function loadDevicesJSONtoTable(devicesListJSON) {
     console.log("loadDevicesJSONtoTable");
     createDevicesTableHeader();
 
-    let devicesList = JSON.parse(devicesListJSON);//jQuery.parseJSON(devicesListJSON);
-    let tbody = document.createElement("tbody");
+    let devicesList = JSON.parse(devicesListJSON);
+    let $tbody = $("<tbody>");
 
-    console.log("devicesList: " + devicesList + " type: " + typeof (devicesList) + " length: " + devicesList.length);
+    for (let i = 0; i < devicesList.length; ++i) {
+        let device = devicesList[i];
+        let name = device.name;
+        let timeSinceNow = timeSince(new Date(Number(device.lastConnection))) + " ago";
 
-    for (var i = 0; i < devicesList.length; ++i) {
+        let $row = $("<tr>").attr("id", "tableRow" + i);
 
-        console.log(devicesList[i])
+        // Name cell with popover
+        let $popoverDiv = $("<div>");
+        $popoverDiv.append($("<p>").text("IP: " + device.ip));
+        $popoverDiv.append($("<p>").text("Port: " + device.serverPort));
+        $popoverDiv.append($("<p>").text("Encryption Key: " + device.encryptionKey));
 
-        var name = devicesList[i].name;
-        var IP = devicesList[i].ip;
-        var serverPort = devicesList[i].serverPort;
-        var lastConnection = devicesList[i].lastConnection;
-        var encryptionKey = devicesList[i].encryptionKey;
-        var associatedUser = devicesList[i].associatedUserEmail;
-        var commands = devicesList[i].commands;
-        var commandsOutput = devicesList[i].commandsOutput;
-        var installationId = devicesList[i].installationId;
-        var location = devicesList[i].locationAsPosition;
-        var deviceInfo = devicesList[i].deviceInfoDevName;
+        let $nameA = $("<a>", {
+            tabindex: "0",
+            type: "button",
+            "class": "btn btn-outline-info",
+            "data-html": "true",
+            "data-toggle": "popover",
+            title: name + " Info",
+            "data-content": $popoverDiv.html(),
+            text: name
+        });
+        $row.append($("<td>").append($nameA));
 
-        var timeSinceNow = timeSince(new Date(Number(lastConnection))) + " ago";
+        // Other cells
+        $row.append($("<td>").text(timeSinceNow));
+        $row.append($("<td>").text(device.associatedUserEmail));
+        $row.append($("<td>").text(device.commands));
+        $row.append($("<td>").text(device.commandsOutput));
 
-        var row = document.createElement("tr");
-        row.id = "tableRow" + i;
-        row.innerHTML = (
-            "<td>" +
-            "<a tabindex='0' type=\"button\" data-html=\"true\" class=\"btn btn-outline-info\" data-toggle=\"popover\" title='" + name + " Info' " +
-            "   data-content=\"<div>" +
-            "       <p>IP: " + IP + "</p>" +
-            "       <p>Port: " + serverPort + "</p>" +
-            "       <p>Encryption Key: " + encryptionKey + "</p>" +
-            "</div>\"> " + name + "</a>" +
-            "</td>" +
-            "<td>" + timeSinceNow + "</td>" +
-            "<td>" + associatedUser + "</td>" +
-            "<td>" + commands + "</td>" +
-            "<td>" + commandsOutput + "</td>" +
-            "<td>" +
-            "<button title='Insert Commands' aria-label='Insert Commands' type='button' class='btn btn-secondary' onclick=commandsM('" + name + "')><span class='fa fa-terminal'></span></button> " +
-            "<button title='View Output' aria-label='View Output' type='button' class='btn btn-primary' onclick=outputM('" + name + "')><span class='fa fa-eye'></span></button> " +
-            "<button title='Remove Device' aria-label='Remove Device' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteDevice('" + name + "', '" + i + "')\"><span class=\"fa fa-trash\"></span></button>" +
-            "</td>");
+        // Actions
+        let $actionsCell = $("<td>");
 
-        tbody.appendChild(row);
+        $actionsCell.append($("<button>", {
+            title: "Insert Commands",
+            "aria-label": "Insert Commands",
+            type: "button",
+            "class": "btn btn-secondary",
+            click: function() { commandsM(name); }
+        }).append($("<span>", {"class": "fa fa-terminal"})));
+
+        $actionsCell.append(" ");
+
+        $actionsCell.append($("<button>", {
+            title: "View Output",
+            "aria-label": "View Output",
+            type: "button",
+            "class": "btn btn-primary",
+            click: function() { outputM(name); }
+        }).append($("<span>", {"class": "fa fa-eye"})));
+
+        $actionsCell.append(" ");
+
+        $actionsCell.append($("<button>", {
+            title: "Remove Device",
+            "aria-label": "Remove Device",
+            type: "button",
+            "class": "btn btn-danger",
+            click: function() { deleteDevice(name, i); }
+        }).append($("<span>", {"class": "fa fa-trash"})));
+
+        $row.append($actionsCell);
+        $tbody.append($row);
     }
-    devicesTable.appendChild(tbody);
+    $("#devicesTable").append($tbody);
     popInfo();
 }
 
@@ -123,11 +145,11 @@ function infoDev(devL) {
     return '<table class="table" style="padding-left:50px;">' +
         '<tr>' +
         '<td>IP:Port</td>' +
-        '<td>' + devL.ip + ':' + devL.serverPort + '</td>' +
+        '<td>' + escapeHTML(devL.ip) + ':' + escapeHTML(devL.serverPort) + '</td>' +
         '</tr>' +
         '<tr>' +
         '<td>EncryptionKey:</td>' +
-        '<td>' + devL.encryptionKey + '</td>' +
+        '<td>' + escapeHTML(devL.encryptionKey) + '</td>' +
         '</tr>' +
         '</table>';
 }

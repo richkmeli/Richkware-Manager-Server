@@ -93,32 +93,54 @@ function createUsersTableHeader() {
 function loadUsersJSONtoTable(usersListJSON) {
     createUsersTableHeader();
 
-    var usersList = JSON.parse(usersListJSON)//jQuery.parseJSON(usersListJSON);
+    let usersList = JSON.parse(usersListJSON);
+    let $tbody = $("<tbody>");
 
-    var tbody = document.createElement("tbody");
-    //var index = 0;
-    //while (usersList[index] != null) {
-    //for(var device in usersList){
-    for (var i = 0; i < usersList.length; ++i) {
-        var email = usersList[i].email
-        var password = usersList[i].password
-        var admin = usersList[i].admin
+    for (let i = 0; i < usersList.length; ++i) {
+        let user = usersList[i];
+        let email = user.email;
+        let password = user.password;
+        let admin = user.admin;
 
-        var row = document.createElement("tr");
-        row.id = "tableRow" + i;
-        row.innerHTML = (
-            //"<td>" + (index + 1) + "</td>" +
-            "<td>" + email + "</td>" +
-            "<td><a type=\"button\" class=\"btn btn-outline-secondary\" data-toggle=\"popover\" tabindex='0' title=\"Password\" data-content=\"" + password + "\">Show Password</a></td>" +
-            //"<td><button title='Show Password' type=\"button\" class=\"btn btn-secondary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + admin + "')\"><span class=\"fa fa-pencil\">Show Password</button></td>" +
-            //"<td>" + password + "</td>" +
-            "<td>" + admin + "</td>" +
-            "<td><button title='Edit' type=\"button\" class=\"btn btn-primary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + admin + "')\"><span class=\"fa fa-pencil\"></button></td>" +
-            "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteUser('" + email + "','" + i + "')\"><span class=\"fa fa-trash\"></button></td>");
+        let $row = $("<tr>").attr("id", "tableRow" + i);
 
-        tbody.appendChild(row);
+        $row.append($("<td>").text(email));
+
+        $row.append($("<td>").append($("<a>", {
+            type: "button",
+            "class": "btn btn-outline-secondary",
+            "data-toggle": "popover",
+            tabindex: "0",
+            title: "Password",
+            "data-content": password,
+            text: "Show Password"
+        })));
+
+        $row.append($("<td>").text(admin));
+
+        let $actionsCell = $("<td>");
+        $actionsCell.append($("<button>", {
+            title: "Edit",
+            type: "button",
+            "class": "btn btn-primary",
+            click: function() { editDevicesTableField(email, password, admin); }
+        }).append($("<span>", {"class": "fa fa-pencil"})));
+
+        $row.append($actionsCell);
+
+        let $removeCell = $("<td>");
+        $removeCell.append($("<button>", {
+            title: "Remove",
+            type: "button",
+            "class": "btn btn-danger",
+            click: function() { deleteUser(email, i); }
+        }).append($("<span>", {"class": "fa fa-trash"})));
+
+        $row.append($removeCell);
+
+        $tbody.append($row);
     }
-    usersTable.appendChild(tbody);
+    $("#usersTable").append($tbody);
     popInfo();
 }
 

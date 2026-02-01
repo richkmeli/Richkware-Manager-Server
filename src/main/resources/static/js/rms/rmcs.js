@@ -39,38 +39,31 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
     console.log("loadRmcsJSONtoTable")
     createRmcsTableHeader();
 
-    var rmcsList = JSON.parse(rmcsListJSON)//jQuery.parseJSON(devicesListJSON);
+    let rmcsList = JSON.parse(rmcsListJSON);
+    let $tbody = $("<tbody>");
 
-    var tbody = document.createElement("tbody");
+    for (let i = 0; i < rmcsList.length; ++i) {
+        let rmc = rmcsList[i];
+        let associatedUser = rmc.associatedUser;
+        let rmcId = rmc.rmcId;
 
-    console.log("rmcsList: " + rmcsList + " type: " + typeof (rmcsList) + " length: " + rmcsList.length)
-    //var index = 0;
-    //while (devicesList[index] != null) {
-    //for(var device in devicesList){
-    for (var i = 0; i < rmcsList.length; ++i) {
-//        $.each(devicesList, function (index, value) {
-        //var device = devicesList[index];
-//            var device = value;
-        console.log(rmcsList[i])
+        let $row = $("<tr>").attr("id", "tableRow" + i);
 
-        var associatedUser = rmcsList[i].associatedUser;
-        var rmcId = rmcsList[i].rmcId;
+        $row.append($("<td>").text(associatedUser));
+        $row.append($("<td>").text(rmcId));
 
-        var row = document.createElement("tr");
-        row.id = "tableRow" + i;
+        let $actionsCell = $("<td>");
+        $actionsCell.append($("<button>", {
+            title: "Remove",
+            type: "button",
+            "class": "btn btn-danger",
+            click: function() { deleteRmc(associatedUser, i, rmcId); }
+        }).append($("<span>", {"class": "fa fa-trash"})));
 
-        row.innerHTML = (
-            //"<td>" + (index + 1) + "</td>" +
-            "<td>" + associatedUser + "</td>" +
-            "<td>" + rmcId + "</td>" +
-            "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteRmc('" + associatedUser + "', '" + i + "', '" + rmcId + "')\"><span class=\"fa fa-trash\"></button></td>");
-
-        //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/device?name=" + name + "\';\">Remove</button></td>");
-
-        tbody.appendChild(row);
-        //      index++
+        $row.append($actionsCell);
+        $tbody.append($row);
     }
-    rmcsTable.appendChild(tbody);
+    $("#rmcsTable").append($tbody);
 }
 
 function deleteRmc(associatedUser, indexTableRow, rmcId) {
