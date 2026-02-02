@@ -1,0 +1,4 @@
+## 2026-02-02 - [Hardcoded Secrets and Stored XSS]
+**Vulnerability:** Critical hardcoded default credentials in configuration files (Dockerfile, docker-compose.yml, application-docker.properties) and High-priority Stored XSS in frontend dashboard tables.
+**Learning:** Default values in configuration files are often forgotten and committed to version control, posing a significant risk if the application is deployed with these defaults. Frontend tables built using string concatenation and .innerHTML are highly susceptible to Stored XSS if the data source (e.g., device names) can be influenced by users or external agents.
+**Prevention:** Remove all default values for sensitive configuration and rely strictly on environment variables. Use jQuery's safe DOM construction methods (.text(), .attr(), .click()) instead of .innerHTML and inline event handlers to build dynamic UI components.

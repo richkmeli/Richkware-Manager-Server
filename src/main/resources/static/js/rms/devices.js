@@ -48,46 +48,56 @@ function loadDevicesJSONtoTable(devicesListJSON) {
 
     console.log("devicesList: " + devicesList + " type: " + typeof (devicesList) + " length: " + devicesList.length);
 
-    for (var i = 0; i < devicesList.length; ++i) {
+    for (let i = 0; i < devicesList.length; ++i) {
+        let device = devicesList[i];
+        let name = device.name;
+        let timeSinceNow = timeSince(new Date(Number(device.lastConnection))) + " ago";
 
-        console.log(devicesList[i])
+        let $row = $("<tr>").attr("id", "tableRow" + i);
 
-        var name = devicesList[i].name;
-        var IP = devicesList[i].ip;
-        var serverPort = devicesList[i].serverPort;
-        var lastConnection = devicesList[i].lastConnection;
-        var encryptionKey = devicesList[i].encryptionKey;
-        var associatedUser = devicesList[i].associatedUserEmail;
-        var commands = devicesList[i].commands;
-        var commandsOutput = devicesList[i].commandsOutput;
-        var installationId = devicesList[i].installationId;
-        var location = devicesList[i].locationAsPosition;
-        var deviceInfo = devicesList[i].deviceInfoDevName;
+        // Safely build popover content
+        let $popoverContent = $("<div>")
+            .append($("<p>").text("IP: " + device.ip))
+            .append($("<p>").text("Port: " + device.serverPort))
+            .append($("<p>").text("Encryption Key: " + device.encryptionKey));
 
-        var timeSinceNow = timeSince(new Date(Number(lastConnection))) + " ago";
+        let $infoA = $("<a>")
+            .attr({
+                "tabindex": "0",
+                "type": "button",
+                "data-html": "true",
+                "class": "btn btn-outline-info",
+                "data-toggle": "popover",
+                "title": name + " Info",
+                "data-content": $popoverContent.html()
+            })
+            .text(name);
 
-        var row = document.createElement("tr");
-        row.id = "tableRow" + i;
-        row.innerHTML = (
-            "<td>" +
-            "<a tabindex='0' type=\"button\" data-html=\"true\" class=\"btn btn-outline-info\" data-toggle=\"popover\" title='" + name + " Info' " +
-            "   data-content=\"<div>" +
-            "       <p>IP: " + IP + "</p>" +
-            "       <p>Port: " + serverPort + "</p>" +
-            "       <p>Encryption Key: " + encryptionKey + "</p>" +
-            "</div>\"> " + name + "</a>" +
-            "</td>" +
-            "<td>" + timeSinceNow + "</td>" +
-            "<td>" + associatedUser + "</td>" +
-            "<td>" + commands + "</td>" +
-            "<td>" + commandsOutput + "</td>" +
-            "<td>" +
-            "<button title='Insert Commands' aria-label='Insert Commands' type='button' class='btn btn-secondary' onclick=commandsM('" + name + "')><span class='fa fa-terminal'></span></button> " +
-            "<button title='View Output' aria-label='View Output' type='button' class='btn btn-primary' onclick=outputM('" + name + "')><span class='fa fa-eye'></span></button> " +
-            "<button title='Remove Device' aria-label='Remove Device' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteDevice('" + name + "', '" + i + "')\"><span class=\"fa fa-trash\"></span></button>" +
-            "</td>");
+        $row.append($("<td>").append($infoA));
+        $row.append($("<td>").text(timeSinceNow));
+        $row.append($("<td>").text(device.associatedUserEmail));
+        $row.append($("<td>").text(device.commands));
+        $row.append($("<td>").text(device.commandsOutput));
 
-        tbody.appendChild(row);
+        let $actionsTd = $("<td>");
+
+        $actionsTd.append($("<button>")
+            .attr({"title": "Insert Commands", "aria-label": "Insert Commands", "type": "button", "class": "btn btn-secondary"})
+            .click(() => commandsM(name))
+            .append($("<span>").addClass("fa fa-terminal")));
+
+        $actionsTd.append(" ").append($("<button>")
+            .attr({"title": "View Output", "aria-label": "View Output", "type": "button", "class": "btn btn-primary"})
+            .click(() => outputM(name))
+            .append($("<span>").addClass("fa fa-eye")));
+
+        $actionsTd.append(" ").append($("<button>")
+            .attr({"title": "Remove Device", "aria-label": "Remove Device", "type": "button", "class": "btn btn-danger"})
+            .click(() => deleteDevice(name, i))
+            .append($("<span>").addClass("fa fa-trash")));
+
+        $row.append($actionsTd);
+        $(tbody).append($row);
     }
     devicesTable.appendChild(tbody);
     popInfo();
