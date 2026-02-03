@@ -76,49 +76,62 @@ function loadUsersTable() {
 }
 
 function createUsersTableHeader() {
-    var usersTable = document.getElementById("usersTable");
-    usersTable.innerHTML = "";
+    var $usersTable = $("#usersTable");
+    $usersTable.empty();
 
-    var thead = document.createElement("thead");
-    var row = document.createElement("tr");
-    row.innerHTML = ( //"<th>Index</th>" +
-        "<th>Email</th>" +
-        "<th>Password</th>" +
-        "<th>Admin</th>");
+    var $thead = $("<thead>");
+    var $row = $("<tr>");
+    $row.append($("<th>").text("Email"))
+        .append($("<th>").text("Password"))
+        .append($("<th>").text("Admin"));
 
-    thead.appendChild(row);
-    usersTable.appendChild(thead);
+    $thead.append($row);
+    $usersTable.append($thead);
 }
 
 function loadUsersJSONtoTable(usersListJSON) {
     createUsersTableHeader();
 
-    var usersList = JSON.parse(usersListJSON)//jQuery.parseJSON(usersListJSON);
+    var usersList = JSON.parse(usersListJSON);
+    var $usersTable = $("#usersTable");
+    var $tbody = $("<tbody>");
 
-    var tbody = document.createElement("tbody");
-    //var index = 0;
-    //while (usersList[index] != null) {
-    //for(var device in usersList){
     for (var i = 0; i < usersList.length; ++i) {
         var email = usersList[i].email
         var password = usersList[i].password
         var admin = usersList[i].admin
 
-        var row = document.createElement("tr");
-        row.id = "tableRow" + i;
-        row.innerHTML = (
-            //"<td>" + (index + 1) + "</td>" +
-            "<td>" + email + "</td>" +
-            "<td><a type=\"button\" class=\"btn btn-outline-secondary\" data-toggle=\"popover\" tabindex='0' title=\"Password\" data-content=\"" + password + "\">Show Password</a></td>" +
-            //"<td><button title='Show Password' type=\"button\" class=\"btn btn-secondary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + admin + "')\"><span class=\"fa fa-pencil\">Show Password</button></td>" +
-            //"<td>" + password + "</td>" +
-            "<td>" + admin + "</td>" +
-            "<td><button title='Edit' type=\"button\" class=\"btn btn-primary\" onclick=\"editDevicesTableField('" + email + "','" + password + "','" + admin + "')\"><span class=\"fa fa-pencil\"></button></td>" +
-            "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteUser('" + email + "','" + i + "')\"><span class=\"fa fa-trash\"></button></td>");
+        var $row = $("<tr>", {id: "tableRow" + i})
+            .append($("<td>").text(email))
+            .append($("<td>").append($("<a>", {
+                type: "button",
+                class: "btn btn-outline-secondary",
+                "data-toggle": "popover",
+                tabindex: "0",
+                title: "Password",
+                "data-content": password
+            }).text("Show Password")))
+            .append($("<td>").text(admin))
+            .append($("<td>")
+                .append($("<button>", {title: 'Edit', type: "button", class: "btn btn-primary"})
+                    .click({email: email, password: password, admin: admin}, function (e) {
+                        if (typeof editDevicesTableField === "function") {
+                            editDevicesTableField(e.data.email, e.data.password, e.data.admin);
+                        } else {
+                            console.error("editDevicesTableField is not defined");
+                        }
+                    })
+                    .append($("<span>", {class: "fa fa-pencil"})))
+                .append(" ")
+                .append($("<button>", {title: 'Remove', type: "button", class: "btn btn-danger"})
+                    .click({email: email, i: i}, function (e) {
+                        deleteUser(e.data.email, e.data.i);
+                    })
+                    .append($("<span>", {class: "fa fa-trash"}))));
 
-        tbody.appendChild(row);
+        $tbody.append($row);
     }
-    usersTable.appendChild(tbody);
+    $usersTable.append($tbody);
     popInfo();
 }
 

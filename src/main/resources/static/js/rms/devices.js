@@ -21,21 +21,20 @@ function loadDevicesTable() {
 
 function createDevicesTableHeader() {
     console.log("createDevicesTableHeader");
-    let devicesTable = document.getElementById("devicesTable");
-    devicesTable.innerHTML = "";
+    let $devicesTable = $("#devicesTable");
+    $devicesTable.empty();
 
-    let thead = document.createElement("thead");
-    let row = document.createElement("tr");
-    row.innerHTML = (
-        "<th>Name</th>" +
-        "<th>Last Connection</th>" +
-        "<th>Associated User</th>" +
-        "<th>Commands</th>" +
-        "<th>Commands Output</th>" +
-        "<th>Actions</th>");
+    let $thead = $("<thead>");
+    let $row = $("<tr>");
+    $row.append($("<th>").text("Name"))
+        .append($("<th>").text("Last Connection"))
+        .append($("<th>").text("Associated User"))
+        .append($("<th>").text("Commands"))
+        .append($("<th>").text("Commands Output"))
+        .append($("<th>").text("Actions"));
 
-    thead.appendChild(row);
-    devicesTable.appendChild(thead);
+    $thead.append($row);
+    $devicesTable.append($thead);
     console.log("tableHeader")
 }
 
@@ -43,13 +42,13 @@ function loadDevicesJSONtoTable(devicesListJSON) {
     console.log("loadDevicesJSONtoTable");
     createDevicesTableHeader();
 
-    let devicesList = JSON.parse(devicesListJSON);//jQuery.parseJSON(devicesListJSON);
-    let tbody = document.createElement("tbody");
+    let devicesList = JSON.parse(devicesListJSON);
+    let $devicesTable = $("#devicesTable");
+    let $tbody = $("<tbody>");
 
     console.log("devicesList: " + devicesList + " type: " + typeof (devicesList) + " length: " + devicesList.length);
 
     for (var i = 0; i < devicesList.length; ++i) {
-
         console.log(devicesList[i])
 
         var name = devicesList[i].name;
@@ -60,36 +59,60 @@ function loadDevicesJSONtoTable(devicesListJSON) {
         var associatedUser = devicesList[i].associatedUserEmail;
         var commands = devicesList[i].commands;
         var commandsOutput = devicesList[i].commandsOutput;
-        var installationId = devicesList[i].installationId;
-        var location = devicesList[i].locationAsPosition;
-        var deviceInfo = devicesList[i].deviceInfoDevName;
 
         var timeSinceNow = timeSince(new Date(Number(lastConnection))) + " ago";
 
-        var row = document.createElement("tr");
-        row.id = "tableRow" + i;
-        row.innerHTML = (
-            "<td>" +
-            "<a tabindex='0' type=\"button\" data-html=\"true\" class=\"btn btn-outline-info\" data-toggle=\"popover\" title='" + name + " Info' " +
-            "   data-content=\"<div>" +
-            "       <p>IP: " + IP + "</p>" +
-            "       <p>Port: " + serverPort + "</p>" +
-            "       <p>Encryption Key: " + encryptionKey + "</p>" +
-            "</div>\"> " + name + "</a>" +
-            "</td>" +
-            "<td>" + timeSinceNow + "</td>" +
-            "<td>" + associatedUser + "</td>" +
-            "<td>" + commands + "</td>" +
-            "<td>" + commandsOutput + "</td>" +
-            "<td>" +
-            "<button title='Insert Commands' aria-label='Insert Commands' type='button' class='btn btn-secondary' onclick=commandsM('" + name + "')><span class='fa fa-terminal'></span></button> " +
-            "<button title='View Output' aria-label='View Output' type='button' class='btn btn-primary' onclick=outputM('" + name + "')><span class='fa fa-eye'></span></button> " +
-            "<button title='Remove Device' aria-label='Remove Device' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteDevice('" + name + "', '" + i + "')\"><span class=\"fa fa-trash\"></span></button>" +
-            "</td>");
+        var popoverContent = $("<div>")
+            .append($("<p>").text("IP: " + IP))
+            .append($("<p>").text("Port: " + serverPort))
+            .append($("<p>").text("Encryption Key: " + encryptionKey))
+            .html();
 
-        tbody.appendChild(row);
+        var $row = $("<tr>", {id: "tableRow" + i})
+            .append($("<td>").append($("<a>", {
+                tabindex: "0",
+                type: "button",
+                "data-html": "true",
+                class: "btn btn-outline-info",
+                "data-toggle": "popover",
+                title: name + " Info",
+                "data-content": popoverContent
+            }).text(name)))
+            .append($("<td>").text(timeSinceNow))
+            .append($("<td>").text(associatedUser))
+            .append($("<td>").text(commands))
+            .append($("<td>").text(commandsOutput))
+            .append($("<td>")
+                .append($("<button>", {
+                    title: 'Insert Commands',
+                    'aria-label': 'Insert Commands',
+                    type: 'button',
+                    class: 'btn btn-secondary'
+                }).click({name: name}, function (e) {
+                    commandsM(e.data.name);
+                }).append($("<span>", {class: 'fa fa-terminal'})))
+                .append(" ")
+                .append($("<button>", {
+                    title: 'View Output',
+                    'aria-label': 'View Output',
+                    type: 'button',
+                    class: 'btn btn-primary'
+                }).click({name: name}, function (e) {
+                    outputM(e.data.name);
+                }).append($("<span>", {class: 'fa fa-eye'})))
+                .append(" ")
+                .append($("<button>", {
+                    title: 'Remove Device',
+                    'aria-label': 'Remove Device',
+                    type: "button",
+                    class: "btn btn-danger"
+                }).click({name: name, i: i}, function (e) {
+                    deleteDevice(e.data.name, e.data.i);
+                }).append($("<span>", {class: "fa fa-trash"}))));
+
+        $tbody.append($row);
     }
-    devicesTable.appendChild(tbody);
+    $devicesTable.append($tbody);
     popInfo();
 }
 
@@ -119,18 +142,6 @@ function timeSince(date) {
     return Math.floor(seconds) + " seconds";
 }
 
-function infoDev(devL) {
-    return '<table class="table" style="padding-left:50px;">' +
-        '<tr>' +
-        '<td>IP:Port</td>' +
-        '<td>' + devL.ip + ':' + devL.serverPort + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>EncryptionKey:</td>' +
-        '<td>' + devL.encryptionKey + '</td>' +
-        '</tr>' +
-        '</table>';
-}
 
 function popInfo() {
     $("[data-toggle=popover]").popover();

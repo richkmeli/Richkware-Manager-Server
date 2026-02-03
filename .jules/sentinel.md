@@ -1,0 +1,4 @@
+## 2026-02-03 - Recurring Stored XSS in Dashboard Tables
+**Vulnerability:** User-controlled data (device names, IPs, user emails, etc.) was being directly concatenated into HTML strings and injected into the DOM using `innerHTML`.
+**Learning:** This is a common pattern in older or vanilla JS applications where dynamic table rendering is implemented manually. It bypasses built-in browser protections and allows for Stored XSS if the server-side data is compromised or comes from untrusted sources (like infected devices in a C2 context).
+**Prevention:** Always use jQuery's `.text()` method or similar safe DOM APIs to set content. For complex elements like popovers that require HTML, construct the HTML fragment using jQuery elements and `.text()` for the variable parts before extracting the safe HTML string with `.html()`. Avoid inline `onclick` attributes and use programmatic event listeners (`.click()`) instead.

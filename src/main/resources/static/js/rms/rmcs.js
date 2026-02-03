@@ -21,17 +21,16 @@ function loadRmcsTable() {
 
 function createRmcsTableHeader() {
     console.log("createRmcsTableHeader")
-    var rmcsTable = document.getElementById("rmcsTable");
-    rmcsTable.innerHTML = "";
+    var $rmcsTable = $("#rmcsTable");
+    $rmcsTable.empty();
 
-    var thead = document.createElement("thead");
-    var row = document.createElement("tr");
-    row.innerHTML = ( //"<th>Index</th>" +
-        "<th>associatedUser</th>" +
-        "<th>RMCID</th>");
+    var $thead = $("<thead>");
+    var $row = $("<tr>");
+    $row.append($("<th>").text("associatedUser"))
+        .append($("<th>").text("RMCID"));
 
-    thead.appendChild(row);
-    rmcsTable.appendChild(thead);
+    $thead.append($row);
+    $rmcsTable.append($thead);
     console.log("tableHeader")
 }
 
@@ -39,38 +38,30 @@ function loadRmcsJSONtoTable(rmcsListJSON) {
     console.log("loadRmcsJSONtoTable")
     createRmcsTableHeader();
 
-    var rmcsList = JSON.parse(rmcsListJSON)//jQuery.parseJSON(devicesListJSON);
-
-    var tbody = document.createElement("tbody");
+    var rmcsList = JSON.parse(rmcsListJSON);
+    var $rmcsTable = $("#rmcsTable");
+    var $tbody = $("<tbody>");
 
     console.log("rmcsList: " + rmcsList + " type: " + typeof (rmcsList) + " length: " + rmcsList.length)
-    //var index = 0;
-    //while (devicesList[index] != null) {
-    //for(var device in devicesList){
+
     for (var i = 0; i < rmcsList.length; ++i) {
-//        $.each(devicesList, function (index, value) {
-        //var device = devicesList[index];
-//            var device = value;
         console.log(rmcsList[i])
 
         var associatedUser = rmcsList[i].associatedUser;
         var rmcId = rmcsList[i].rmcId;
 
-        var row = document.createElement("tr");
-        row.id = "tableRow" + i;
+        var $row = $("<tr>", {id: "tableRow" + i})
+            .append($("<td>").text(associatedUser))
+            .append($("<td>").text(rmcId))
+            .append($("<td>").append($("<button>", {title: 'Remove', type: "button", class: "btn btn-danger"})
+                .click({user: associatedUser, i: i, id: rmcId}, function (e) {
+                    deleteRmc(e.data.user, e.data.i, e.data.id);
+                })
+                .append($("<span>", {class: "fa fa-trash"}))));
 
-        row.innerHTML = (
-            //"<td>" + (index + 1) + "</td>" +
-            "<td>" + associatedUser + "</td>" +
-            "<td>" + rmcId + "</td>" +
-            "<td><button title='Remove' type=\"button\" class=\"btn btn-danger\" onclick=\"deleteRmc('" + associatedUser + "', '" + i + "', '" + rmcId + "')\"><span class=\"fa fa-trash\"></button></td>");
-
-        //        "<td><button type=\"button\" class=\"btn btn-warning\" onclick=\"location.href=\'/device?name=" + name + "\';\">Remove</button></td>");
-
-        tbody.appendChild(row);
-        //      index++
+        $tbody.append($row);
     }
-    rmcsTable.appendChild(tbody);
+    $rmcsTable.append($tbody);
 }
 
 function deleteRmc(associatedUser, indexTableRow, rmcId) {
