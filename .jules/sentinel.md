@@ -1,0 +1,4 @@
+## 2026-02-05 - Hardcoded Secrets in Configuration Files
+**Vulnerability:** Critical secrets like `DB_PASSWORD` and `ENCRYPTION_KEY` had hardcoded default values (`changeme`) in `Dockerfile`, `docker-compose.yml`, `configuration.properties`, and `application-docker.properties`.
+**Learning:** Hardcoded defaults are often left in place for developer convenience ("it just works"), but they frequently leak into production environments, providing a trivial attack vector if not changed. In this app, the `Dockerfile` was even baking these defaults into the image.
+**Prevention:** Never provide default values for sensitive credentials in the codebase or build artifacts. Use environment variables without defaults (e.g., `${VAR}` instead of `${VAR:default}`) to force the environment to provide these values, following the principle of "fail securely". Always use a `.env.example` with clear placeholders instead of functional defaults.
